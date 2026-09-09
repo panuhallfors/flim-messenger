@@ -1,15 +1,15 @@
 # AGENTS.md — fork workspace
 
-Fork deltas live here as an ordered spec log — not a spec of Element X. In an app tree, also follow that app’s `AGENTS.md` (iOS: `element-x-ios/AGENTS.md`).
+Fork deltas live here as an ordered spec log — not a spec of Element X. In an app tree, also follow that app’s `AGENTS.md` (iOS: `ios/AGENTS.md`).
 
 ## Layout
 
 ```
 .                          # meta: specs + this file + submodule pins
 specs/
-element-x-ios/             # submodule → our fork (not Element X copied into meta)
-element-x-android/         # later, same
-element-web/               # later, same
+ios/             # submodule → our fork (not Element X copied into meta)
+android/         # later, same
+web/               # later, same
 ```
 
 App `origin` = our fork; `upstream` = Element HQ. Specs never live in an app tree.
@@ -18,7 +18,7 @@ App `origin` = our fork; `upstream` = Element HQ. Specs never live in an app tre
 
 Apps are submodules. Meta stores gitlinks, not app source. Empty app dir → `git submodule update --init`.
 
-- Spec/design → meta. App code → that submodule, then **pin** (`git add element-x-ios` from meta; stages the SHA). Not `done` until pinned.
+- Spec/design → meta. App code → that submodule, then **pin** (`git add ios` from meta; stages the SHA). Not `done` until pinned.
 - Never stage app files as normal paths in meta. After checkout of an old meta SHA: `git submodule update`.
 - Upstream merge in the app repo, then pin. New app: `git submodule add <our-fork-url> <dir>`.
 
@@ -26,12 +26,12 @@ Apps are submodules. Meta stores gitlinks, not app source. Empty app dir → `gi
 
 Upstream Element X is the baseline. We record **fork deltas** only. Replay `NNN` in order → same functionality **and** product design (not the same source). That is how iOS is later replayed on Android/Web.
 
-| Path | Role |
-|------|------|
-| `specs/INDEX.md` | Ordered log |
-| `specs/TEMPLATE.md` / `DESIGN-TEMPLATE.md` | Copy these |
-| `specs/NNN-slug.md` | Intent + acceptance. Sort order = replay. Never reuse/renumber. |
-| `specs/NNN-slug.design.md` | Product design for that id. Replay-canonical with the spec. Required unless the delta is trivial. |
+| Path                                       | Role                                                                                              |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `specs/INDEX.md`                           | Ordered log                                                                                       |
+| `specs/TEMPLATE.md` / `DESIGN-TEMPLATE.md` | Copy these                                                                                        |
+| `specs/NNN-slug.md`                        | Intent + acceptance. Sort order = replay. Never reuse/renumber.                                   |
+| `specs/NNN-slug.design.md`                 | Product design for that id. Replay-canonical with the spec. Required unless the delta is trivial. |
 
 One intent per spec. Later `NNN` wins. Append-only: wrong intent → new spec (`withdrawn` + replacement), do not rewrite history to match a shortcut.
 
