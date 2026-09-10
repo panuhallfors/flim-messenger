@@ -16,7 +16,11 @@ One or two sentences. What changes for the user versus upstream (or versus the a
 
 ## Acceptance
 
-Observable checks. Replay = these become true after this decision, given all earlier decisions.
+**High level.** What is true for the user once this is done — outcomes a person could confirm by using the app, worded so they survive any reasonable implementation. Aim for a handful of bullets, not a checklist of the design.
+
+Mechanism, thresholds, timings, glyphs, copy, layout, control names and edge-case handling belong in the companion `.design.md`, not here. If a bullet would change when the design changes, it is too specific.
+
+Replay = these become true after this decision, given all earlier decisions.
 
 - [ ] …
 - [ ] …
