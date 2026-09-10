@@ -12,11 +12,11 @@ platforms: []
 
 ## Intent
 
-This workspace is a fork of Element X (iOS first; Android and Web later). The product baseline is upstream Element X. Fork behaviour and product design are only what later specs (and their `.design.md` files) in this directory record.
+This workspace is a fork of Element X (iOS first; Android and Web later). The product baseline is upstream Element X. Fork behaviour and product design are only what later decisions (and their `.design.md` files) in this directory record.
 
 ## Acceptance
 
-- [x] Ordered specs under `specs/` are the record of fork changes; a spec’s `.design.md` is replay-canonical product design for that id.
+- [x] Ordered decisions under `specs/` are the record of fork changes; a decision’s `.design.md` is replay-canonical product design for that id.
 - [x] App trees keep upstream structure and follow their own `AGENTS.md`; they are git submodules of this meta repo, not a source dump.
 - [x] No requirement to specify the whole messenger.
 
@@ -28,7 +28,7 @@ Documenting or reimplementing Element X as a whole. Replacing upstream test suit
 
 iOS already implements Matrix voice messages. Specs after this one describe *changes* to that (or unrelated fork features), not the existence of voice bubbles.
 
-Non-trivial specs get a companion `NNN-slug.design.md` (replay-canonical with the spec). This baseline has none.
+Non-trivial decisions get a companion `NNN-slug.design.md` (replay-canonical with the decision). This baseline has none.
 
 ## Verification
 

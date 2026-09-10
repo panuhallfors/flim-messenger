@@ -12,24 +12,24 @@ platforms: [ios]   # ios | android | web
 
 ## Intent
 
-One or two sentences. What changes for the user versus upstream (or versus the amended spec)?
+One or two sentences. What changes for the user versus upstream (or versus the amended decision)?
 
 ## Acceptance
 
-Observable checks. Replay = these become true after this spec, given all earlier specs.
+Observable checks. Replay = these become true after this decision, given all earlier decisions.
 
 - [ ] …
 - [ ] …
 
 ## Non-goals
 
-What this spec does not do (avoids silent scope growth).
+What this decision does not do (avoids silent scope growth).
 
 ## Notes
 
 Upstream hooks, MSCs, existing types to reuse, platform exceptions.
 
-Design (non-trivial, replay-canonical with this spec): `NNN-slug.design.md` | none
+Design (non-trivial, replay-canonical with this decision): `NNN-slug.design.md` | none
 
 ## Verification
 
