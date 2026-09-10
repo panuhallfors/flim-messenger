@@ -108,3 +108,7 @@ If the fact is really project documentation (architecture, API contract, coding 
 | `add_memory`                                     | Persist a new durable fact                 |
 | `get_memories`                                   | List what's already stored for a `user_id` |
 | `get_memory` / `update_memory` / `delete_memory` | Correct a specific record                  |
+
+## Commits
+
+Use Conventional Commits.
