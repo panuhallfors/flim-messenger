@@ -25,7 +25,7 @@ Upstream Element X is the baseline. Record **fork deltas** only. Replay `NNN` in
 
 - One intent per decision. Later `NNN` wins.
 - Append-only: wrong intent → new decision (`withdrawn` + replacement); do not rewrite history to match a shortcut.
-- Design **canonical**: flows, IA, interaction, protocol, rejected alternatives.
+- Design **canonical**: flows, IA, interaction, protocol.
 - **Not** canonical (Platform notes): languages, paths, type names.
 - No fork behaviour without a decision. Mid-impl scope growth → new decision.
 - Same intent/design, tighter wording → edit in place + History entry.
@@ -40,6 +40,14 @@ Mechanism, thresholds, timings, glyphs, copy, layout, control names, and edge-ca
 
 Design detail growing is a design edit (History entry), not a new decision. Only a changed _intent or product design_ needs a new `NNN`.
 
+## Design depth
+
+At authoring time, write enough product design to lock intent and shape (flows, IA, interaction). **Do not** pre-enumerate every implementation detail, token choice, or future enhancement as a backlog in the design file.
+
+**Detailed design is created when implementation begins** — then edit the `.design.md` (History entry) as concrete choices land. Do not invent an “Alternatives rejected” section. Do not invent a “Follow-on” backlog section.
+
+**Open issues** (in the design template): only for unresolved questions while the decision is still being worked on. Normally empty (`_(none)_`). Clear bullets as they are decided. Not a parking lot for later features.
+
 ## Workflow (do not skip the challenge loop)
 
 Prefer files over chat for the draft body. Write the markdown early; iterate by editing those files. Use chat for questions, challenges, and short summaries of what changed — not for pasting the full decision/design.
@@ -51,7 +59,7 @@ Decision progress:
 - [ ] 1. Discover — read context; enough clarifying Qs to pick shape
 - [ ] 2. Write drafts — files + INDEX; status proposed
 - [ ] 3. Challenge & edit — push back; revise the .md files until the user is happy
-- [ ] 4. Confirm — summarize paths and open follow-ons
+- [ ] 4. Confirm — summarize paths and any Open issues still open
 ```
 
 ### 1. Discover
@@ -91,7 +99,7 @@ As soon as shape is clear, create the files — do not hold the draft in chat:
 
 Acceptance: handful of user-observable bullets. Mechanism that creeps in → move into the design file.
 
-Design: Context, Product design, Alternatives rejected, Platform notes (translation only), Follow-on, History. Rejected alternatives stay rejected in replay unless a later decision reopens them.
+Design sections: Context, Product design, Platform notes (translation only), Open issues (normally `_(none)_`), History. Do **not** add Alternatives rejected or Follow-on.
 
 Point the user at the file paths so they can read the draft as markdown. Do not commit unless the user asks.
 
@@ -105,7 +113,7 @@ Challenge checklist:
 - Is the intent one decision or a bundle that should be split?
 - Are acceptance bullets outcome-level, or sneaking in mechanism?
 - Are non-goals strong enough to block the usual scope creep?
-- For design: which alternatives were considered, and why rejected? Missing rejects are a smell.
+- Is the design enough to lock shape without pretending every detail is settled? Put true unknowns in Open issues; leave implementation polish for when coding starts.
 - Multi-app: is the product design replayable, or are we baking in one platform’s toolkit?
 - Does an existing decision already cover this (edit + History) vs need a new `NNN`?
 
@@ -117,11 +125,11 @@ Repeat until the user is happy with the realized decision (and design, if any).
 
 ### 4. Confirm
 
-Report final paths, id/slug, whether design exists, and any Follow-on items left for later decisions.
+Report final paths, id/slug, whether design exists, and any Open issues still listed (should usually be none).
 
 ## After authoring (not this skill’s job, but know the handoff)
 
-1. Implement in the app submodule; PR mentions `decision NNN`.
+1. Implement in the app submodule; PR mentions `decision NNN`. **Deepen the `.design.md` then** as concrete UI/protocol choices land — that is when detailed design is written, not during `/decision`.
 2. Pin submodule SHA on meta; record in decision History.
 3. Verify per `AGENTS.md` (acceptance → app tests → Agent UI only if needed). `done` iff listed platforms pass (or `deferred`) and pin is committed.
 

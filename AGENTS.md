@@ -1,6 +1,6 @@
-# AGENTS.md — fork workspace
+# AGENTS.md — "Flim" fork workspace
 
-Fork deltas live here as an ordered decision log — not a spec of Element X. In an app tree, also follow that app’s `AGENTS.md` (iOS: `ios/AGENTS.md`).
+Fork deltas for Flim live here as an ordered decision log — not a spec of Element X. In an app tree, also follow that app’s `AGENTS.md` (iOS: `ios/AGENTS.md`).
 
 A **decision** (`specs/NNN-slug.md`) is intent + acceptance criteria, not a full specification. The detailed, replay-canonical specification of behaviour — flows, IA, interaction, protocol — lives in its companion `.design.md` when one exists. "Spec" below refers to the `specs/` directory and log as a whole, not to the level of detail in any single file.
 
@@ -35,21 +35,17 @@ Upstream Element X is the baseline. We record **fork deltas** only. Replay `NNN`
 | `specs/NNN-slug.md`                                 | Intent + high-level acceptance. Sort order = replay. Never reuse/renumber.                            |
 | `specs/NNN-slug.design.md`                          | Product design for that id. Replay-canonical with the decision. Required unless the delta is trivial. |
 
-One intent per decision. Later `NNN` wins. Append-only: wrong intent → new decision (`withdrawn` + replacement), do not rewrite history to match a shortcut. Design **canonical**: flows, IA, interaction, protocol, rejected alternatives. **Not** canonical (Platform notes): languages, paths, type names. No fork behaviour without a decision. Mid-impl scope growth → new decision.
+One intent per decision. Later `NNN` wins. Append-only: wrong intent → new decision (`withdrawn` + replacement), do not rewrite history to match a shortcut. Design **canonical**: flows, IA, interaction, protocol. **Not** canonical (Platform notes): languages, paths, type names. No fork behaviour without a decision. Mid-impl scope growth → new decision.
 
 Acceptance is high-level user outcomes (not mechanism). Same intent/design, tighter wording → edit in place + History. Conflicting intent **or** design → new `NNN` with `amends:`. Upstream merge: app then pin; if upstream matches, `upstreamed` and drop our patch.
 
-**Author or amend a decision:** use the project skill `.cursor/skills/decision` (`/decision`). It owns the challenge loop, drafting, and file/INDEX write steps. After a decision exists: implement in the app submodule (PR mentions `decision NNN`); pin the submodule SHA on meta; record History; verify → `done` iff listed platforms pass (or `deferred`) and the pin is committed.
+A companion `.design.md` at decision time locks product shape; **fill in detailed design when implementation begins**. Do not stockpile future topics as a “Follow-on” backlog in the design file. Use **Open issues** only for unresolved questions while the decision is still being authored (normally empty).
+
+**Author or amend a decision:** use the project skill `.agents/skills/decision` (`/decision`). It owns the challenge loop, drafting, and file/INDEX write steps. After a decision exists: implement in the app submodule with `.agents/skills/implement-decision` (`/implement-decision`) (PR mentions `decision NNN`); verify on the Mac host with `.agents/skills/verify-decision` (`/verify-decision`); pin the submodule SHA on meta; record History → `done` iff listed platforms pass (or `deferred`) and the pin is committed.
 
 ## Verification
 
-Use Element X’s existing tests first (unit, snapshots, UI, a11y). Stock voice-message tests are baseline, not fork decisions. Do not re-test all of Element X. Name/comment fork tests with the decision id.
-
-1. Acceptance bullets (user-observable outcomes; the design says how). Tests may assert design detail — acceptance itself stays high level.
-2. App tests (VM/service; snapshots; existing UITests).
-3. `## Agent UI` in the decision — only when (1)–(2) cannot cheaply lock the interaction. No extra test framework.
-
-Unshipped platforms: `deferred`.
+Prefer Element X’s existing harness; name fork tests with the decision id. Lock acceptance with app tests; `## Agent UI` only if that cannot cheaply lock the interaction. Unshipped platforms: `deferred`. Code in the container: `/implement-decision`. Xcode/simulator on the Mac host (same checkout): `/verify-decision`.
 
 ## Multi-app
 

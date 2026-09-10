@@ -1,6 +1,5 @@
 .orchestrator/
 .devcontainer/
 
-# Local Cursor state (mcp.json, etc.). Shared project skills are tracked.
+# Local Cursor state (mcp.json, etc.). Project skills live in `.agents/skills/`.
 .cursor/*
-!.cursor/skills/
