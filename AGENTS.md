@@ -28,36 +28,24 @@ Apps are submodules. Meta stores gitlinks, not app source. Empty app dir → `gi
 
 Upstream Element X is the baseline. We record **fork deltas** only. Replay `NNN` in order → same functionality **and** product design (not the same source). That is how iOS is later replayed on Android/Web.
 
-| Path                                                | Role                                                                                                   |
-| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `specs/INDEX.md`                                     | Ordered log                                                                                             |
-| `specs/DECISION-TEMPLATE.md` / `DESIGN-TEMPLATE.md`  | Copy these                                                                                              |
-| `specs/NNN-slug.md`                                  | Intent + acceptance. Sort order = replay. Never reuse/renumber.                                         |
-| `specs/NNN-slug.design.md`                           | Product design for that id. Replay-canonical with the decision. Required unless the delta is trivial.  |
+| Path                                                | Role                                                                                                  |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `specs/INDEX.md`                                    | Ordered log                                                                                           |
+| `specs/DECISION-TEMPLATE.md` / `DESIGN-TEMPLATE.md` | Copy these                                                                                            |
+| `specs/NNN-slug.md`                                 | Intent + high-level acceptance. Sort order = replay. Never reuse/renumber.                            |
+| `specs/NNN-slug.design.md`                          | Product design for that id. Replay-canonical with the decision. Required unless the delta is trivial. |
 
-One intent per decision. Later `NNN` wins. Append-only: wrong intent → new decision (`withdrawn` + replacement), do not rewrite history to match a shortcut.
+One intent per decision. Later `NNN` wins. Append-only: wrong intent → new decision (`withdrawn` + replacement), do not rewrite history to match a shortcut. Design **canonical**: flows, IA, interaction, protocol, rejected alternatives. **Not** canonical (Platform notes): languages, paths, type names. No fork behaviour without a decision. Mid-impl scope growth → new decision.
 
-Design **canonical**: flows, IA, interaction, protocol, rejected alternatives. **Not** canonical (Platform notes): languages, paths, type names.
+Acceptance is high-level user outcomes (not mechanism). Same intent/design, tighter wording → edit in place + History. Conflicting intent **or** design → new `NNN` with `amends:`. Upstream merge: app then pin; if upstream matches, `upstreamed` and drop our patch.
 
-No fork behaviour without a decision. Mid-impl scope growth → new decision.
-
-### Workflow
-
-1. Next `NNN` from `DECISION-TEMPLATE.md`; row in `INDEX.md`; `proposed`.
-2. Non-trivial: `NNN-slug.design.md`; link from INDEX + decision Notes.
-3. Implement in the app submodule; PR mentions `decision NNN`.
-4. Pin submodule SHA on meta; record in decision History.
-5. Verify. `done` iff listed platforms pass (or `deferred`) and pin is committed.
-
-Same intent/design, tighter wording → edit in place + History. Conflicting intent **or** design → new `NNN` with `amends:`.
-
-Upstream merge: app then pin. If upstream matches, `upstreamed` and drop our patch.
+**Author or amend a decision:** use the project skill `.cursor/skills/decision` (`/decision`). It owns the challenge loop, drafting, and file/INDEX write steps. After a decision exists: implement in the app submodule (PR mentions `decision NNN`); pin the submodule SHA on meta; record History; verify → `done` iff listed platforms pass (or `deferred`) and the pin is committed.
 
 ## Verification
 
 Use Element X’s existing tests first (unit, snapshots, UI, a11y). Stock voice-message tests are baseline, not fork decisions. Do not re-test all of Element X. Name/comment fork tests with the decision id.
 
-1. Acceptance bullets (observable, not implementation).
+1. Acceptance bullets (user-observable outcomes; the design says how). Tests may assert design detail — acceptance itself stays high level.
 2. App tests (VM/service; snapshots; existing UITests).
 3. `## Agent UI` in the decision — only when (1)–(2) cannot cheaply lock the interaction. No extra test framework.
 
