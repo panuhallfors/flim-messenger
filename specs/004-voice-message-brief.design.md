@@ -26,34 +26,85 @@ The voice-message block keeps the existing player. With it, in this order:
 
 All three are part of that voice message. Flim does not also show them as their own timeline row.
 
-Until a result is adopted, the block shows a quiet in-progress state (waiting on the sender, or producing a result on device). Those two waits look the same. A failed attempt that adopted nothing shows a quiet failure and a way to try again on this device. Trying again is a new attempt only when nothing has been adopted yet; a result that is already showing stays.
+Until a result is adopted, the block shows a quiet in-progress state (waiting on the sender, or producing a result on device). Those two waits look the same.
 
-The conversation-list preview for that voice message uses the title once a result is adopted. Before that, it stays the upstream voice-message preview.
+When an attempt fails and nothing has been adopted yet, the same place where the title, summary, and transcript would appear shows an **error** instead — not a blank, and not a separate timeline row. The player stays.
+
+**Keep it simple.** No codes, no stack traces, no “error 429” style chrome. One quiet block under the player, same visual weight as the brief would have had:
+
+1. **Status** — one short plain-language line from the Flim catalog (what happened).
+2. **Detail** (optional) — at most one more line. If the service returned a short human-readable note, show the **start** of that note and truncate the rest with an ellipsis so it stays a single line. Drop the detail entirely when it is empty, technical, or a duplicate of the status line. Never invent jargon to fill the slot.
+3. **Try again** — its own **tappable** control (text-button / link style), labelled from the catalog (English source: “Try again”). Not buried inside the status sentence, and not a second screen. Tap starts a new attempt on this device.
+
+Trying again is allowed only when nothing has been adopted yet; a result that is already showing stays.
+
+Every failure uses that same layout. The status is one of these:
+
+1. **Generic failure** — the transcript could not be made (English source: “Couldn't make a transcript.”).
+2. **Not set up** — transcription is not set up (English source: “Transcription isn't set up.”). The user sets it up in Settings.
+3. **No reply** — the service could not be reached (English source: “Couldn't reach the transcription service.”). Silence, a timeout, and a connection that drops are this status.
+4. **Service fault** — the service replied and failed (English source: “The transcription service failed.”).
+5. **Allowance used up** — the allowance is used up. For Flim, say that a larger transcription-service subscription is needed. For a server the user named, say that this key's allowance is used up. No store or plan-change flow on the bubble — only that message. Try again may succeed after the plan changes.
+6. **Too many requests** — try again shortly (English source: “Too many requests. Try again shortly.”). This is not the allowance message, even when the host uses one refusal for both. A refusal that cannot be read as an empty allowance stays this status, so a throttle never asks the user to buy a larger plan.
+7. **Key rejected** — the key was rejected (English source: “The key was rejected.”). Fix it in Settings.
+8. **Setup is wrong** — the server or the model settings look wrong (English source: “The transcription settings look wrong.”).
+9. **Unusable reply** — the service answered in a shape that is not a title, a summary, and a transcript (English source: “The transcription service replied in an unexpected way.”).
+
+Tell “no reply” apart from “the service replied and failed.” Transcription and summary are one attempt. If the transcript step succeeds and the summary step fails, nothing is adopted and no notice is sent. Try again runs both steps again.
+
+A failure never publishes a companion notice. Other people in the room do not see the error. On a Flim-marked send that fails on the sending device, recipients still wait 15 seconds, then produce a result on their own device if no trusted brief arrived.
+
+The conversation-list preview for that voice message uses the title once a result is adopted. Before that, and after a failure with nothing adopted, it stays the upstream voice-message preview.
 
 ### Where the words come from
 
-Every platform calls an in-app service. Input is the voice message. Output is a title, a summary, and a transcript.
+Every platform calls an in-app service. Input is the voice message's audio plus **room context** (below). Output is a title, a summary, and a transcript.
 
 - Title is at most 50 characters. A longer title is truncated on a character boundary before it is shown or sent.
 - Summary is about two sentences, and is not a copy of the transcript.
 - Transcript is the full text.
 
+#### Room context (every call)
+
+The service needs enough surrounding conversation to place what was said. Every call includes, built by the caller before invoking the service:
+
+1. **Reply target** — if this voice message is a reply, that parent message as one context item (and a flag that it is the reply target).
+2. **Recent messages** — the five most recent messages **before** this voice message, in the same timeline the voice message sits in (the room's main timeline, or the thread if the voice message is in a thread). Oldest of the five first, then toward the voice message. Fewer than five is fine when the timeline is shorter.
+
+If the reply target is already among those five, it still appears once as content; the reply-target flag is what marks the relation. This voice message itself is not included in the five.
+
+Each context item is **text only**. Never send prior messages' media bytes (audio, image, video, file) to the service. Per item:
+
+| Kind | What is sent |
+|------|----------------|
+| Ordinary text message | The message body text |
+| Voice message that already has an adopted transcript (local or trusted) | That transcript text (and title/summary if adopted — enough that the service sees the spoken words as text) |
+| Voice message without an adopted transcript | A short kind label only, e.g. that it is a voice message — not the audio |
+| Image (and other non-text media: video, file, sticker, location, etc.) | A short kind label only, e.g. that it is an image — not the media. If the event has a text caption, that caption text may be included; the media itself is not |
+| Redacted / unavailable | A short kind label that it is unavailable — not an attempt to recover content |
+
+Sender display name (or a stable sender id) may accompany each item so the service can tell speakers apart. That is still text metadata, not media.
+
+Gathering this context is the caller's job and stays outside the mock/engine swap. Both implementations receive the same context shape. The mock may ignore the context when choosing sample text or a failure; the real engine may use it. Callers always pass it.
+
+#### Contract (replaceable implementation)
+
 Every caller talks to that service and to nothing behind it. The bubble, the 15-second wait, the on-device race, retry, and the companion notice do not know whether the service is the mock. There is no second path for "sample" versus "real".
 
 The contract is fixed now, so a later decision can replace the implementation without editing those callers:
 
-- Start from the voice message's audio.
+- Start from the voice message's audio **and** the room context above.
 - Finish with a title, a summary, and a transcript.
-- Fail, so the bubble can show the quiet failure and try again.
+- Fail as one of the statuses above, so the bubble can show the matching error and try again.
 - Be cancelled, so an in-flight attempt can be dropped when an earlier result wins.
 
 The call is asynchronous from the start. The mock may return immediately; a later engine may take time. Callers already wait either way.
 
-Title truncation to 50 characters sits outside the service, in the one place that shows and sends the result. Both implementations share it.
+Title truncation to 50 characters sits outside the service, in the one place that shows and sends the result. Both implementations share it. Mapping a service failure to one of the statuses above also sits outside the engine, in that same place.
 
-The service in this decision is a mock. It does not read the audio. It returns a fixed title, summary, and transcript. The fixed text says that it is sample text, not what was spoken. The shipping app calls this mock in real rooms, not only in tests or previews: the sender's bubble shows the sample, and the companion notice carries the sample title and summary to the other people in the room.
+The service in this decision is a mock. It does not read the audio or the context. On a successful call it returns a fixed title, summary, and transcript. The fixed text says that it is sample text, not what was spoken. **Every third call fails** with a generic failure, so the shipping app exercises the error UI in real rooms without a real engine. The mock can also return any of the other statuses (for previews and tests) under the same failure contract. The shipping app calls this mock in real rooms, not only in tests or previews: on success the sender's bubble shows the sample and the companion notice carries the sample title and summary; on failure the sender's bubble shows the error and no notice is sent.
 
-A later decision replaces the mock by swapping which implementation is constructed. It does not edit the bubble, the race, or the notice. Credentials, a model, or a network client that the engine needs live inside that implementation. A new user-visible behaviour is a new decision, not a change to these callers.
+A later decision replaces the mock by swapping which implementation is constructed. It does not edit the bubble, the race, the failure UI, context gathering, or the notice. Credentials, a model, quota accounting, or a network client that the engine needs live inside that implementation. A new user-visible behaviour is a new decision, not a change to these callers.
 
 The race below is per device. Only the device that sent the voice message publishes a brief to the other people in the room. If a recipient produces a result, it stays on that device.
 
@@ -63,7 +114,7 @@ Flim sends the voice message immediately. It does not wait for the service.
 
 Every voice message Flim sends carries a marker that a brief from this sender may follow. The marker is set even when the brief is not ready, and even if the brief later fails. Receivers use it only to decide whether to wait.
 
-The sending device starts the service immediately. When the result returns, that device adopts it if it has not already adopted one, and publishes one companion notice if the room does not already have a trusted brief for this voice message. Publishing retries the same adopted result; it does not call the service again. That notice is how the original sender's title and summary reach the other people in the room.
+The sending device starts the service immediately. When the result returns, that device adopts it if it has not already adopted one, and publishes one companion notice if the room does not already have a trusted brief for this voice message. Publishing retries the same adopted result; it does not call the service again. That notice is how the original sender's title and summary reach the other people in the room. When the service fails, nothing is adopted, no notice is published, and the bubble shows the matching error.
 
 Another signed-in device of the same account did not send the message. It follows the receive path and does not publish.
 
@@ -84,7 +135,23 @@ A recipient does not publish. The result they produce is for themselves on that 
 
 An adopted result is kept on device for that voice message, so a later launch does not start another attempt and does not swap in a late notice.
 
-The sending device, on a later launch, if it still has no adopted result and the room has no trusted brief: start the service immediately (no 15-second wait). If it already adopted a result that was never published, publish that result and do not call the service again.
+### On app launch (after a close or kill)
+
+Incomplete work is remembered per voice message on this device. When the app starts again (or returns to a session that can run the service), unfinished briefs are handled as follows.
+
+**Received** (this device did not send the voice message — including another device of the same account):
+
+- If nothing is adopted yet and a brief is still owed (no trusted brief in the room, or the wait already ended without one): continue — start or resume the service. No 15-second wait again if that wait already completed before the close; if the wait was still running, finish the remaining wait, then continue as on receive.
+- A received result stays on this device. Relaunch never publishes for a received message.
+
+**Sent** (this device sent the voice message):
+
+- Resume only while the voice message is **younger than 10 minutes** (from its send time).
+  - No adopted result and no trusted brief in the room → start the service immediately (no 15-second wait).
+  - Adopted result not yet published → publish that result; do not call the service again.
+- **10 minutes or older:** do not auto-start or resume the service, and do not publish a late companion notice. Recipients should not get a Flim title/summary in the room long after they already heard the audio. The bubble may show the quiet failure (or stay without a brief); the user can still tap Try again for a **local** result on this device only — that retry must not publish once the send is past 10 minutes.
+
+The 10-minute limit applies only to **outgoing** auto-resume and to **publishing**. It does not limit received local briefs.
 
 ### What other clients see
 
@@ -144,19 +211,20 @@ One notice per voice message. A later correction is not sent: a result that fini
 
 ### After the app leaves the foreground
 
-Producing the brief and publishing the notice are part of sending a voice message, not part of keeping the room open.
+Producing the brief and publishing the notice are part of handling the voice message, not part of keeping the room open.
 
-Upstream already hands outgoing messages to a send queue, and when the app enters the background it starts a limited background interval before pausing client services. This decision requires the same kind of attempt for an in-flight brief on the sending device: keep producing the result, then publish the notice, across leaving the conversation and across the app going to the background.
+Upstream already hands outgoing messages to a send queue, and when the app enters the background it starts a limited background interval before pausing client services. This decision requires the same kind of attempt for an in-flight brief: keep producing the result (and, on the sending device, publish the notice while still within the 10-minute window), across leaving the conversation and across the app going to the background.
 
-The scheduler is not chosen here (extending that existing interval, a later refresh task, or something else). What is fixed is the product rule: closing or backgrounding the app must not be treated as a reason to drop the attempt. If the system ends the process before the notice is published, there is no notice. Recipients then hit the 15-second wait and produce their own result on device. The next launch of the sending device follows the resume rule above.
+The scheduler is not chosen here (extending that existing interval, a later refresh task, or something else). Closing or backgrounding the app must not be treated as a reason to drop an in-flight attempt early. If the system ends the process before work finishes, the next launch follows **On app launch** above: received work resumes; outgoing work resumes only under 10 minutes from send. If an outgoing notice never published in time, there is no late notice — recipients use their 15-second wait and their own on-device result.
 
 ## Platform notes
 
 - iOS: the Rust SDK's typed timeline content drops unknown content keys. Reading `com.hallfors.panu.flim.voice` and `com.hallfors.panu.flim.voice_summary` needs the original event JSON (already exposed on timeline debug info) or a small SDK pass-through. The typed voice-message model is not enough.
 - iOS: 50 characters means extended grapheme clusters, so an emoji counts as one.
-- iOS: status and attribution strings are Flim catalog keys (decision 002), not `Localizable.strings` / `Untranslated.strings`.
+- iOS: status, attribution, each failure status above, and “Try again” strings are Flim catalog keys (decision 002), not `Localizable.strings` / `Untranslated.strings`. English source for Flim's allowance status must state that a larger transcription-service subscription is needed.
 - iOS background: the existing pieces to hang the attempt on are the SDK send queue and `AppCoordinator`'s `beginBackgroundTask` when entering background. Which of those, or a new task, actually runs the service is an implementation choice.
-- iOS: one protocol for the service. This decision adds the mock as its implementation. The composition root is the only place that names the mock. A later engine conforms to the same protocol and is selected there.
+- iOS: one protocol for the service, including room context on every call and a typed failure for each status above. This decision adds the mock as its implementation (success with sample text, every third call a generic failure, the other statuses available for previews/tests). The composition root is the only place that names the mock. A later engine conforms to the same protocol and is selected there.
+- iOS: context items are built from timeline / local adopted briefs before the service call; do not download prior media solely to feed the service.
 
 ## Open issues
 
@@ -168,3 +236,11 @@ _(none)_
 - 2026-10-13: only the sending device publishes to the room; a recipient's result stays on device. Wait for the sender's brief is 15 seconds. Mock service described as fixed sample text, not as a claim about the audio
 - 2026-10-13: the mock runs in real rooms; sample title and summary are sent to other participants until a later decision replaces the service
 - 2026-10-13: one service contract (start, finish, fail, cancel). Replacing the mock does not change callers, the bubble, the race, or the notice
+- 2026-10-13: failures show in the brief slot with try again; no notice on failure; quota exhausted is a distinct message; mock fails every third call (generic) and can return quota for previews/tests
+- 2026-10-13: every service call includes reply target + five preceding messages as text-only context; prior media sent only as kind labels (plus caption text if any); existing transcripts sent as text
+- 2026-10-13: failure UI simplified — catalog status, optional one-line truncated human detail, separate tappable Try again; no tech codes
+- 2026-10-13: relaunch resumes unfinished received briefs; outgoing resume/publish only within 10 minutes of send (no late room notice); Try again after that stays local-only
+- 2026-10-13: amended by 005 — the user chooses the method in settings and finishes its setup before a brief is attempted
+- 2026-10-13: failure statuses cover not set up, no reply, service fault, allowance, too many requests, rejected key, wrong setup, and an unusable reply, besides the generic failure
+- 2026-10-13: amended by 006 — custom-server method uses an OpenAI-compatible listener instead of the mock; other methods unchanged
+- 2026-10-13: amended by 007 — on-device method uses the on-device listener instead of the mock; other methods unchanged

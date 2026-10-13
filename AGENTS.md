@@ -2,6 +2,8 @@
 
 Fork deltas for Flim live here as an ordered decision log — not a spec of Element X. In an app tree, also follow that app’s `AGENTS.md` (iOS: `ios/AGENTS.md`).
 
+We will implement both iOS and Android, so when designing a decision, consider both platforms, even though some implementation might not exist yet.
+
 A **decision** (`specs/NNN-slug.md`) is intent + acceptance criteria, not a full specification. The detailed, replay-canonical specification of behaviour — flows, IA, interaction, protocol — lives in its companion `.design.md` when one exists. "Spec" below refers to the `specs/` directory and log as a whole, not to the level of detail in any single file.
 
 ## Layout
