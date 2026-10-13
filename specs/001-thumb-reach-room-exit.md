@@ -14,7 +14,7 @@ platforms: [ios]
 
 On **narrow (compact) layouts**, leaving a room, or a space, for the list it opened from must be reachable with the thumb without stretching to the top-leading back control. A room or space opens from its list row via a container transform and closes the same way; a bottom strip is the visible, full-width control that returns to that list. The same pattern applies at every level of the space/room hierarchy (spaces can nest inside spaces before reaching a room), one level at a time.
 
-**Wide (regular-width / split) layouts are unchanged:** keep upstream Element X navigation and chrome exactly as today. This decision does not redesign them.
+**Wide (regular-width / split) layouts are unchanged by this decision:** keep upstream Element X navigation and navigation chrome (back controls, transitions) exactly as today. Visual styling on all layouts is decision 003's concern.
 
 ## Acceptance
 
@@ -51,6 +51,8 @@ Codebase terms (iOS): a **space** is a `SpaceServiceRoom` with `isSpace == true`
 
 Design (replay-canonical with this decision): [`001-thumb-reach-room-exit.design.md`](001-thumb-reach-room-exit.design.md)
 
+Visual styling (colours, surfaces, the strip's look, row and canvas styling) is specified by decision 003 ([`003-flim-visual-refresh.design.md`](003-flim-visual-refresh.design.md)), which wins over any visual detail here.
+
 ## Verification
 
 ### ios
@@ -79,3 +81,4 @@ Design (replay-canonical with this decision): [`001-thumb-reach-room-exit.design
 - 2026-09-10: scope — fork paradigm (transform, strip, chevron removal, space/room differentiation) applies only to narrow/compact layouts; wide/split stays upstream unchanged
 - 2026-09-10: design guidelines — no Alternatives rejected / Follow-on; Open issues (empty) instead
 - 2026-09-11: non-goal — inner pushes stay upstream; design clarifications (upward caret, popup shrink+fade, strip vs system-back, composer cluster above the strip) — same intent
+- 2026-10-13: visual detail deferred to decision 003 (not yet implemented, so edited in place): wide-layout "unchanged" now means navigation and navigation chrome only; canvas-tone and strip/row visual specifics come from 003
