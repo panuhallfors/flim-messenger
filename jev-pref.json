@@ -1,0 +1,99 @@
+{
+  "$schema": "https://raw.githubusercontent.com/doeixd/jev-pref/v0.4.1/packages/jev-pref/schema.json",
+  "suites": ["prefs", "secrets"],
+  "gateThreshold": 0.7,
+  "advisoryThreshold": 0.7,
+  "failOn": "gates",
+  "prefs": [
+    {
+      "id": "specs_not_in_app_trees",
+      "name": "Specs stay in meta",
+      "description": "Decision and design files live under specs/ in the meta repo, never inside app submodule trees.",
+      "scope": "change",
+      "gate": false,
+      "question": "Does this change add or move a decision, design, or other specs/ policy file under an app submodule path (ios/, android/, or web/)?",
+      "guidance": "Count only new or relocated files whose path is under ios/, android/, or web/ and whose role is a fork decision, design, or specs-log document. Submodule gitlink SHA updates alone do not count."
+    },
+    {
+      "id": "no_localizable_strings_edits",
+      "name": "No Localizable.strings edits",
+      "description": "Localizable.strings is auto-overwritten; new English strings go in Untranslated.strings.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change edit Localizable.strings (or Localizable.stringsdict) instead of adding new English strings to Untranslated.strings / Untranslated.stringsdict?",
+      "guidance": "True only when Localizable.strings or Localizable.stringsdict is modified. Adding or changing Untranslated.strings / Untranslated.stringsdict is fine."
+    },
+    {
+      "id": "no_sensitive_logging",
+      "name": "No sensitive logging",
+      "description": "Never log secrets, passwords, keys, or user content such as message bodies.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change log secrets, passwords, keys, or user content (for example message bodies) rather than only safe identifiers?",
+      "guidance": "Count MXLog / Logger / print / os_log (and similar) calls added or changed in this review. Matrix user/room IDs are safe. Secrets in associated values printed via default enum description count as true."
+    },
+    {
+      "id": "no_unchecked_sendable",
+      "name": "No unchecked Sendable escapes",
+      "description": "Do not add @unchecked Sendable or nonisolated(unsafe).",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change introduce @unchecked Sendable or nonisolated(unsafe)?",
+      "guidance": "Count only annotations or modifiers added or changed in this review. Removing them is fine."
+    },
+    {
+      "id": "no_service_locator",
+      "name": "No ServiceLocator",
+      "description": "ServiceLocator is deprecated; dependencies are injected from above.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change introduce or call ServiceLocator to obtain a service?",
+      "guidance": "True when ServiceLocator is newly referenced, imported for use, or called. Mentions in comments or deprecation notes alone do not count."
+    },
+    {
+      "id": "prefer_preview_provider",
+      "name": "Prefer PreviewProvider",
+      "description": "Use PreviewProvider (not #Preview) so snapshot and accessibility tests can be generated.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change add a #Preview macro instead of a PreviewProvider for a screen or component preview?",
+      "guidance": "True when #Preview is newly added for UI previews. PreviewProvider / TestablePreview additions are fine."
+    },
+    {
+      "id": "no_duplication",
+      "name": "No duplicated logic",
+      "description": "Prefer reuse over copy-pasted logic, constants, or type definitions in the same change.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change introduce duplicated logic, constants, or type definitions that already appear elsewhere in the same review (copy-pasted rather than shared)?",
+      "guidance": "Count near-identical blocks, repeated magic values, or parallel type shapes added in this review when a shared helper, constant, or type would clearly remove the duplication. Similar but intentionally distinct domain cases do not count."
+    },
+    {
+      "id": "no_legacy_fallbacks",
+      "name": "No legacy endpoint/code/status fallbacks",
+      "description": "Do not add fallbacks for old endpoints, codes, or statuses unless explicitly asked.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change add a fallback path for an old endpoint, response code, or status that is not required by the current task?",
+      "guidance": "True when the hunk adds compatibility branches for superseded URLs, error codes, HTTP statuses, or enum cases. Migration deletions or single current-path handling do not count. Treat as false if the change message or surrounding comments explicitly request the legacy fallback."
+    },
+    {
+      "id": "no_out_of_spec_fallbacks",
+      "name": "No out-of-spec fallbacks",
+      "description": "No fallbacks to places or behaviours outside the agreed spec or plan.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change add a fallback that consults or uses something outside the stated spec or plan when the specified path is missing or fails?",
+      "guidance": "True when failure or absence of the specified path triggers alternate behaviour, data, or control flow not described in the decision, design, plan, or task. Explicit error handling that surfaces failure without substituting an out-of-scope path does not count."
+    },
+    {
+      "id": "fix_root_cause_not_symptom",
+      "name": "Fix root cause, not symptom",
+      "description": "Correct the producing code path; do not paper over failures with workarounds.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change mitigate a failure by adding a workaround, compensating guard, retry, or silent catch rather than correcting the code path that produces the wrong state?",
+      "guidance": "True when the hunk primarily adds defensive layers around a still-wrong producer (extra nil-coalesce to a guessed value, swallow-and-continue, band-aid retry) without fixing the underlying bug or contract visible in the change. Legitimate input validation and user-facing error presentation do not count."
+    }
+  ]
+}

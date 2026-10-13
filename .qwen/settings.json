@@ -1,0 +1,61 @@
+{
+  "mcpServers": {
+    "mem0": {
+      "type": "http",
+      "url": "http://host.docker.internal:13100/mcp",
+      "headers": {
+        "Authorization": "Bearer 743a04d83919e699bee9cb446aa91b6251c29fad94a3d3c"
+      }
+    },
+    "tavily-search": {
+      "httpUrl": "https://mcp.tavily.com/mcp/?tavilyApiKey=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"
+    }
+  },
+  "env": {
+    "QWEN_CUSTOM_API_KEY_OPENAI_HTTP_127_0_0_1_18000_V1_696EDF5B044F": "not_in_use"
+  },
+  "modelProviders": {
+    "openai": [
+      {
+        "id": "incoai/Qwen3.6-35B-A3B-Splash",
+        "name": "incoai/Qwen3.6-35B-A3B-Splash",
+        "baseUrl": "http://host.docker.internal:19000/v1",
+        "envKey": "QWEN_CUSTOM_API_KEY_OPENAI_HTTP_127_0_0_1_18000_V1_696EDF5B044F",
+        "generationConfig": {
+          "enable_thinking": true,
+          "contextWindowSize": 250000
+        }
+      },
+      {
+        "id": "incoai/Qwen3.8-27B-Splash",
+        "name": "incoai/Qwen3.8-27B-Splash",
+        "baseUrl": "http://host.docker.internal:19001/v1",
+        "envKey": "QWEN_CUSTOM_API_KEY_OPENAI_HTTP_127_0_0_1_19001_V1_696EDF5B044F",
+        "capabilities": {
+          "vision": true
+        },
+        "generationConfig": {
+          "enable_thinking": true,
+          "contextWindowSize": 160000,
+          "modalities": {
+            "image": true
+          }
+        }
+      }
+    ]
+  },
+  "security": {
+    "auth": {
+      "selectedType": "openai"
+    }
+  },
+  "model": {
+    "name": "incoai/Qwen3.6-35B-A3B-Splash",
+    "baseUrl": "http://host.docker.internal:19000/v1"
+  },
+  "$version": 4,
+  "ui": {
+    "autoModeAcknowledged": true,
+    "feedbackLastShownTimestamp": 1789836440281
+  }
+}

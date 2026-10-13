@@ -5,5 +5,6 @@ Replay order = `id` ascending. Each id is the decision **plus** its `.design.md`
 | id | slug | status | intent | platforms | design |
 |----|------|--------|--------|-----------|--------|
 | 000 | [fork-baseline](000-fork-baseline.md) | done | This workspace records fork deltas on Element X; no full-app decision | meta | — |
+| 000a | [flim-app-identity](000a-flim-app-identity.md) | proposed | Distinct Flim Messenger install identity (short: Flim) + our bundle/app-group ids; OIDC/maps human setup | ios | [design](000a-flim-app-identity.design.md) |
 | 001 | [thumb-reach-room-exit](001-thumb-reach-room-exit.md) | proposed | Narrow-layout thumb-reachable room/space→list exit via container transform + bottom strip; wide/split stays upstream | ios | [design](001-thumb-reach-room-exit.design.md) |
 | 002 | [flim-strings](002-flim-strings.md) | proposed | Local Flim string catalog infra (en-GB + fi); Element Localazy unchanged | ios | [design](002-flim-strings.design.md) |
