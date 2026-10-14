@@ -95,7 +95,12 @@ The fields, in everyday labels as well as the names above:
 - transcription key
 - summary key (only when a distinct summary address is in use; otherwise one key covers both)
 
-Saving, once the required fields are filled, makes this the method in use.
+Saving, once the required fields are filled, runs a **check** before this method is in use. The check uses decision 006’s two steps on a short **bundled sample clip** (fixed app audio, same on every platform) with empty room context — not the mic, not a room voice message. While it runs, the screen stays on setup and shows that the check is in progress; leaving cancels it and does not switch the method.
+
+- **Success.** Show that the check worked and briefly the returned title and summary (truncated to decision 004’s caps). Then make custom server the method in use.
+- **Failure.** Do not make custom server the method in use. Keep the fields; show the matching decision 004 failure status (catalog wording). Offer try-again by saving again after edits. No new failure statuses on this screen.
+
+Opening a finished custom server still shows the saved setup. Changing fields and saving runs the same check. A failed re-check leaves the **previous** working configuration as the method in use until a later save succeeds.
 
 Each key is write-only after it is saved: the screen does not show it back in full. Keys are not placed in the Matrix account.
 
@@ -134,3 +139,4 @@ _(none)_
 - 2026-10-14: platforms = ios, android
 - 2026-10-14: distinct summary address gets a second key field (default “same key”); never cross-send keys by accident
 - 2026-10-14: amended by 009 — not-set-up action is setup, not Try again
+- 2026-10-14: custom-server save tests with a bundled clip (006) before the method is in use; failures use 004 status wording

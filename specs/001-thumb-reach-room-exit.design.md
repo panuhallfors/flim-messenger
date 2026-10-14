@@ -14,6 +14,8 @@ Upstream opens a room (or a space) with a conventional navigation push and retur
 
 **Wide (regular-width / split) layouts:** do not apply this design. Keep upstream Element X room and space navigation and navigation chrome exactly as today — including whatever back control (or lack of one) upstream already shows when the list sits beside the detail. Visual styling on every layout (including the strip's look, row styling and canvas tones referenced below) is specified by decision 003, which wins over visual detail here.
 
+**Accepted — large phones in landscape.** Phones that are compact in portrait (e.g. iPhone Plus / Pro Max) become regular-width in landscape. Rotating into that size class switches to upstream split navigation and the strip disappears; rotating back restores the compact paradigm. That is intended, not a bug — layout class owns the chrome, not orientation alone.
+
 Everything below is written for narrow layouts, in terms of "a list" and "a row" opening into "a surface." The primary case is the conversation list opening a room. The same primitive recurses for spaces, which can nest before reaching a room — see "Recursing into spaces" below for what stays identical and what differs.
 
 ## Product design
@@ -85,10 +87,11 @@ There is no separate compose-mode exit. The strip sits **below the panel** (and 
 ### Layout consequences inside the room
 
 - Inset the timeline’s bottom by the strip height so no message is permanently hidden behind it; scroll-to-latest and typing indicators sit **above** the strip, never overlapping it.
+- **Accepted — small phones with the keyboard up.** On the smallest supported devices (e.g. iPhone SE / mini-class), the composer, strip, any app-owned bars, and the keyboard leave little timeline. That short timeline is accepted: do not hide the strip, shrink it below the platform touch minimum, or invent a second compose-mode exit to reclaim space. Prefer the strip’s existing degradation (icon + label → icon only on very narrow widths / largest accessibility text). Verify morph cost and readable timeline early on that device class (see Platform notes).
 - **Pushes inside a room or space** (room settings, members, media viewer, message info, user profile, polls, and the rest of upstream’s inner stack) keep **upstream presentation and back chrome**. The strip, container transform, and chevron-removal apply only to the room/space join itself — the surface that opened from a list row — not to screens pushed on top of that join.
 - Bottom-anchored transient UI (context menus, reaction pickers, snackbars) must not cover the strip while it is the only visible exit. Composer-owned pickers stay above the strip; app-owned suggestion bars stay below the strip (just above the keyboard) as above.
 - Contrast must come from the surface itself, not from blur alone — verify in dark mode and over media-heavy backgrounds.
-- **Wide / split layouts:** out of scope for this decision — leave upstream room/space presentation alone (no fork strip, no fork transform, no fork chevron policy).
+- **Wide / split layouts:** out of scope for this decision — leave upstream room/space presentation alone (no fork strip, no fork transform, no fork chevron policy). Same accepted landscape rule as in Context: compact → regular-width on rotate drops the strip for upstream split chrome.
 
 ### Consistency with system back
 
@@ -153,3 +156,4 @@ _(none)_
 - 2026-10-13: visual detail handed to decision 003 — wide-layout "unchanged" scoped to navigation chrome; canvas tone no longer constrained to "same neutral scale, no hue change" (003 tints the room/list canvas, space canvas stays neutral); space/room visual cues apply on all layouts via 003
 - 2026-10-14: platforms include android (with ios)
 - 2026-10-14: system suggestion / IME chrome stays with the keyboard (not placed by us); app-owned bars moved to just above the keyboard, below the strip; stack is panel → strip → app-owned bars (when shown) → keyboard
+- 2026-10-14: accepted — large-phone landscape → regular-width drops strip for upstream split; small-phone keyboard-up short timeline stays (icon-only degradation, no hide-strip)

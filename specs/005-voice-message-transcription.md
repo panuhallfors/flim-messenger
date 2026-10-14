@@ -21,7 +21,7 @@ User-observable outcomes. The design document specifies how these are achieved.
 - [ ] Settings has a Voice message transcription section on the main settings screen.
 - [ ] The user picks a method first. That method is used only after its setup is finished.
 - [ ] Flim's setup takes an email, then a code sent to that email, then a promo code for a plan. A subscription option is visible but disabled, with a note that it is coming later. Afterwards the user can see the account and the plan.
-- [ ] A custom server's setup explains, in everyday language, that any OpenAI-compatible service works — for example OpenAI, Cortecs (a European provider), or OpenRouter — and briefly where to copy the key and the address. The user then enters the addresses, key(s), and the models, and that server is the method in use. When the summary uses a different address, a second key field appears (defaulting to the same key).
+- [ ] A custom server's setup explains, in everyday language, that any OpenAI-compatible service works — for example OpenAI, Cortecs (a European provider), or OpenRouter — and briefly where to copy the key and the address. The user then enters the addresses, key(s), and the models. Saving runs a short check against that server first; only a successful check makes it the method in use. A failed check keeps the method unset (or the previous working setup) and shows the same everyday failure wording used on voice-message briefs. When the summary uses a different address, a second key field appears (defaulting to the same key).
 - [ ] On this device can be turned on when the device is able to transcribe and summarise there. The user sees, before turning it on, that the quality is lower than an external service. A device that cannot do it shows the choice and why it cannot be turned on.
 
 ## Non-goals
@@ -36,6 +36,8 @@ User-observable outcomes. The design document specifies how these are achieved.
 Decision 004 owns the brief on the voice message, the room notice, and the failure statuses. This decision adds the choice of method.
 
 New user-facing strings belong to the Flim catalog (decision 002).
+
+**Disclosure (store / privacy):** Before a method is in use, tell the user clearly where the voice message and room context go — Flim’s third-party ZDR EU service, a third-party server they name, or only this device. Custom-server options (OpenAI, Cortecs, OpenRouter, or any other OpenAI-compatible host) are services the user is free to obtain and use themselves; the app does not hide that the audio leaves the phone for that host. Selector and setup copy own this; a later decision may add an explicit consent step or Flim service terms if store review requires more than that copy.
 
 Design (replay-canonical with this decision): [`005-voice-message-transcription.design.md`](005-voice-message-transcription.design.md)
 
@@ -69,3 +71,5 @@ Design (replay-canonical with this decision): [`005-voice-message-transcription.
 - 2026-10-14: platforms = ios, android
 - 2026-10-14: second key when summary address differs (default same key)
 - 2026-10-14: amended by 009 — not-set-up bubble opens setup, not Try again
+- 2026-10-14: Notes — clear disclosure that audio/context go to a third party or stay on device; custom hosts are services the user may use themselves
+- 2026-10-14: custom-server save runs a bundled-clip check (via 006) before the method is in use; failures use 004 wording

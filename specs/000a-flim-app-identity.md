@@ -12,20 +12,22 @@ platforms: [ios, android]
 
 ## Intent
 
-The installed app is a distinct product identity from Element X on every platform: it shows as **Flim Messenger** (short name **Flim** where the product uses a short label), and it uses our own package / bundle / app-group identifiers so it can sit alongside Element X without colliding.
+The installed app is a distinct product identity from Element X on every platform: it shows as **Flim** on the home screen and in system lists (store listing / long-form name **Flim Messenger**), and it uses our own package / bundle / app-group identifiers so it can sit alongside Element X without colliding.
 
 ## Acceptance
 
 **High level.** Outcomes a person could confirm by using the app (or looking at the installed app on device).
 
-- [ ] On the home screen and in system app lists, the app’s display name is **Flim Messenger**, not Element X.
+- [ ] On the home screen and in system app lists, the app’s display name is **Flim**, not Element X.
+- [ ] In the App Store / Play store listing, the product name is **Flim Messenger**.
 - [ ] Where the product uses a short name in UI copy, that name is **Flim**, not Element.
+- [ ] UI that names **this** product (notification sound labels, forced-upgrade copy, and similar) says **Flim**, not Element; other products named Element Call / Pro / Classic may stay.
 - [ ] Installing this fork does not replace or share the same app identity as Element X — both can be installed at once as separate apps.
 - [ ] App extensions that ship with the fork (notifications, share, etc.) belong to the same Flim identity family, not Element’s.
 
 ## Non-goals
 
-- Agent implementation of OIDC / MAS, associated domains, MapLibre keys, or other runtime fork setup — those are **human tasks** listed in the design, not coding acceptance for this decision.
+- Agent implementation of OIDC / MAS public site, associated domains, MapLibre keys, or other runtime fork setup — those were **human tasks** in this decision’s design; **decision 011 amends** ownership of the public site / AASA / OAuth host / associated-domains target (Team ID and MapLibre stay human here).
 - Changing icons, accent colour, or other brand chrome beyond display name + identifiers.
 - Offering migration from Element Classic (the old Element / Vector iOS app) or from Element X — do not claim Element’s classic app-group / keychain entitlements under our team.
 - Choosing or documenting a Nightly / alternate build flavour.
@@ -58,3 +60,6 @@ Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md
 - 2026-09-11: proposed
 - 2026-09-11: full/short names (Flim Messenger / Flim); OIDC+rest of FORKING.md as human tasks; classic migration clarified as non-goal
 - 2026-10-14: platforms = ios, android (same product identity on every platform)
+- 2026-10-14: note — decision 011 amends OIDC public-site / AASA / OAuth host ownership
+- 2026-10-14: home screen / system lists = Flim; store listing = Flim Messenger (avoids launcher truncation)
+- 2026-10-14: acceptance — this-product “Element” UI copy → Flim (design: audit + Flim keys per 002)

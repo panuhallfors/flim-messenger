@@ -13,9 +13,11 @@ A **decision** (`specs/NNN-slug.md`) is intent + acceptance criteria, not a full
 specs/
 ios/             # submodule → our fork (not Element X copied into meta)
 android/         # submodule → our fork (when present)
+push-gateway/    # first-party meta tree: Sygnal deploy to UpCloud (decision 010)
+website/         # first-party meta tree: Eleventy site → statichost.eu (decision 011)
 ```
 
-App `origin` = our fork; `upstream` = Element HQ. Specs never live in an app tree.
+App `origin` = our fork; `upstream` = Element HQ. Specs never live in an app tree. `push-gateway/` and `website/` live in meta (not app submodules); see decisions 010 and 011.
 
 ## Git
 

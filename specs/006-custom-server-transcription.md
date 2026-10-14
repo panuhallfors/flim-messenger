@@ -68,3 +68,4 @@ Design (replay-canonical with this decision): [`006-custom-server-transcription.
 - 2026-10-14: platforms = ios, android
 - 2026-10-14: per-address keys (transcription vs summary); no cross-host key send
 - 2026-10-14: other methods stay unavailable until 007 / 008 — no ongoing mock on those paths
+- 2026-10-14: listener also powers 005’s custom-server setup check (bundled clip)

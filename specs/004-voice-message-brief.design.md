@@ -18,17 +18,31 @@ This decision adds the brief around that player, and a companion room event so o
 
 ### What Flim shows
 
-The voice-message block keeps the existing player. With it, in this order:
+The voice-message block keeps the existing player. With an adopted result, Flim draws:
 
-1. **Title** — one line, at most four words and at most 35 characters.
-2. **Summary** — short: at most four short sentences, and at most 20 words, and at most 160 characters; not a copy of the transcript.
-3. **Transcript** — the full text.
+1. **Title** — one line, at most four words and at most 35 characters. Always visible once a result is adopted.
+2. **Body** — either the **summary** or the **transcript**, never both at once:
+   - **Summary** (default) — short: at most four short sentences, and at most 20 words, and at most 160 characters; not a copy of the transcript.
+   - **Transcript** — the full text.
 
-All three are part of that voice message. Flim does not also show them as their own timeline row.
+**Default.** After a result is adopted, show title + summary. Do not put the full transcript in the timeline until the user asks for it.
+
+**Toggle.** A tap on the brief text (title or body) or on the disclosure control switches the body between summary and transcript. Tap again to switch back. The title stays. There is no state that shows summary and transcript together. The toggle is local UI state for that bubble; it does not change what is stored or published.
+
+**Visual hint.** Always show a small chevron next to the brief so expand/collapse is discoverable without relying on a guess that the text is tappable. No text label (“Show transcript” / “Hide transcript” or similar) — chevron only.
+
+- **Summary showing** — chevron pointing down (expand to transcript).
+- **Transcript showing** — same control, chevron pointing up (collapse to summary).
+
+The chevron stays visually quiet (same weight as secondary timeline chrome, not a primary button). It must remain visible in both states so collapse is as obvious as expand. Tapping the chevron triggers the same toggle as tapping the brief text.
+
+**Select and copy.** Title, summary, and transcript (whichever is showing) are ordinary selectable text. The user can select a range and copy it with the platform’s usual copy action. Long-press / drag-to-select takes priority over the toggle so selecting text does not flip the body.
+
+All of this stays on that voice message. Flim does not also show title, summary, or transcript as their own timeline row.
 
 Until a result is adopted, the block shows a quiet in-progress state (waiting on the sender, or producing a result on device). Those two waits look the same.
 
-When an attempt fails and nothing has been adopted yet, the same place where the title, summary, and transcript would appear shows an **error** instead — not a blank, and not a separate timeline row. The player stays.
+When an attempt fails and nothing has been adopted yet, the same place where the title and body would appear shows an **error** instead — not a blank, and not a separate timeline row. The player stays.
 
 **Keep it simple.** No codes, no stack traces, no “error 429” style chrome. One quiet block under the player, same visual weight as the brief would have had:
 
@@ -62,7 +76,7 @@ Every platform calls an in-app service. Input is the voice message's audio plus 
 
 - Title is at most four words and at most 35 characters (same limits as the 006 / 007 prompts). A longer title is truncated on a character boundary to 35 before it is shown or sent; excess words are dropped from the end if needed to meet the four-word cap after that.
 - Summary is at most four short sentences, and at most 20 words, and at most 160 characters, and is not a copy of the transcript. Longer summaries are truncated to those caps before show/send (character cap first, then word / sentence caps as needed).
-- Transcript is the full text.
+- Transcript is the full text on the device that produced or adopted it. When that transcript is published in the companion notice, it may be shortened further for event size (below).
 
 #### Room context (every call)
 
@@ -100,7 +114,7 @@ The contract is fixed now, so a later decision can replace the implementation wi
 
 The call is asynchronous from the start. The mock may return immediately; a later engine may take time. Callers already wait either way.
 
-Title and summary truncation to the limits above sits outside the service, in the one place that shows and sends the result. All implementations share it. Mapping a service failure to one of the statuses above also sits outside the engine, in that same place.
+Title and summary truncation to the limits above, and companion-notice transcript truncation for event size (below), sit outside the service, in the one place that shows and sends the result. All implementations share them. Mapping a service failure to one of the statuses above also sits outside the engine, in that same place.
 
 The mock does not read the audio or the context. On a successful call it returns a fixed title, summary, and transcript. The fixed text says that it is sample text, not what was spoken. **Every third call fails** with a generic failure so the error UI can be exercised without a real engine. The mock can also return any of the other statuses under the same failure contract (useful for previews and tests).
 
@@ -122,7 +136,7 @@ Flim sends the voice message immediately. It does not wait for the service.
 
 Every voice message Flim sends carries a marker that a brief from this sender may follow. The marker is set even when the brief is not ready, and even if the brief later fails. Receivers use it only to decide whether to wait.
 
-The sending device starts the service immediately. When the result returns, that device adopts it if it has not already adopted one, and publishes one companion notice if the room does not already have a trusted brief for this voice message. Publishing retries the same adopted result; it does not call the service again. That notice is how the original sender's title and summary reach the other people in the room. When the service fails, nothing is adopted, no notice is published, and the bubble shows the matching error.
+The sending device starts the service immediately. When the result returns, that device adopts it if it has not already adopted one, and publishes one companion notice if the room does not already have a trusted brief for this voice message. Publishing retries the same adopted result; it does not call the service again. If the notice would be too large for Matrix, shorten only the transcript in that notice (see Protocol) — do not drop the publish, and do not map size into a bubble failure status. That notice is how the original sender's title and summary reach the other people in the room. When the service fails, nothing is adopted, no notice is published, and the bubble shows the matching error.
 
 Another signed-in device of the same account did not send the message. It follows the receive path and does not publish.
 
@@ -192,9 +206,9 @@ They see a normal voice message, then a notice that replies to it. The notice's 
 
 That leading line is the sender's Flim-catalog string (decision 002). English source: **"Summary by Flim Messenger"**. It comes first so other clients do not read the (often first-person) title and summary as the sender's own typed words. The full transcript is not in the visible text.
 
-The notice is an `m.notice`, so default push rules do not raise a second notification for it. The voice message still notifies as it does today. Clients that have turned notice suppression off may notify. The notice is its own timeline event, so clients that count every event will count it.
+The notice is an `m.notice`, so default push rules do not raise a second notification for it. The voice message still notifies as it does today. Clients that have turned notice suppression off may notify. The notice is its own timeline event, so other clients that count every event will count it.
 
-Flim does not draw a trusted companion notice as its own timeline row, whether or not its text was the result Flim adopted.
+Flim does not draw a trusted companion notice as its own timeline row, whether or not its text was the result Flim adopted. On Flim, a **trusted** companion never counts toward the client-side unread state (room list badge, “has unread”, or advancing the read marker solely because that notice arrived). There is nothing visible in the timeline to read for that event. The voice message itself still follows ordinary unread rules. Untrusted events that happen to carry the marker stay ordinary messages and keep ordinary unread behaviour.
 
 If the voice message is in a thread, the companion notice is in that same thread (see Protocol). Matrix allows only one `rel_type` on an event, so a threaded notice cannot also use the custom voice-summary relation.
 
@@ -228,6 +242,10 @@ Presence is the whole signal. No brief is stored on the audio event.
 ```
 
 `body` is plain text. There is no `formatted_body`. The transcript exists only under `me.flim.voice_summary`. The leading attribution in `body` is the sender's localized catalog string; the English source above is the fallback shape. Do not put a second attribution at the end.
+
+**Companion notice size.** Matrix events are limited to 64 KiB; encryption adds overhead. Before publish, if the companion’s cleartext `content` would exceed **48 KiB**, shorten only `me.flim.voice_summary.transcript` from the end and append an ellipsis (`…`) so cleartext `content` stays within 48 KiB. That budget leaves headroom under the 64 KiB event limit for encryption and transport. Keep the `transcript` field; do not omit it for size. Prefer at least the ellipsis alone over removing the field. Title, summary, and `body` stay at the caps above and are not shortened further for size.
+
+This truncation applies to the **published notice only**. The sending device keeps the full adopted transcript on the voice-message block. A recipient who adopts from the notice uses the (possibly truncated) transcript stored there. Size-based truncation is not a failure status and must not block sending the notice.
 
 **`m.relates_to` — choose exactly one shape:**
 
@@ -301,3 +319,7 @@ _(none)_
 - 2026-10-14: Not set up = no method in use only; on-device not-ready uses Generic failure + detail (decision 007)
 - 2026-10-14: mock interim only until 006 / 007 / 008 replace it per path; no separate 010 decision
 - 2026-10-14: title/summary limits match 006/007 prompts (title ≤4 words / 35 chars; summary ≤4 short sentences / 20 words / 160 chars)
+- 2026-10-14: companion notice cleartext content capped at 48 KiB — oversized `transcript` truncated with `…`; sender keeps full transcript locally; size is not a failure status
+- 2026-10-14: trusted companion excluded from Flim client-side unread (room badge / has-unread / read marker); voice message unread unchanged; other clients may still count the event
+- 2026-10-14: brief UI — title always; body toggles summary (default) ↔ full transcript on tap; text selectable/copyable; long-press select does not toggle
+- 2026-10-14: chevron-only disclosure always visible (down when summary, up when transcript); no Show/Hide text label

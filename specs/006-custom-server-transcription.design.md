@@ -18,7 +18,7 @@ Callers, the bubble, the race, the companion notice, and the failure statuses st
 
 ### When it runs
 
-Only while decision 005's custom-server method is in use. The saved fields from that setup are the only credentials and endpoints this listener uses:
+While decision 005's custom-server method is in use, and also for the **setup check** on decision 005's custom-server save (bundled sample clip, empty room context — settings only; no room publish). The saved or just-entered fields from that setup are the only credentials and endpoints this listener uses:
 
 - transcription base address and model name
 - summary base address and model name
@@ -145,3 +145,4 @@ _(none)_
 - 2026-10-14: separate transcription and summary keys; each bearer token only to its own address
 - 2026-10-14: Flim / on-device stay unavailable until 007 / 008; mock not kept as stand-in on those paths
 - 2026-10-14: truncation references point at 004’s prompt-matched caps (35 / 160), not 50
+- 2026-10-14: also used for 005’s custom-server setup check (bundled clip, empty room context)

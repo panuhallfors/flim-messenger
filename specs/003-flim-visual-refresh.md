@@ -40,7 +40,7 @@ User-observable outcomes. The design document specifies how these are achieved.
 - Changing per-user sender-name colours in the timeline.
 - Restyling content or UI we do not draw: system UI (alerts, share sheet, photo / document pickers, keyboard, context-menu chrome), web content (e.g. Element Call), and user media.
 - A custom typeface; the system font stays.
-- New app icon or launch / brand artwork (separate decision if wanted).
+- New app icon or launch / brand artwork (decision 013).
 
 ## Notes
 
@@ -75,3 +75,4 @@ Design (replay-canonical with this decision): [`003-flim-visual-refresh.design.m
 - 2026-10-14: platforms = ios, android
 - 2026-10-14: design stack with 001 — app-owned bars below the strip, just above the keyboard; system IME chrome with the keyboard
 - 2026-10-14: note — mock accent/violet unread (incl. strip) superseded by unread.strong / unread.soft
+- 2026-10-14: non-goal — app icon / launch artwork owned by decision 013

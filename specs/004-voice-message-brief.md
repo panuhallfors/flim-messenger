@@ -12,13 +12,13 @@ platforms: [ios, android]
 
 ## Intent
 
-A voice message in Flim shows a one-line title, a short summary, and a full transcript with the audio. Other Matrix clients see the title and the summary in connection with that voice message, not the full transcript. The words come from an in-app service. This decision is the presentation and how a result travels in the room. A mock fills that service only until real listener decisions replace it on each path (006, 007, 008).
+A voice message in Flim shows a one-line title and a short summary with the audio by default; the full transcript is on that same message behind a toggle. Other Matrix clients see the title and the summary in connection with that voice message, not the full transcript. The words come from an in-app service. This decision is the presentation and how a result travels in the room. A mock fills that service only until real listener decisions replace it on each path (006, 007, 008).
 
 ## Acceptance
 
 User-observable outcomes. The design document specifies how these are achieved.
 
-- [ ] Once a result is ready, Flim shows a one-line title, a short summary, and the full transcript with that voice message — not as a separate message of their own.
+- [ ] Once a result is ready, Flim shows a one-line title and a short summary with that voice message by default; the full transcript is available on that same message (not as a separate timeline row), and the visible brief text can be selected and copied.
 - [ ] The voice message still plays as a voice message, whether or not that text is ready.
 - [ ] A newly arriving voice message sent from Flim is one a recipient can expect a sender's result for: Flim waits briefly for it, and only then produces a result on device.
 - [ ] A newly arriving voice message that did not come from Flim starts producing a title, summary, and transcript on the recipient's device straight away.
@@ -26,6 +26,8 @@ User-observable outcomes. The design document specifies how these are achieved.
 - [ ] The first result that becomes ready for a voice message is the one Flim keeps. A result that finishes later does not replace it.
 - [ ] Only the person who sent the voice message shares a title and summary with the rest of the room. A title, summary, or transcript that someone else produces stays on their own Flim.
 - [ ] In another Matrix client, the title and the summary show up in connection with the voice message; that visible text starts with a short note that Flim Messenger produced the summary, and the full transcript is not visible message text. If the voice message was in a thread, that notice is in the same thread.
+- [ ] A long transcript still gets a companion notice into the room: the notice’s stored transcript may end with an ellipsis so the event fits; the sending device keeps the full transcript on that voice message. Size alone does not leave the room without a notice or show a failure for the brief.
+- [ ] A trusted companion notice never marks the room unread on Flim by itself — there is nothing visible in the timeline to read for that event.
 - [ ] Sending a voice message and immediately leaving the app does not cancel the attempt to produce that result and to share the title and summary with the room while the attempt is still timely.
 - [ ] After the app is closed mid-work, opening it again continues unfinished briefs for voice messages this device received. For a voice message this device sent, unfinished work resumes only while that send is still recent — so a title and summary do not appear in the room long after people already heard the audio.
 - [ ] While no real listener yet exists for the method in use, a successful result in a real room may be the mock’s fixed sample text (and other people may see that sample title and summary). Once that method’s real listener is in the replay (006, 007, or 008), that path never uses the mock — real rooms get a real result, a real failure, or not-set-up, not sample text.
@@ -92,3 +94,6 @@ Design (replay-canonical with this decision): [`004-voice-message-brief.design.m
 - 2026-10-14: Not set up only when no method is in use (on-device not-ready is generic failure per 007)
 - 2026-10-14: mock only until each path’s real listener (006 / 007 / 008); no separate amending id
 - 2026-10-14: title/summary limits aligned with 006/007 prompt caps (design)
+- 2026-10-14: companion notice truncates an oversized transcript with an ellipsis so the event fits under the Matrix size limit; sender keeps the full transcript locally (design)
+- 2026-10-14: trusted companion never counts toward Flim’s client-side unread state (design)
+- 2026-10-14: adopted brief shows title + summary by default; tap toggles summary ↔ full transcript; brief text is selectable and copyable; disclosure hint for expand/collapse (design)

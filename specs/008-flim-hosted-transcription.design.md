@@ -74,9 +74,10 @@ On failure: a reply the listener maps to decision 004's statuses (below). One at
 
 1. Authenticates the session. Rejected or missing session → **sign-in rejected**.
 2. Checks the account has an active plan with remaining allowance. Empty allowance → **allowance used up** (Flim wording from decision 004).
-3. Transcribes the audio with Cortecs, model **faster-whisper-large-v3**, with EU-native routing so inference stays with EU-based providers.
-4. Asks Cortecs chat model **ministral-8b:latest** (same EU-native routing) for a title and summary, using prompts the service holds. Prefer a **low-latency** Cortecs provider for that model; today **Mistral**'s own serving of it is the fast path — pin or prefer that provider when Cortecs allows. Those prompts follow the same product rules and numeric limits as decision 006's embedded prompts: title at most four words / 35 characters, summary at most four short sentences / 20 words / 160 characters, same language as the transcript, first-person voice, room context only to place what was said, JSON with `title` and `summary`. Exact prompt wording is owned by the service and may differ from 006's copy, but not those limits.
-5. Returns title, summary, and transcript to the app. Empty transcript → **unusable reply**. Title/summary JSON that cannot be parsed → **unusable reply**.
+3. Refuses audio longer than **30 minutes** for that voice message (duration of the audio itself). Over-length → **generic failure**, with a short plain-language detail the bubble can show (decision 004). No Cortecs call for that request.
+4. Transcribes the audio with Cortecs, model **faster-whisper-large-v3**, with EU-native routing so inference stays with EU-based providers.
+5. Asks Cortecs chat model **ministral-8b:latest** (same EU-native routing) for a title and summary, using prompts the service holds. Prefer a **low-latency** Cortecs provider for that model; today **Mistral**'s own serving of it is the fast path — pin or prefer that provider when Cortecs allows. Those prompts follow the same product rules and numeric limits as decision 006's embedded prompts: title at most four words / 35 characters, summary at most four short sentences / 20 words / 160 characters, same language as the transcript, first-person voice, room context only to place what was said, JSON with `title` and `summary`. Exact prompt wording is owned by the service and may differ from 006's copy, but not those limits.
+6. Returns title, summary, and transcript to the app. Empty transcript → **unusable reply**. Title/summary JSON that cannot be parsed → **unusable reply**.
 
 Audio and room context leave the phone only for this service and its EU inference path. The service does not publish to the room and does not store briefs for callers; decision 004's callers own show/send.
 
@@ -90,11 +91,13 @@ Audio and room context leave the phone only for this service and its EU inferenc
 | HTTP 401 / 403 (session missing or rejected)                              | Sign-in rejected                 |
 | HTTP 429 that clearly means plan allowance exhausted                      | Allowance used up (Flim wording) |
 | HTTP 429 otherwise, or a throttle that is not readable as empty allowance | Too many requests                |
-| HTTP 400 / 404 / 422 that points at request shape or setup                | Setup is wrong                   |
-| Other 4xx / 5xx, or a server-side failure body                            | Service fault                    |
+| Audio longer than 30 minutes (service refuses before transcription)       | Generic failure                  |
+| HTTP 400 / 404 / 422, other 4xx / 5xx, or a server-side failure body      | Service fault                    |
 | Success body that is not a title, summary, and transcript                 | Unusable reply                   |
 
 Prefer the more specific row when more than one could apply. Do not invent new failure statuses here.
+
+**Setup is wrong** is unused on this path. Flim has no server or model fields the user can fix; a bad request shape or host rejection is a service problem, not a settings one. Custom server (006) still maps those codes to Setup is wrong.
 
 ### Out of band
 
@@ -124,3 +127,5 @@ _(none)_
 - 2026-10-14: promo free plan 100 briefs/day (UTC); IAP aligned with 005 disabled + coming-later UI
 - 2026-10-14: platforms = ios, android; web out of product scope
 - 2026-10-14: title/summary limits match 004 / 006 (35 / 160 caps)
+- 2026-10-14: max voice-message duration for transcription = 30 minutes; over-length → generic failure
+- 2026-10-14: HTTP 400 / 404 / 422 → Service fault (Setup is wrong unused; no user-editable Flim settings)

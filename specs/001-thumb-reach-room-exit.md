@@ -45,7 +45,7 @@ User-observable outcomes. The design document specifies how these are achieved.
 
 ## Notes
 
-Upstream Element X keeps room → list exit, and space → list exit, on the top-leading back control (and whatever chrome it uses in split layouts). On **narrow layouts**, this decision replaces that exit model for listed platforms, for both rooms and spaces. On **wide / split layouts**, upstream stays.
+Upstream Element X keeps room → list exit, and space → list exit, on the top-leading back control (and whatever chrome it uses in split layouts). On **narrow layouts**, this decision replaces that exit model for listed platforms, for both rooms and spaces. On **wide / split layouts**, upstream stays — including when a large phone rotates into regular width and the strip disappears. On the smallest phones, a short timeline while the keyboard is up (strip still present) is accepted; see the design.
 
 Codebase terms (iOS): a **space** is a `SpaceServiceRoom` with `isSpace == true`, browsed via `SpacesScreen` (top-level) / `SpaceScreen` (inside a space); a **room** is the conversation itself (`JoinedRoomProxyProtocol`, `RoomFlowCoordinator`). Spaces can nest (`SpaceFlowCoordinator`'s `presentingChild` state) before reaching a room.
 
@@ -84,3 +84,4 @@ Visual styling (colours, surfaces, the strip's look, row and canvas styling) is 
 - 2026-10-13: visual detail deferred to decision 003 (not yet implemented, so edited in place): wide-layout "unchanged" now means navigation and navigation chrome only; canvas-tone and strip/row visual specifics come from 003
 - 2026-10-14: platforms = ios, android
 - 2026-10-14: design — system IME chrome with the keyboard; app-owned bars just above the keyboard, below the strip
+- 2026-10-14: accepted — landscape regular-width drops strip; small-phone keyboard-up short timeline (design)
