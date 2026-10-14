@@ -44,25 +44,25 @@ Setup is a short sequence. One step at a time.
 
 1. **Email.** One address, then continue.
 2. **Code.** Flim sends a one-time code to that address. The user enters it. They can ask for a new code. A new address creates the account. An existing address signs in.
-3. **Plan.** Transcription with Flim needs a plan on this account. The step offers both:
+3. **Plan.** Transcription with Flim needs a plan on this account. The step shows both:
    - a promo code, which attaches a free plan
-   - a subscription, bought in the app
+   - a subscription bought in the app — **visible but disabled**, with plain-language copy that paid subscription is **coming later** (English source: “Coming later.”). Restore purchases is likewise shown disabled with the same coming-later note when it would otherwise appear.
 
-   The user completes one. Cancelling the purchase, or a promo the service refuses, stays on this step and says what happened, in plain language. The other option remains.
+   The user finishes the plan step with a promo the service accepts. A promo the service refuses stays on this step and says what happened, in plain language. The disabled subscription control cannot be completed.
 
 Finishing the plan step makes Flim the method in use and opens the account screen: the email, the plan, and sign out.
 
-An account that already has a plan skips the plan step and lands on that account screen. A second device uses the same email and a new code, and does not redeem another promo or buy another subscription for a plan that is already there.
+An account that already has a plan skips the plan step and lands on that account screen. A second device uses the same email and a new code, and does not redeem another promo for a plan that is already there.
 
 Leaving before the plan step does not make Flim the method in use. The account is kept: returning continues at the plan step, not at the email.
 
 The account is the email, not the Matrix user. One Flim transcription account serves the Matrix sessions on this device. Signing out of Matrix does not sign it out. Signing out is on the account screen. After sign-out, Flim is not the method in use.
 
-The subscription bought here is attached to this account. Restoring purchases is offered on the plan step, and on the account screen when a signed-in account has no active plan. A restored subscription attaches to the account they are signed in to.
+When a later decision enables store billing, the subscription bought here will attach to this account, and restore will be offered on the plan step and on the account screen when a signed-in account has no active plan. Until then those controls stay disabled with the coming-later copy.
 
 Flim's service holds the prompts. The app sends the voice message and the room context.
 
-With an active plan whose allowance is used up, the brief shows decision 004's allowance failure. The bubble does not open a store. The plan step and the account screen are where the user subscribes or applies a promo.
+With an active plan whose allowance is used up, the brief shows decision 004's allowance failure. The bubble does not open a store. The plan step and the account screen are where the user applies a promo (or, later, subscribes).
 
 ### Custom server
 
@@ -111,7 +111,7 @@ When the device cannot, the row stays visible, cannot be confirmed, and says why
 - Both: the section is on the root settings screen. The selector is the next screen; each setup step is the next screen after that. Strings are Flim catalog keys (decision 002), not Element's `Localizable` / `Untranslated` files. All three choices are shown on iOS and on Android.
 - iOS: the custom-server key and the Flim session live in the Keychain. They are not written to preferences in the clear, and not written into Matrix account data.
 - Android: the custom-server key and the Flim session live in the platform credential store. They are not written to preferences in the clear, and not written into Matrix account data.
-- Both: the subscription uses the platform purchase sheet. The account already exists before the sheet is shown, and the purchase is tied to that account.
+- Both: when store billing is enabled later, the subscription uses the platform purchase sheet. The account already exists before the sheet is shown, and the purchase is tied to that account. Until then the control stays disabled.
 - Both: on-device availability follows decision 007. The row is not hidden.
 
 ## Open issues
@@ -127,3 +127,4 @@ _(none)_
 - 2026-10-13: Android shows the same three choices as iOS
 - 2026-10-13: custom-server setup explains, for a non-technical user, how to get a key and an address from OpenAI, Cortex, or OpenRouter (or an equivalent service)
 - 2026-10-13: the example is Cortecs (cortecs.ai), named as a European provider; any OpenAI-compatible service works
+- 2026-10-14: plan step — subscription and restore visible but disabled; coming-later copy; promo is the working path

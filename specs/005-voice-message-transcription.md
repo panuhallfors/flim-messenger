@@ -12,7 +12,7 @@ platforms: [ios, android]
 
 ## Intent
 
-The user chooses how Flim transcribes voice messages, from a section on the main settings screen. They pick Flim's service, a server of their own, or this device, and finish that method's setup before it is used. Flim's setup creates an account with an email and a code, then a promo code or a subscription.
+The user chooses how Flim transcribes voice messages, from a section on the main settings screen. They pick Flim's service, a server of their own, or this device, and finish that method's setup before it is used. Flim's setup creates an account with an email and a code, then a promo code (in-app subscription is shown but not available yet).
 
 ## Acceptance
 
@@ -20,7 +20,7 @@ User-observable outcomes. The design document specifies how these are achieved.
 
 - [ ] Settings has a Voice message transcription section on the main settings screen.
 - [ ] The user picks a method first. That method is used only after its setup is finished.
-- [ ] Flim's setup takes an email, then a code sent to that email, then either a promo code or a subscription. Afterwards the user can see the account and the plan.
+- [ ] Flim's setup takes an email, then a code sent to that email, then a promo code for a plan. A subscription option is visible but disabled, with a note that it is coming later. Afterwards the user can see the account and the plan.
 - [ ] A custom server's setup explains, in everyday language, that any OpenAI-compatible service works — for example OpenAI, Cortecs (a European provider), or OpenRouter — and briefly where to copy the key and the address. The user then enters the addresses, a key, and the models, and that server is the method in use.
 - [ ] On this device can be turned on when the device is able to transcribe and summarise there. The user sees, before turning it on, that the quality is lower than an external service. A device that cannot do it shows the choice and why it cannot be turned on.
 
@@ -65,3 +65,4 @@ Design (replay-canonical with this decision): [`005-voice-message-transcription.
 - 2026-10-13: Android implements the same three choices as iOS (Flim, custom server, on this device)
 - 2026-10-13: custom-server setup explains how to get a key and an address from a service such as OpenAI, Cortex, or OpenRouter
 - 2026-10-13: Cortecs (cortecs.ai) is the European example; any OpenAI-compatible service works
+- 2026-10-14: plan step — promo works; in-app subscription shown disabled with coming-later copy
