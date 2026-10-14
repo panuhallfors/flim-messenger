@@ -38,7 +38,7 @@ Minimum pages / assets the apps and OIDC need (paths may be refined at implement
 | App logo for OIDC / web views                                                          | Stable image URL under `flim.me` (e.g. `/mobile-icon.png`), derived from the master logo                                      |
 | OAuth redirect base                                                                    | `/oauth/ios/<bundle id>` (and later Android path pattern as Element X uses)                                                   |
 | OIDC `clientURI` path                                                                  | `/apps/ios` (and later `/apps/android`) appended to `https://flim.me`                                                         |
-| Apple Associated Domains                                                               | `/.well-known/apple-app-site-association` with `webcredentials` for the 000a id family (`me.flim` and relevant extensions)    |
+| Apple Associated Domains                                                               | `/.well-known/apple-app-site-association` with `webcredentials` for the 000a id family in use (shipping `me.flim`, or interim `me.flim.dev` until cutover — plus relevant extensions) |
 
 Landing content stays minimal (brand, short product line, links to store / legal). Policies are **Flim-authored**, covering Flim as controller for site + app telemetry, and pointing at Matrix homeserver / Flim transcription / push as separate processing where relevant. Exact counsel wording is filled when implementing / reviewing — not a product redesign.
 
@@ -96,7 +96,7 @@ Push (`push.flim.me`), transcription service, MapLibre keys, and Apple team id r
 
 ### android
 
-- Same URL map and telemetry choices when the Android tree is in play; package id family remains `me.flim` (000a).
+- Same URL map and telemetry choices when the Android tree is in play; package id family follows 000a (shipping `me.flim`, interim `me.flim.dev` until cutover).
 - Rageshake / equivalent log-upload endpoint unset.
 
 ### Site ops (`website/` in meta)
@@ -114,3 +114,4 @@ _(none)_
 - 2026-10-14: first write
 - 2026-10-14: lock analytics URL to `/privacy#analytics`; help = Element X stubs + credit; amends 000a OIDC site ownership
 - 2026-10-14: lock keep `elementWebHosts`; provisioning host empty in 011 (filled by 012)
+- 2026-10-14: AASA / package family — allow interim `me.flim.dev` per 000a until shipping cutover

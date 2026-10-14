@@ -25,7 +25,7 @@ Apps are submodules. Meta stores gitlinks, not app source. Empty app dir → `gi
 
 - Decision/design → meta. App code → that submodule, then **pin** (`git add ios` from meta; stages the SHA). Not `done` until pinned.
 - Never stage app files as normal paths in meta. After checkout of an old meta SHA: `git submodule update`.
-- Upstream merge in the app repo, then pin. New app: `git submodule add <our-fork-url> <dir>`.
+- Upstream merge in the app repo, then pin — use `.agents/skills/merge-upstream` (`/merge-upstream`). New app: `git submodule add <our-fork-url> <dir>`.
 
 ## Decisions
 
@@ -40,7 +40,7 @@ Upstream Element X is the baseline. We record **fork deltas** only. Replay `NNN`
 
 One intent per decision. Later `NNN` wins. Append-only: wrong intent → new decision (`withdrawn` + replacement), do not rewrite history to match a shortcut. Design **canonical**: flows, IA, interaction, protocol. **Not** canonical (Platform notes): languages, paths, type names. No fork behaviour without a decision. Mid-impl scope growth → new decision.
 
-Acceptance is high-level user outcomes (not mechanism). Same intent/design, tighter wording → edit in place + History. Conflicting intent **or** design → new `NNN` with `amends:`. Upstream merge: app then pin; if upstream matches, `upstreamed` and drop our patch.
+Acceptance is high-level user outcomes (not mechanism). Same intent/design, tighter wording → edit in place + History. Conflicting intent **or** design → new `NNN` with `amends:`. Upstream merge (`/merge-upstream`): app then pin; if upstream matches, `upstreamed` and drop our patch.
 
 A companion `.design.md` at decision time locks product shape; **fill in detailed design when implementation begins**. Do not stockpile future topics as a “Follow-on” backlog in the design file. Use **Open issues** only for unresolved questions while the decision is still being authored (normally empty).
 

@@ -26,10 +26,16 @@ Long-form **Flim Messenger** in other product copy (notices, legal, marketing se
 
 ### Bundle / package identity
 
-- Canonical reverse-DNS product id: **`me.flim`**.
+- **Shipping / canonical** reverse-DNS product id: **`me.flim`**. App group: **`group.me.flim`**.
 - Rationale vs `…film-ios`: product spelling is **Flim**; platform suffix is unnecessary — each platform uses its own packaging field, and iOS extensions already hang off the base id with their own suffixes.
-- App group id for shared container / capabilities: **`group.me.flim`** (same suffix as the base id, `group.` prefix).
 - Extension and test targets derive from the base id (same pattern as upstream: e.g. notification service, share extension, unit/UI test bundles). Exact suffix strings are platform translation.
+
+### Interim Apple registration (`me.flim.dev`)
+
+Until the **final** Apple Developer team owns the shipping App IDs, builds use a throwaway id family so a personal / temporary team does not claim `me.flim`:
+
+- Interim base: **`me.flim.dev`**; interim app group: **`group.me.flim.dev`**.
+- Cutover: set shipping ids (`me.flim` / `group.me.flim`), regenerate (`xcodegen` / Android package), and register App IDs / groups / AASA under the final team. Do not treat `.dev` as a long-lived product flavour (Nightly remains a separate non-goal).
 
 ### Side-by-side with Element X
 
@@ -56,14 +62,14 @@ Out of product scope. Do not enable or retarget Element Classic account import u
 
 ### ios
 
-- Identity knobs in `app.yml` (then `xcodegen`): `APP_DISPLAY_NAME` → **Flim**; `PRODUCTION_APP_NAME` → **Flim**; `BASE_BUNDLE_IDENTIFIER` → `me.flim`; `APP_GROUP_IDENTIFIER` → `group.me.flim`; `DEVELOPMENT_TEAM` → human-supplied Team ID.
+- Identity knobs in `app.yml` (then `xcodegen`): `APP_DISPLAY_NAME` → **Flim**; `PRODUCTION_APP_NAME` → **Flim**; `BASE_BUNDLE_IDENTIFIER` / `APP_GROUP_IDENTIFIER` → interim **`me.flim.dev`** / **`group.me.flim.dev`**, then shipping **`me.flim`** / **`group.me.flim`** at cutover; `DEVELOPMENT_TEAM` → human-supplied Team ID.
 - Store listing title **Flim Messenger** is App Store Connect metadata, not an `app.yml` knob.
 - Do not retarget `CLASSIC_*` at Element’s groups; leave Classic migration disabled / unused for Flim.
 - Nightly / flavour overlays (e.g. `Components/Variants/Nightly/`) are out of scope until a later decision.
 
 ### android
 
-- Application id / package root: **`me.flim`**.
+- Application id / package root: shipping **`me.flim`**; interim **`me.flim.dev`** until the final Play / signing account owns the shipping id (same cutover idea as iOS).
 - Launcher / application label → **Flim**; Play listing title → **Flim Messenger**; short in-app product label → **Flim**.
 - Do not reuse Element’s application id or shared storage; side-by-side install with Element X must work.
 
@@ -79,3 +85,4 @@ _(none)_
 - 2026-10-14: OIDC public site / AASA / OAuth host amended by decision 011
 - 2026-10-14: home screen / launcher = Flim; store listing = Flim Messenger (avoids truncation)
 - 2026-10-14: Element string audit — product-self hits → Flim keys at call sites (002); leave Call / Pro / Classic
+- 2026-10-14: interim Apple-safe ids `me.flim.dev` / `group.me.flim.dev` until final team owns shipping `me.flim`

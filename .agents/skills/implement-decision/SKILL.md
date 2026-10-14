@@ -101,5 +101,5 @@ Do not push or open a PR unless asked; if a PR is opened in the app fork, title/
 - Authoring / amending decision intent → `/decision`
 - Xcode / simulator / snapshot runs → `/verify-decision`
 - Writing implementation detail into `.design.md`
-- Upstream merge / `upstreamed` status
+- Upstream merge / `upstreamed` status → `/merge-upstream`
 - Implementing deferred platforms “while we’re here”

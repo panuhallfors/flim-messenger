@@ -30,7 +30,7 @@ Upstream Element X is the baseline. Record **fork deltas** only. Replay `NNN` in
 - No fork behaviour without a decision. Mid-impl scope growth → new decision.
 - Same intent/design, tighter wording → edit in place + History entry.
 - Conflicting intent **or** design → new `NNN` with `amends:`.
-- Upstream merge that matches ours → `upstreamed` and drop our patch (outside this skill’s write path; still know the rule).
+- Upstream merge that matches ours → `upstreamed` and drop our patch (`/merge-upstream`; outside this skill’s write path; still know the rule).
 
 ## Acceptance is high level
 

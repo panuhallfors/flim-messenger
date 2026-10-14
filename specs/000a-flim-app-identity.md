@@ -36,6 +36,8 @@ The installed app is a distinct product identity from Element X on every platfor
 
 Upstream documents the minimum project knobs in `ios/docs/FORKING.md` (`app.yml` → `xcodegen`). This decision records the **fork identity values** plus the human setup checklist for the rest of that forking guide.
 
+**Interim bundle ids:** Shipping identity remains **`me.flim`**. Until the final Apple (and Play) developer account owns those App IDs, builds use **`me.flim.dev`** / **`group.me.flim.dev`** so a temporary team cannot claim the shipping id. Design spells the cutover.
+
 **Classic migration (context):** Element X can optionally read accounts/session material from the pre-X “Element Classic” iOS app via shared app group + keychain (`CLASSIC_*` in `app.yml`). That path is Element-owned; Flim does not implement or retarget it.
 
 Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md`](000a-flim-app-identity.design.md)
@@ -63,3 +65,4 @@ Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md
 - 2026-10-14: note — decision 011 amends OIDC public-site / AASA / OAuth host ownership
 - 2026-10-14: home screen / system lists = Flim; store listing = Flim Messenger (avoids launcher truncation)
 - 2026-10-14: acceptance — this-product “Element” UI copy → Flim (design: audit + Flim keys per 002)
+- 2026-10-14: note — interim `me.flim.dev` until final developer account owns shipping `me.flim`

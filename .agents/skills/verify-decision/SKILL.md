@@ -98,4 +98,4 @@ Do not push or open a PR unless asked; if a PR is opened in the app fork, title/
 - Authoring / amending decision intent → `/decision`
 - Full feature implementation / Plan-mode coding → `/implement-decision`
 - Writing implementation detail into `.design.md`
-- Upstream merge / `upstreamed` status
+- Upstream merge / `upstreamed` status → `/merge-upstream`
