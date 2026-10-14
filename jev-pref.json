@@ -15,6 +15,15 @@
       "guidance": "Count only new or relocated files whose path is under ios/, android/, or web/ and whose role is a fork decision, design, or specs-log document. Submodule gitlink SHA updates alone do not count."
     },
     {
+      "id": "flim_authored_copyright",
+      "name": "Flim-authored copyright",
+      "description": "New Flim-authored source files credit Panu Hällfors, not Element Creations or New Vector.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change add a new Flim-authored source file whose copyright header credits Element Creations Ltd. or New Vector Ltd. instead of Panu Hällfors?",
+      "guidance": "True when a newly added source file (not an upstream Element-origin file lightly edited in place) has a copyright line naming Element Creations Ltd. or New Vector Ltd. New Flim-authored files should use Copyright <year> Panu Hällfors. Leaving Element/New Vector headers on existing Element-origin files is fine. Generated SwiftGen output and files with no copyright header do not count."
+    },
+    {
       "id": "no_localizable_strings_edits",
       "name": "No Localizable.strings edits",
       "description": "Localizable.strings is auto-overwritten. Fork-only copy uses the Flim catalog; upstream-bound English staging uses Untranslated.",

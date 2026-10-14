@@ -2,7 +2,7 @@
 id: 002
 slug: flim-strings
 title: Local Flim string catalog (en + fi)
-status: proposed
+status: implementing
 created: 2026-09-11
 amends: []
 platforms: [ios, android]
@@ -43,7 +43,7 @@ Design (replay-canonical with this decision): [`002-flim-strings.design.md`](002
 
 ### ios
 
-- Tests: none yet (expect a small localization unit test once the catalog is wired)
+- Tests: **pending host** (`/verify-decision`) — `FlimLocalizationTests` (en / fi / English fallback for unsupported locale)
 - Agent UI: none
 
 ### android
@@ -59,3 +59,4 @@ Design (replay-canonical with this decision): [`002-flim-strings.design.md`](002
 - 2026-09-11: proposed
 - 2026-09-11: infra-only (no keys yet); English clarified as en-GB; no en-US Flim locale
 - 2026-10-14: platforms = ios, android
+- 2026-10-14: implementing

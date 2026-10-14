@@ -2,7 +2,7 @@
 id: 000a
 slug: flim-app-identity
 title: Flim app identity (display name + bundle IDs)
-status: proposed
+status: implementing
 created: 2026-09-11
 amends: []
 platforms: [ios, android]
@@ -46,7 +46,7 @@ Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md
 
 ### ios
 
-- Tests: none yet (identity is largely build/config; confirm via installed app metadata / side-by-side install with Element X)
+- Tests: **pending host** (`/verify-decision`) — `FlimAppIdentityTests` (unit); manual: home-screen **Flim**, notification sound labels, bundle id family `me.flim.dev*`; store listing **Flim Messenger** is App Store Connect (human). Side-by-side with Element X when both installed.
 - Agent UI: none
 
 ### android
@@ -66,3 +66,4 @@ Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md
 - 2026-10-14: home screen / system lists = Flim; store listing = Flim Messenger (avoids launcher truncation)
 - 2026-10-14: acceptance — this-product “Element” UI copy → Flim (design: audit + Flim keys per 002)
 - 2026-10-14: note — interim `me.flim.dev` until final developer account owns shipping `me.flim`
+- 2026-10-14: implementing

@@ -2,6 +2,8 @@
 
 Meta workspace for the **Flim** fork of Element X: ordered decisions under `specs/`, plus git submodule pins for the app forks (`ios/`, later `android/`). First-party trees (`push-gateway/`, `website/`) live here too. Product platforms are **iOS and Android** only. See [`AGENTS.md`](AGENTS.md) for layout, git rules, and the decision log.
 
+**Authorship:** new Flim-authored code is copyright **Panu Hällfors** (not Element Creations / New Vector). Upstream Element headers stay on Element-origin files. Details in [`AGENTS.md`](AGENTS.md).
+
 ## Branch policy
 
 Same shape on **meta and every subproject**: `develop` = work + test, `main` = published. Solo trunk — decisions in `specs/` are the product audit trail, not feature branches.
@@ -30,5 +32,6 @@ Project skills live under [`.agents/skills/`](.agents/skills/) (invoke with `/na
 | [`implement-decision`](.agents/skills/implement-decision/) | Implement a decision in the app submodule (devcontainer) |
 | [`verify-decision`](.agents/skills/verify-decision/) | Xcode/simulator verify on the Mac host; mark `done` when pinned |
 | [`merge-upstream`](.agents/skills/merge-upstream/) | Merge Element HQ into the app fork, then pin the submodule on meta |
+| [`review-for-bugs`](.agents/skills/review-for-bugs/) | Review session work for bugs, corner cases, AGENTS alignment, and DRY; fix without over-engineering |
 
 **Upstream sync:** run [`/merge-upstream`](.agents/skills/merge-upstream/) — merge in the app repo (`origin` = our fork, `upstream` = Element HQ), land on app `develop`, then pin on **meta `develop`**. Do not merge Element X into this meta tree.

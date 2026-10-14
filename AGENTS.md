@@ -58,6 +58,12 @@ One decision + one product design. `platforms:` is who must implement. Later pla
 
 New app: submodule + that tree’s `AGENTS.md`.
 
+# Coding conventions
+
+Strongly prefer solutions that MINIMIZE potential conflicts with upstream Element X.
+
+**Copyright on new Flim-authored code:** use `Copyright <year> Panu Hällfors` — not Element Creations Ltd. or New Vector Ltd. Leave upstream Element/New Vector headers on files that came from Element X (including when only lightly edited). Keep the existing SPDX / LICENSE footer lines used in the app tree.
+
 # Persistent memory (Mem0)
 
 Mem0 stores facts that should survive sessions, machines, and tools (Cursor, Claude Code, Codex, …), and retrieves them by meaning.
@@ -121,6 +127,7 @@ Encode only rules an independent reviewer can judge from a diff. Shared policy: 
 Human rules that map into that policy (also drawn from `ios/AGENTS.md` where applicable):
 
 - Specs / decisions / designs never live under app trees (`ios/`, `android/`).
+- New Flim-authored source files use `Copyright <year> Panu Hällfors` (not Element Creations / New Vector); leave upstream headers on Element-origin files.
 - Do not edit `Localizable.strings`. **Two catalogs:** fork-only copy goes in the Flim catalog (`Flim.strings` / `Flim.stringsdict`, en-GB + fi; never park it permanently in `Untranslated`). Upstream-bound English staging still goes in `Untranslated.strings` / `Untranslated.stringsdict` (decision 002).
 - Never log secrets, passwords, keys, or user content (e.g. message bodies); Matrix IDs are fine.
 - Never add `@unchecked Sendable` or `nonisolated(unsafe)`.
