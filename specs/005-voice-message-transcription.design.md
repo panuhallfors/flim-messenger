@@ -36,7 +36,7 @@ Each row says that, in ordinary language, before the user commits. Tapping a row
 
 The method already in use is marked. Opening it shows its finished setup (the account and plan, the saved server, or the on-device confirmation), not the first step again. Switching away keeps the other method's saved setup, so coming back does not ask the user to register twice. Switching away does change which method is in use, once the newly chosen setup is finished.
 
-With no method in use, a voice message does not produce a brief. The brief's place shows that transcription is not set up yet, and Try again. After a method is in use, Try again runs that method.
+With no method in use, a voice message does not produce a brief. The brief's place shows that transcription is not set up yet; the action opens setup (decision 009 amends 004 — not Try again). After a method is in use, Try again on other failures runs that method.
 
 ### Flim
 
@@ -86,17 +86,20 @@ The screen names the three examples and gives the address to paste when it is a 
 
 One address and one key cover both listening and the summary. The screen starts that way. A second address is there only if the summary lives somewhere else.
 
+When the user enters a **second (summary) address** that is different from the transcription address, show a **second key** field for that host. It defaults to **“same key”** (reuse the transcription key) so a single-provider split URL stays easy; the user can paste a different key when the summary host is another provider. Never imply that one provider’s key is sent to another host unless the user chose “same key” or typed the same secret into both fields.
+
 The fields, in everyday labels as well as the names above:
 
 - transcription address and model name
 - summary address and model name
-- key
+- transcription key
+- summary key (only when a distinct summary address is in use; otherwise one key covers both)
 
 Saving, once the required fields are filled, makes this the method in use.
 
-The key is write-only after it is saved: the screen does not show it back in full. It is not placed in the Matrix account.
+Each key is write-only after it is saved: the screen does not show it back in full. Keys are not placed in the Matrix account.
 
-The app asks that server for a transcript, then for a title and summary from the transcript and the room context.
+The app asks that server for a transcript, then for a title and summary from the transcript and the room context. Decision 006 sends each key only to its own address.
 
 ### On this device
 
@@ -109,8 +112,8 @@ When the device cannot, the row stays visible, cannot be confirmed, and says why
 ## Platform notes
 
 - Both: the section is on the root settings screen. The selector is the next screen; each setup step is the next screen after that. Strings are Flim catalog keys (decision 002), not Element's `Localizable` / `Untranslated` files. All three choices are shown on iOS and on Android.
-- iOS: the custom-server key and the Flim session live in the Keychain. They are not written to preferences in the clear, and not written into Matrix account data.
-- Android: the custom-server key and the Flim session live in the platform credential store. They are not written to preferences in the clear, and not written into Matrix account data.
+- iOS: the custom-server key(s) and the Flim session live in the Keychain. They are not written to preferences in the clear, and not written into Matrix account data. When two keys are saved, store them as separate Keychain entries keyed by role (transcription vs summary).
+- Android: the custom-server key(s) and the Flim session live in the platform credential store. They are not written to preferences in the clear, and not written into Matrix account data. When two keys are saved, store them as separate entries keyed by role (transcription vs summary).
 - Both: when store billing is enabled later, the subscription uses the platform purchase sheet. The account already exists before the sheet is shown, and the purchase is tied to that account. Until then the control stays disabled.
 - Both: on-device availability follows decision 007. The row is not hidden.
 
@@ -128,3 +131,6 @@ _(none)_
 - 2026-10-13: custom-server setup explains, for a non-technical user, how to get a key and an address from OpenAI, Cortex, or OpenRouter (or an equivalent service)
 - 2026-10-13: the example is Cortecs (cortecs.ai), named as a European provider; any OpenAI-compatible service works
 - 2026-10-14: plan step — subscription and restore visible but disabled; coming-later copy; promo is the working path
+- 2026-10-14: platforms = ios, android
+- 2026-10-14: distinct summary address gets a second key field (default “same key”); never cross-send keys by accident
+- 2026-10-14: amended by 009 — not-set-up action is setup, not Try again

@@ -5,7 +5,7 @@ title: Human title
 status: proposed   # proposed | implementing | done | withdrawn | upstreamed
 created: YYYY-MM-DD
 amends: []         # e.g. [001]
-platforms: [ios]   # ios | android | web
+platforms: [ios, android]   # Flim product platforms only; verification may still defer android
 ---
 
 # NNN — Title
@@ -48,7 +48,7 @@ Design (non-trivial, replay-canonical with this decision): `NNN-slug.design.md` 
 
 ### web
 
-- deferred
+- out of scope (Flim is iOS and Android only)
 
 ## Agent UI
 

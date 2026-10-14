@@ -12,7 +12,7 @@ Companion to `006-custom-server-transcription.md`. **Replay-canonical** with tha
 
 Decision 004 defines the in-app service contract (audio + room context → title, summary, transcript, or a typed failure) and ships a mock. Decision 005 lets the user finish a custom-server setup and make that the method in use. This decision is the real listener for that method.
 
-Callers, the bubble, the race, the companion notice, and the failure statuses stay as 004 specifies. When custom server is in use, the composition root selects this implementation instead of the mock. Flim keeps its own later decision. On-device is decision 007.
+Callers, the bubble, the race, the companion notice, and the failure statuses stay as 004 specifies. When custom server is in use, the composition root selects this implementation instead of the mock. Flim is decision 008; on-device is decision 007. Each of those, like this decision, replaces the mock on its path when it is in the replay — the mock is only interim until then (decision 004).
 
 ## Product design
 
@@ -22,9 +22,10 @@ Only while decision 005's custom-server method is in use. The saved fields from 
 
 - transcription base address and model name
 - summary base address and model name
-- API key
+- transcription API key
+- summary API key (may be the same secret as the transcription key when the user chose “same key” or entered one key for a shared host)
 
-No other method's credentials are sent. The key is sent only as a bearer token to those addresses.
+No other method's credentials are sent. Each key is sent **only** as a bearer token to **its own** address: the transcription key to the transcription address, the summary key to the summary address. Never send the transcription key to the summary host (or the reverse) unless those two saved key values are the same secret the user intentionally stored for both.
 
 ### Protocol (OpenAI-compatible)
 
@@ -35,7 +36,7 @@ The user's server speaks an OpenAI-compatible HTTP API. Two steps, in order. One
 `POST {transcription address}/v1/audio/transcriptions`
 
 - Multipart form: the voice message audio as `file`, the saved model name as `model`, and `response_format=json` (or `text` if the host only returns plain text — the app accepts either a JSON body with a `text` field or a plain-text body as the transcript).
-- Header: `Authorization: Bearer <key>`.
+- Header: `Authorization: Bearer <transcription key>`.
 - Success: a non-empty transcript string. Empty transcript is an **unusable reply**.
 
 #### 2. Title and summary
@@ -43,9 +44,9 @@ The user's server speaks an OpenAI-compatible HTTP API. Two steps, in order. One
 `POST {summary address}/v1/chat/completions`
 
 - JSON body: the saved summary model name, and a short chat that includes Flim's embedded prompts, the transcript, and the room context from decision 004.
-- Header: `Authorization: Bearer <key>`.
+- Header: `Authorization: Bearer <summary key>`.
 - The app asks for a structured reply the model can return as the assistant message content: JSON with `title` and `summary` string fields. A reply that is not parseable as that shape, or that is missing either field, is an **unusable reply**.
-- Title may be longer than 50 characters here; truncation to 50 characters stays outside this listener, as decision 004 already requires.
+- Title or summary may exceed decision 004’s caps here; truncation to those caps (title ≤4 words / 35 characters; summary ≤4 short sentences / 20 words / 160 characters) stays outside this listener, as 004 already requires.
 
 The two addresses may be the same host. Path suffixes above are relative to the base the user entered in settings (the base is the origin the user typed — e.g. `https://example.com` or `https://example.com/v1` — see normalisation below).
 
@@ -72,7 +73,7 @@ The prompts live in the app, the same wording on every platform (English source 
 
 These are adapted from the previous Flim generation: same length and tone rules, first-person voice, empty strings when nothing fits — but the language is “same as the transcript,” not a language code, and room context is included. Provider-specific safety blocks (e.g. Gemini) are not sent; an OpenAI-compatible chat call has no equivalent field here.
 
-The app does **not** send `response_format: json_object` (or equivalent). Structured output is requested only in the system prompt. A non-parseable assistant message, or one missing `title` or `summary`, is an **unusable reply**. Empty-string `title` or `summary` is allowed when the model cannot find one (still a usable reply). Decision 004 still truncates a longer title to 50 characters before show/send.
+The app does **not** send `response_format: json_object` (or equivalent). Structured output is requested only in the system prompt. A non-parseable assistant message, or one missing `title` or `summary`, is an **unusable reply**. Empty-string `title` or `summary` is allowed when the model cannot find one (still a usable reply). Decision 004 still truncates a longer title or summary to its caps before show/send.
 
 Changing the product intent of these prompts (limits, voice, language rule, or asking for more than title + summary) needs a new decision.
 
@@ -124,9 +125,8 @@ This listener does not publish to the room, does not show UI, and does not store
 ## Platform notes
 
 - iOS: selected at the composition root when custom server is the method in use; conforms to the same service protocol as the mock (decision 004).
-- iOS: the key comes from the Keychain entry decision 005 already requires; do not cache it in preferences.
-- Android: selected at the composition root when custom server is the method in use; same service contract as iOS. The key comes from the credential store decision 005 already requires; do not cache it in preferences.
-- Web: deferred.
+- iOS: the transcription and summary keys come from the Keychain entries decision 005 already requires; do not cache them in preferences.
+- Android: selected at the composition root when custom server is the method in use; same service contract as iOS. The keys come from the credential-store entries decision 005 already requires; do not cache them in preferences.
 
 ## Open issues
 
@@ -141,3 +141,7 @@ _(none)_
 - 2026-10-13: embedded system/user prompts locked (adapted from prior Flim; language = same as transcript; no provider safety settings)
 - 2026-10-13: Android implements this listener; Web stays deferred
 - 2026-10-14: 401/403 maps to Sign-in rejected (004 rename)
+- 2026-10-14: platforms = ios, android; web out of product scope
+- 2026-10-14: separate transcription and summary keys; each bearer token only to its own address
+- 2026-10-14: Flim / on-device stay unavailable until 007 / 008; mock not kept as stand-in on those paths
+- 2026-10-14: truncation references point at 004’s prompt-matched caps (35 / 160), not 50

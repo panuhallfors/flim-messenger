@@ -17,11 +17,20 @@
     {
       "id": "no_localizable_strings_edits",
       "name": "No Localizable.strings edits",
-      "description": "Localizable.strings is auto-overwritten; new English strings go in Untranslated.strings.",
+      "description": "Localizable.strings is auto-overwritten. Fork-only copy uses the Flim catalog; upstream-bound English staging uses Untranslated.",
       "scope": "hunk",
       "gate": false,
-      "question": "Does this change edit Localizable.strings (or Localizable.stringsdict) instead of adding new English strings to Untranslated.strings / Untranslated.stringsdict?",
-      "guidance": "True only when Localizable.strings or Localizable.stringsdict is modified. Adding or changing Untranslated.strings / Untranslated.stringsdict is fine."
+      "question": "Does this change edit Localizable.strings or Localizable.stringsdict?",
+      "guidance": "True only when Localizable.strings or Localizable.stringsdict is modified. Adding or changing Flim.strings / Flim.stringsdict (fork catalog) or Untranslated.strings / Untranslated.stringsdict (upstream staging) is fine."
+    },
+    {
+      "id": "fork_strings_in_flim_catalog",
+      "name": "Fork strings in Flim catalog",
+      "description": "Fork-only user-facing copy belongs in Flim.strings / Flim.stringsdict, not permanently in Untranslated.",
+      "scope": "hunk",
+      "gate": false,
+      "question": "Does this change add fork-only user-facing copy to Untranslated.strings or Untranslated.stringsdict instead of the Flim catalog (Flim.strings / Flim.stringsdict)?",
+      "guidance": "True when new or changed strings are clearly fork-only (Flim chrome, decisions 001+, fork failure copy, and the like) and land in Untranslated.* rather than Flim.*. Upstream-bound Element staging in Untranslated.* is fine. Editing Localizable.* is covered by no_localizable_strings_edits."
     },
     {
       "id": "no_sensitive_logging",

@@ -40,7 +40,7 @@ User-observable outcomes. The design document specifies how these are achieved.
 
 Decision 005 chooses the method and keeps the Flim session on device. This decision is the listener for that method and the product shape of Flim's hosted service: accounts, plans, protocol, prompts, and where inference runs.
 
-The product design is the same on iOS and Android. Web stays deferred.
+The product design is the same on iOS and Android.
 
 New user-facing strings belong to the Flim catalog (decision 002). Prompt text that only the service sees is not a catalog string.
 
@@ -60,10 +60,12 @@ Design (replay-canonical with this decision): [`008-flim-hosted-transcription.de
 
 ### web
 
-- deferred
+- out of scope (Flim is iOS and Android only)
 
 ## History
 
 - 2026-10-13: proposed
 - 2026-10-14: acceptance covers email OTP account, promo plan, and IAP as a later placeholder; settings UI stays decision 005
 - 2026-10-14: promo free plan capped at 100 briefs/day; IAP remains disabled-with-coming-later in 005
+- 2026-10-14: platforms = ios, android
+- 2026-10-14: title/summary caps aligned with 004 / 006 prompts (design)

@@ -2,7 +2,7 @@
 
 Fork deltas for Flim live here as an ordered decision log — not a spec of Element X. In an app tree, also follow that app’s `AGENTS.md` (iOS: `ios/AGENTS.md`).
 
-We will implement both iOS and Android, so when designing a decision, consider both platforms, even though some implementation might not exist yet.
+We implement **iOS and Android** only. When designing a decision, consider both platforms, even though some implementation might not exist yet. Web is not a Flim product platform.
 
 A **decision** (`specs/NNN-slug.md`) is intent + acceptance criteria, not a full specification. The detailed, replay-canonical specification of behaviour — flows, IA, interaction, protocol — lives in its companion `.design.md` when one exists. "Spec" below refers to the `specs/` directory and log as a whole, not to the level of detail in any single file.
 
@@ -12,8 +12,7 @@ A **decision** (`specs/NNN-slug.md`) is intent + acceptance criteria, not a full
 .                          # meta: specs + this file + submodule pins
 specs/
 ios/             # submodule → our fork (not Element X copied into meta)
-android/         # later, same
-web/               # later, same
+android/         # submodule → our fork (when present)
 ```
 
 App `origin` = our fork; `upstream` = Element HQ. Specs never live in an app tree.
@@ -28,7 +27,7 @@ Apps are submodules. Meta stores gitlinks, not app source. Empty app dir → `gi
 
 ## Decisions
 
-Upstream Element X is the baseline. We record **fork deltas** only. Replay `NNN` in order → same functionality **and** product design (not the same source). That is how iOS is later replayed on Android/Web.
+Upstream Element X is the baseline. We record **fork deltas** only. Replay `NNN` in order → same functionality **and** product design (not the same source). That is how iOS is later replayed on Android.
 
 | Path                                                | Role                                                                                                  |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
@@ -117,8 +116,8 @@ Encode only rules an independent reviewer can judge from a diff. Shared policy: 
 
 Human rules that map into that policy (also drawn from `ios/AGENTS.md` where applicable):
 
-- Specs / decisions / designs never live under app trees (`ios/`, `android/`, `web/`).
-- Do not edit `Localizable.strings` — new English strings go in `Untranslated.strings`.
+- Specs / decisions / designs never live under app trees (`ios/`, `android/`).
+- Do not edit `Localizable.strings`. **Two catalogs:** fork-only copy goes in the Flim catalog (`Flim.strings` / `Flim.stringsdict`, en-GB + fi; never park it permanently in `Untranslated`). Upstream-bound English staging still goes in `Untranslated.strings` / `Untranslated.stringsdict` (decision 002).
 - Never log secrets, passwords, keys, or user content (e.g. message bodies); Matrix IDs are fine.
 - Never add `@unchecked Sendable` or `nonisolated(unsafe)`.
 - Do not use deprecated `ServiceLocator`; inject dependencies.

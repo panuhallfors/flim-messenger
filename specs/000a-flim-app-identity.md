@@ -5,14 +5,14 @@ title: Flim app identity (display name + bundle IDs)
 status: proposed
 created: 2026-09-11
 amends: []
-platforms: [ios]
+platforms: [ios, android]
 ---
 
 # 000a — Flim app identity (display name + bundle IDs)
 
 ## Intent
 
-The installed app is a distinct product identity from Element X: it shows as **Flim Messenger** (short name **Flim** where the product uses a short label), and it uses our own Apple bundle / app-group identifiers so it can sit alongside Element X without colliding.
+The installed app is a distinct product identity from Element X on every platform: it shows as **Flim Messenger** (short name **Flim** where the product uses a short label), and it uses our own package / bundle / app-group identifiers so it can sit alongside Element X without colliding.
 
 ## Acceptance
 
@@ -28,7 +28,6 @@ The installed app is a distinct product identity from Element X: it shows as **F
 - Agent implementation of OIDC / MAS, associated domains, MapLibre keys, or other runtime fork setup — those are **human tasks** listed in the design, not coding acceptance for this decision.
 - Changing icons, accent colour, or other brand chrome beyond display name + identifiers.
 - Offering migration from Element Classic (the old Element / Vector iOS app) or from Element X — do not claim Element’s classic app-group / keychain entitlements under our team.
-- Android application id / Web package naming beyond what later platform replay will need from this product identity (iOS lands first).
 - Choosing or documenting a Nightly / alternate build flavour.
 
 ## Notes
@@ -52,9 +51,10 @@ Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md
 
 ### web
 
-- deferred
+- out of scope (Flim is iOS and Android only)
 
 ## History
 
 - 2026-09-11: proposed
 - 2026-09-11: full/short names (Flim Messenger / Flim); OIDC+rest of FORKING.md as human tasks; classic migration clarified as non-goal
+- 2026-10-14: platforms = ios, android (same product identity on every platform)

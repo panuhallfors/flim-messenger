@@ -5,7 +5,7 @@ title: Local Flim string catalog (en + fi)
 status: proposed
 created: 2026-09-11
 amends: []
-platforms: [ios]
+platforms: [ios, android]
 ---
 
 # 002 — Local Flim string catalog (en + fi)
@@ -52,9 +52,10 @@ Design (replay-canonical with this decision): [`002-flim-strings.design.md`](002
 
 ### web
 
-- deferred
+- out of scope (Flim is iOS and Android only)
 
 ## History
 
 - 2026-09-11: proposed
 - 2026-09-11: infra-only (no keys yet); English clarified as en-GB; no en-US Flim locale
+- 2026-10-14: platforms = ios, android

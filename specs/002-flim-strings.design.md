@@ -38,20 +38,20 @@ Later fork UI (e.g. decision **001**) will need fork-owned labels and accessibil
 
 ### Key discipline
 
-- Prefer Element key-naming conventions so replay on Android/Web stays predictable (action / common / screen / a11y style prefixes).
+- Prefer Element key-naming conventions so replay on Android stays predictable (action / common / screen / a11y style prefixes).
 - **No fork-only key prefix.** The separate Flim catalog is the namespace; a key may look like an Element key without colliding, because lookup always goes through the Flim API / table, never the Element one.
 - When a Flim key is added, provide English and Finnish in the same change (or an immediate follow-up). Completing other decisions’ `done` is not blocked by an empty Flim catalog.
 
 ### Authoring workflow (product-level)
 
 1. Wire the empty Flim catalog (this decision).
-2. When a feature needs fork-only copy: add the English Flim string and its Finnish translation, then call through the Flim API. (add this to AGENTS.md)
+2. When a feature needs fork-only copy: add the English Flim string and its Finnish translation, then call through the Flim API. (root `AGENTS.md` / Jev: two-catalog rule)
 3. Call sites that reuse Element wording keep using the Element API.
 
 ## Platform notes
 
 - **iOS:** table/files named `Flim.strings` / `Flim.stringsdict`; generated accessor enum `FlimL10n`. Place under the existing Localizations tree (`en.lproj`, `fi.lproj`). Wire SwiftGen similarly to `Untranslated*`, but use the **locale-aware** lookup (same behaviour as `L10n`), not the Untranslated “always en” lookup. Do not put Flim keys in `Untranslated.strings` or `Localizable.strings`. Empty tables (or a single sentinel used only in unit tests) are acceptable until real keys exist.
-- **Android / Web (replay):** same two-catalog rule, en (en-GB) + fi, English fallback; resource/module names may differ — keep “Flim” in the name so ownership stays obvious.
+- **Android:** same two-catalog rule, en (en-GB) + fi, English fallback; resource/module names may differ — keep “Flim” in the name so ownership stays obvious.
 
 ## Open issues
 
@@ -62,3 +62,5 @@ _(none)_
 - 2026-09-11: first write
 - 2026-09-11: no fork key prefix — catalog separation is enough for namespacing
 - 2026-09-11: infra-only until keys appear; English = en-GB; drop Finnish-vs-feature-`done` coupling
+- 2026-10-14: platforms include android (with ios); same catalog rules
+- 2026-10-14: two-catalog rule recorded in root AGENTS.md (ios/AGENTS.md left unchanged)

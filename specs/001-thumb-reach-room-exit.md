@@ -5,7 +5,7 @@ title: Thumb-reach exit from a room or space
 status: proposed
 created: 2026-09-10
 amends: []
-platforms: [ios]
+platforms: [ios, android]
 ---
 
 # 001 — Thumb-reach exit from a room or space
@@ -66,7 +66,7 @@ Visual styling (colours, surfaces, the strip's look, row and canvas styling) is 
 
 ### web
 
-- deferred
+- out of scope (Flim is iOS and Android only)
 
 ## History
 
@@ -82,3 +82,5 @@ Visual styling (colours, surfaces, the strip's look, row and canvas styling) is 
 - 2026-09-10: design guidelines — no Alternatives rejected / Follow-on; Open issues (empty) instead
 - 2026-09-11: non-goal — inner pushes stay upstream; design clarifications (upward caret, popup shrink+fade, strip vs system-back, composer cluster above the strip) — same intent
 - 2026-10-13: visual detail deferred to decision 003 (not yet implemented, so edited in place): wide-layout "unchanged" now means navigation and navigation chrome only; canvas-tone and strip/row visual specifics come from 003
+- 2026-10-14: platforms = ios, android
+- 2026-10-14: design — system IME chrome with the keyboard; app-owned bars just above the keyboard, below the strip

@@ -27,7 +27,7 @@ Reference mocks (narrow, 390×844 pt @3x), light `L*` / dark `D*`, in [`003-flim
 | Form sheet ("New space") | ![L5](003-flim-visual-refresh.assets/L5-form-sheet-light.png) | ![D5](003-flim-visual-refresh.assets/D5-form-sheet-dark.png) |
 | Settings list ("Advanced settings", an inner push) | ![L6](003-flim-visual-refresh.assets/L6-settings-light.png) | ![D6](003-flim-visual-refresh.assets/D6-settings-dark.png) |
 
-**The mocks are a style reference, not a content inventory.** Where a mock omits something upstream shows (header subtitle, badges, filters, the Search tab, sender names), the upstream element stays and is styled per this document. The mocks' unread dot placement and accent-coloured unread cues are superseded by "Unread and notification state" below.
+**The mocks are a style reference, not a content inventory.** Where a mock omits something upstream shows (header subtitle, badges, filters, the Search tab, sender names), the upstream element stays and is styled per this document. The mocks' unread dot placement and accent-coloured unread cues (including a violet unread-elsewhere dot on the strip) are superseded by "Unread and notification state" below — use `unread.strong` / `unread.soft`, never the accent.
 
 ## Product design
 
@@ -143,7 +143,7 @@ Upstream distinguishes, on the row's **trailing** side: a dot (or count badge wh
   - Send: 42 pt circle in the primary-action class (`primary.fill`, `primary.shadow`), with a right-pointing **paper plane** as a 1.9 pt outline (not filled) in `primary.onFill`.
   - Same position and size as the mic, so the swap doesn't shift layout; crossfade ~120 ms (instant with Reduce Motion).
   - Upstream's other Send modes keep their meaning in the same primary style, e.g. the edit-confirm glyph when editing a message. Disabled Send uses the glass treatment with a secondary-colour glyph.
-- **Keyboard up (narrow),** top to bottom: panel → composer → suggestion / dictation bars (with the panel) → strip → system keyboard (per 001).
+- **Keyboard up (narrow),** top to bottom: panel → composer → strip → app-owned bars (when shown) → keyboard including its system suggestion / IME chrome (per 001). Do not restyle or relocate system keyboard chrome.
 
 ### Strip (narrow only)
 
@@ -255,7 +255,7 @@ Every upstream use of Element's accent colour is mapped to one of the rows above
 - iOS glass: `.glassEffect()` on iOS 26, `.ultraThinMaterial` + hairline stroke below; honour `accessibilityReduceTransparency` / `colorSchemeContrast` with an opaque fallback.
 - iOS rainbow outline: stroke a `RoundedRectangle` with a `LinearGradient`.
 - iOS upstream hooks: `HomeScreenRoomCell` (trailing badges, `isHighlighted` → `unread.strong`), `HomeScreenRoomCellButtonStyle` (selection), `RoomListFiltersView` / `RoomListFilterView`, `RoomHeaderView`, `PlaceholderAvatarImage` (neutral initials), `TimelineItemBubbledStylerView` (sender name keeps `decorativeColor`), `NavigationTabCoordinator.configureAppearance` (badge colour).
-- Android (replay): Material 3 surfaces for glass where no blur is available; same token values and rules.
+- Android: Material 3 surfaces for glass where no blur is available; same token values and rules.
 
 ## Open issues
 
@@ -267,3 +267,6 @@ _(none)_
 - 2026-10-13: app-wide scope made explicit ("Applying across the app": building-block mapping incl. primary / send buttons neutral, toggles / checkmarks in the Flim accent, every Element-accent use remapped); no navigation-model change beyond 001 restated in Context and "Do not"
 - 2026-10-13: patch 2 (`specs/temp2/`) folded in: three fill classes (primary action / platform state control / in-content selection) replace "no fills for selection"; new tokens (`primary.*`, `control.*`, `sheet.*`), with `control.accent` separate from the draft / caret `accent`; Send spec (mic ↔ Send swap, outline plane, primary fill); new "Form sheets" (L5 / D5) and "Settings and other lists" (L6 / D6) sections; L3 / D3 replaced by the Send-visible mocks. Adjusted so nothing is lost: confirms keep upstream's content (icon on iOS 26 with the word as the accessibility label, the word itself on earlier iOS); multi-select uses the state-control accent instead of a row outline
 - 2026-10-13: sheet confirms follow upstream per OS version — the word wherever upstream shows the word (earlier than iOS 26), the ✓ only where upstream shows the icon (iOS 26)
+- 2026-10-14: platforms include android (with ios)
+- 2026-10-14: keyboard-up stack aligns with 001 — system suggestion chrome with the keyboard; app-owned bars below the strip, just above the keyboard
+- 2026-10-14: mocks’ accent/violet strip unread cue called out as superseded by unread.strong

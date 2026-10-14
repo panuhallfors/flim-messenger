@@ -66,7 +66,7 @@ The app does not choose transcription or summary models. It does not send prompt
 
 ### What the app gets back
 
-On success: a title, a summary, and a transcript — the same three fields decision 004 already expects. Title may be longer than 50 characters here; truncation to 50 characters stays outside this listener, as decision 004 already requires.
+On success: a title, a summary, and a transcript — the same three fields decision 004 already expects. Title or summary may exceed 004’s caps here; truncation (title ≤4 words / 35 characters; summary ≤4 short sentences / 20 words / 160 characters) stays outside this listener, as 004 already requires.
 
 On failure: a reply the listener maps to decision 004's statuses (below). One attempt is the whole call; nothing is adopted unless all three fields arrive in a usable shape.
 
@@ -75,7 +75,7 @@ On failure: a reply the listener maps to decision 004's statuses (below). One at
 1. Authenticates the session. Rejected or missing session → **sign-in rejected**.
 2. Checks the account has an active plan with remaining allowance. Empty allowance → **allowance used up** (Flim wording from decision 004).
 3. Transcribes the audio with Cortecs, model **faster-whisper-large-v3**, with EU-native routing so inference stays with EU-based providers.
-4. Asks Cortecs chat model **ministral-8b:latest** (same EU-native routing) for a title and summary, using prompts the service holds. Prefer a **low-latency** Cortecs provider for that model; today **Mistral**'s own serving of it is the fast path — pin or prefer that provider when Cortecs allows. Those prompts follow the same product rules as decision 006's embedded prompts: short title, short summary, same language as the transcript, first-person voice, room context only to place what was said, JSON with `title` and `summary`. Exact prompt wording is owned by the service and may differ from 006's copy.
+4. Asks Cortecs chat model **ministral-8b:latest** (same EU-native routing) for a title and summary, using prompts the service holds. Prefer a **low-latency** Cortecs provider for that model; today **Mistral**'s own serving of it is the fast path — pin or prefer that provider when Cortecs allows. Those prompts follow the same product rules and numeric limits as decision 006's embedded prompts: title at most four words / 35 characters, summary at most four short sentences / 20 words / 160 characters, same language as the transcript, first-person voice, room context only to place what was said, JSON with `title` and `summary`. Exact prompt wording is owned by the service and may differ from 006's copy, but not those limits.
 5. Returns title, summary, and transcript to the app. Empty transcript → **unusable reply**. Title/summary JSON that cannot be parsed → **unusable reply**.
 
 Audio and room context leave the phone only for this service and its EU inference path. The service does not publish to the room and does not store briefs for callers; decision 004's callers own show/send.
@@ -109,7 +109,6 @@ Flim's service runs in the **EU** (UpCloud, Finland). Inference for transcriptio
 - Both apps: selected at the composition root when Flim is the method in use; conforms to the same service protocol as the mock (decision 004) and the other listeners.
 - iOS: the Flim session comes from the Keychain entry decision 005 already requires; do not cache it in preferences.
 - Android: the Flim session comes from the platform credential store decision 005 already requires; do not cache it in preferences.
-- Web: deferred.
 - Flim's service (implementation of this host, not app UI): **NestJS (TypeScript)**; **UpCloud Managed Kubernetes** Development control plane; **one** smallest allowed worker (2 GB minimum); **smallest** UpCloud Managed PostgreSQL; Cortecs OpenAI-compatible API for **faster-whisper-large-v3** (transcribe) and **ministral-8b:latest** (title/summary), with `eu_native` set so routing stays EU. For Ministral, prefer a low-latency provider — currently Mistral. Use Resend for email. Reasonable rate limiting.
 
 ## Open issues
@@ -123,3 +122,5 @@ _(none)_
 - 2026-10-14: summary model locked to ministral-8b:latest; prefer low-latency Cortecs provider (currently Mistral)
 - 2026-10-14: account/plan — email OTP, promo plan, IAP placeholder; retention keeps account state only, not audio or briefs
 - 2026-10-14: promo free plan 100 briefs/day (UTC); IAP aligned with 005 disabled + coming-later UI
+- 2026-10-14: platforms = ios, android; web out of product scope
+- 2026-10-14: title/summary limits match 004 / 006 (35 / 160 caps)

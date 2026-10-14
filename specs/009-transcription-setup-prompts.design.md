@@ -65,3 +65,4 @@ _(none)_
 
 - 2026-10-14: first write
 - 2026-10-14: not-set-up always setup link (amends 004); stronger CTA only once on first voice message
+- 2026-10-14: platforms = ios, android

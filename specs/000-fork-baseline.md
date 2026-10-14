@@ -12,7 +12,7 @@ platforms: []
 
 ## Intent
 
-This workspace is a fork of Element X (iOS first; Android and Web later). The product baseline is upstream Element X. Fork behaviour and product design are only what later decisions (and their `.design.md` files) in this directory record.
+This workspace is a fork of Element X. The product baseline is upstream Element X. Fork behaviour and product design are only what later decisions (and their `.design.md` files) in this directory record. Every product decision applies to **iOS and Android**; Web is not a Flim product platform. Verification may still mark Android `deferred` until that tree ships.
 
 ## Acceptance
 
@@ -37,3 +37,4 @@ Meta only — no app tests.
 ## History
 
 - 2026-09-09: proposed and adopted
+- 2026-10-14: product decisions apply to iOS and Android only (Web out of product scope)

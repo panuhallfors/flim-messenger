@@ -39,10 +39,12 @@ Everything below is written for narrow layouts, in terms of "a list" and "a row"
 - The room (or space) is a **popup** over the list: it sits above that list in z-order. Directly **under the panel**, a full-width strip is the permanent, thumb-reachable control back toward the list. Dismiss is a **shrink and fade** along the container transform — the popup receding onto its row — not a lateral slide and not a sheet that travels the full screen height.
 - The strip is the **default discoverable** exit. It must look like chrome for “return to the list,” not like another chat to open.
 - **Always present while the room is open** on compact layouts — including while the composer keyboard is up. The strip does not hide, slide away, or get covered by the keyboard. That single layout is what makes return while composing the same action as return while reading.
-- **Stacking when the keyboard is up**, top to bottom: room panel (composer at its bottom) → strip → keyboard. **Nothing sits between the strip and the keyboard.** The strip stays glued under the panel and rides up with it; the keyboard docks directly under the strip and may go edge-to-edge there. It must never draw over the strip.
-- **Composer cluster stays above the strip.** Attachment picker, emoji picker, voice-message hold, location share, and suggestion / dictation / emoji bars all belong with the panel, immediately above the strip — the strip is simply the next band under that cluster, then the keyboard keys.
+- **Stacking when the keyboard is up**, top to bottom: room panel (composer at its bottom) → strip → **app-owned bars** (when any are showing) → **keyboard**. The strip stays glued under the panel and rides up with it. The keyboard must never draw over the strip or over those bars.
+- **Keyboard includes its own system chrome.** Predictive / suggestion bars, dictation UI, emoji search, and other IME chrome live **with the keyboard**, wherever the OS puts them. This design does not place or reorder that chrome. Treat “keyboard” as the whole system input surface at the bottom.
+- **App-owned bars sit just above the keyboard, below the strip.** @-mention, slash-command, and other **app-drawn** suggestion / accessory bars dock immediately above the keyboard (normal chat placement). They are **not** part of the panel above the strip. When none are showing, the strip sits directly above the keyboard.
+- **Composer-owned pickers stay with the panel.** Attachment picker, emoji picker, voice-message hold, and location share belong with the panel, immediately above the strip — not between the strip and the keyboard.
 - **Peek content:** blur / dim heavily, or show a neutral surface. Never a sharp top list row with avatar + name that reads as “open this conversation.”
-- **System gesture inset (keyboard down only):** when the keyboard is hidden, the phone’s home indicator / Android gesture-nav region is at the bottom of the screen. Leave a few millimetres so a downward system gesture is never captured by the strip’s drag; tap anywhere in the strip still works. That inset is system chrome at the bottom of the display — not a band of app UI between the strip and a keyboard. **Keyboard up:** the keyboard owns the bottom edge; the strip sits flush above it and does not compete with the home gesture.
+- **System gesture inset (keyboard down only):** when the keyboard is hidden, the phone’s home indicator / Android gesture-nav region is at the bottom of the screen. Leave a few millimetres so a downward system gesture is never captured by the strip’s drag; tap anywhere in the strip still works. That inset is system chrome at the bottom of the display — not a band of app UI between the strip and a keyboard. **Keyboard up:** the keyboard owns the bottom edge; the strip (or an app-owned bar under it) sits above that stack and does not compete with the home gesture.
 - Closing should feel like lifting the popup off and returning it to its row. Prefer shrinking and fading along the transform over sliding the full screen height away (full-height slides feel slow on a high-frequency action).
 
 ### Strip affordance — making “this closes the room” legible
@@ -55,8 +57,8 @@ A bare peek or handle is not self-explanatory; the strip must be read correctly 
 - **Whole strip is the hit target,** not just the pill: full width, at least the platform minimum touch height. Icon and label alignment is cosmetic; reach never depends on it.
 - **Unread elsewhere:** if there are new messages outside the open room/space, show a small, quiet indicator on the strip (e.g. a dot) — presence only, no count and no copy like “3 new in other chats.” Do not animate or pulse it while the user is reading; set it when the strip is shown (or when unread state changes between glances) and keep it still.
 - **First run:** one-time introduction only (brief label emphasis on the first room open, then settle). No repeating coach marks, no blocking tooltip.
-- **Separation from neighbours:** the strip must be visually distinct from the panel bottom above it (composer) and, when typing, from the keyboard top below it (elevation edge or surface change) — so those neighbouring targets never read as one control.
-- **Mis-tap guard while typing:** the strip sits in a sandwich between composer/`send` and the top of the keyboard. Leave a clear visual and touch separation on both edges (more than a hairline). Highest-risk hits are a fat finger dropping off `send`/composer, or climbing off the top keyboard row, onto the strip. Spacing and the strip’s own surface are what prevent that — not a settle window (the strip was already there; it only changes _who_ neighbours it).
+- **Separation from neighbours:** the strip must be visually distinct from the panel bottom above it (composer) and from whatever sits directly under it when typing — an **app-owned bar**, or else the **top of the keyboard** (system suggestion chrome or top key row) — elevation edge or surface change — so those neighbouring targets never read as one control.
+- **Mis-tap guard while typing:** the strip sits in a sandwich between composer/`send` and either an app-owned bar or the top of the keyboard. Leave a clear visual and touch separation on both edges (more than a hairline). Highest-risk hits are a fat finger dropping off `send`/composer onto the strip, or climbing from the bar/keyboard top onto the strip. Spacing and the strip’s own surface are what prevent that — not a settle window (the strip was already there; it only changes _who_ neighbours it).
 - **Haptics:** a light confirmation on close commit; nothing on keyboard show/hide.
 
 ### Activation — tap and drag
@@ -71,7 +73,7 @@ Both activations drive the one progress scalar; there is no second close animati
 
 ### Closing while the keyboard is open
 
-There is no separate compose-mode exit. The strip sits in the gap **below the panel and above the keyboard**, so tap or drag on the strip closes the popup the same way it does while reading — one control, one place relative to the panel, keyboard up or down.
+There is no separate compose-mode exit. The strip sits **below the panel** (and above any app-owned bars / the keyboard), so tap or drag on the strip closes the popup the same way it does while reading — one control, one place relative to the panel, keyboard up or down.
 
 - **The strip always closes the popup**, including while the keyboard is visible. Tapping (or drag-closing) the strip is not a keyboard-dismiss control; the keyboard goes away because the popup closed.
 - **Keyboard dismiss vs popup close stay distinct for other gestures.** A downward drag on the timeline / composer still only dismisses the keyboard (platform-normal). Momentum from a keyboard-dismiss flick never continues into a popup close.
@@ -84,7 +86,7 @@ There is no separate compose-mode exit. The strip sits in the gap **below the pa
 
 - Inset the timeline’s bottom by the strip height so no message is permanently hidden behind it; scroll-to-latest and typing indicators sit **above** the strip, never overlapping it.
 - **Pushes inside a room or space** (room settings, members, media viewer, message info, user profile, polls, and the rest of upstream’s inner stack) keep **upstream presentation and back chrome**. The strip, container transform, and chevron-removal apply only to the room/space join itself — the surface that opened from a list row — not to screens pushed on top of that join.
-- Bottom-anchored transient UI (context menus, reaction pickers, snackbars) must not cover the strip while it is the only visible exit. Composer-owned sheets and bars stay above the strip as above.
+- Bottom-anchored transient UI (context menus, reaction pickers, snackbars) must not cover the strip while it is the only visible exit. Composer-owned pickers stay above the strip; app-owned suggestion bars stay below the strip (just above the keyboard) as above.
 - Contrast must come from the surface itself, not from blur alone — verify in dark mode and over media-heavy backgrounds.
 - **Wide / split layouts:** out of scope for this decision — leave upstream room/space presentation alone (no fork strip, no fork transform, no fork chevron policy).
 
@@ -127,7 +129,7 @@ A space's row opens into that space's own list of children (rooms and/or nested 
 
 - iOS: matched-geometry / shared-element style transition; respect safe area and home indicator.
 - iOS: applies to both `RoomFlowCoordinator` (room join) and `SpaceFlowCoordinator` (space join, including its `presentingChild` nested-space state) — one shared transition/strip component, not a per-flow reimplementation.
-- Android (replay): Material container transform is the reference vocabulary; same product rules.
+- Android: Material container transform is the reference vocabulary; same product rules.
 - Measure morph cost early on the lowest supported device before locking the animation as non-optional.
 
 ## Open issues
@@ -149,3 +151,5 @@ _(none)_
 - 2026-09-10: strip unread cue is a quiet presence indicator (dot), not count/copy text
 - 2026-09-11: popup (shrink + fade), not an inverted bottom sheet; upward caret matching drag-up; strip always closes the popup even with the keyboard up (two-step keyboard-then-panel is system back buttons only); stacking is panel → composer cluster → strip → keyboard with nothing between strip and keyboard; inner pushes keep upstream chrome; composer-owned pickers and suggestion/dictation/emoji bars sit above the strip
 - 2026-10-13: visual detail handed to decision 003 — wide-layout "unchanged" scoped to navigation chrome; canvas tone no longer constrained to "same neutral scale, no hue change" (003 tints the room/list canvas, space canvas stays neutral); space/room visual cues apply on all layouts via 003
+- 2026-10-14: platforms include android (with ios)
+- 2026-10-14: system suggestion / IME chrome stays with the keyboard (not placed by us); app-owned bars moved to just above the keyboard, below the strip; stack is panel → strip → app-owned bars (when shown) → keyboard

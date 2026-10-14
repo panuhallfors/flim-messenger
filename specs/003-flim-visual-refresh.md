@@ -5,7 +5,7 @@ title: Flim visual refresh (neutral surfaces, glass controls, signature gradient
 status: proposed
 created: 2026-10-13
 amends: [001]
-platforms: [ios]
+platforms: [ios, android]
 ---
 
 # 003 — Flim visual refresh (neutral surfaces, glass controls, signature gradient)
@@ -50,7 +50,7 @@ Upstream already matches several parts of the patch, so here the work is restyli
 
 The "Draft:" row label is fork copy (the draft-on-row cue comes from 001) and goes in the Flim catalog from decision 002.
 
-Design (replay-canonical with this decision): [`003-flim-visual-refresh.design.md`](003-flim-visual-refresh.design.md). Reference mocks: [`003-flim-visual-refresh.assets/`](003-flim-visual-refresh.assets/).
+Design (replay-canonical with this decision): [`003-flim-visual-refresh.design.md`](003-flim-visual-refresh.design.md). Reference mocks: [`003-flim-visual-refresh.assets/`](003-flim-visual-refresh.assets/). Where a mock shows an accent/violet unread cue (including on the strip), treat that as outdated — implement `unread.strong` / `unread.soft` per the design, not the mock’s accent colour.
 
 ## Verification
 
@@ -65,10 +65,13 @@ Design (replay-canonical with this decision): [`003-flim-visual-refresh.design.m
 
 ### web
 
-- deferred
+- out of scope (Flim is iOS and Android only)
 
 ## History
 
 - 2026-10-13: proposed
 - 2026-10-13: explicit app-wide scope (all screens get the visual language, not only tokens); explicit "no navigation-model change beyond 001" in intent, acceptance and non-goals
 - 2026-10-13: patch 2 (primary actions, Send, state controls, form sheets, settings) folded into the design; acceptance gains a bullet for consistent primary-action vs state-control styling
+- 2026-10-14: platforms = ios, android
+- 2026-10-14: design stack with 001 — app-owned bars below the strip, just above the keyboard; system IME chrome with the keyboard
+- 2026-10-14: note — mock accent/violet unread (incl. strip) superseded by unread.strong / unread.soft

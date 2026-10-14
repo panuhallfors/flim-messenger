@@ -54,9 +54,10 @@ Design (replay-canonical with this decision): [`009-transcription-setup-prompts.
 
 ### web
 
-- deferred
+- out of scope (Flim is iOS and Android only)
 
 ## History
 
 - 2026-10-14: proposed
 - 2026-10-14: not-set-up always uses a setup link (amends 004); stronger CTA only on the first voice message
+- 2026-10-14: platforms = ios, android

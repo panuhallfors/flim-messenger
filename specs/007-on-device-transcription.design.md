@@ -36,7 +36,7 @@ The check is whatever the OS reports at runtime. A phone that can speak-to-text 
 
 The row stays visible. The reason names the gap in ordinary language: no on-device speech, no on-device model that can title and summarise, the models are still preparing, or the on-device model does not support a language the phone can use. The app may start the system download. It does not download a model of its own, and it does not switch the user to Flim or a custom server.
 
-Confirming while the check passes makes on-device the method in use. If a later check fails, the method stays selected, the settings row says it is not ready, and attempts fail as below until the check passes again. The user can switch to another method.
+Confirming while the check passes makes on-device the method in use. If a later check fails, the method stays selected, the settings row says it is not ready, and attempts fail as **Generic failure** (below) until the check passes again — not as **Not set up**, so decision 009 does not push the user back into setup. The user can switch to another method.
 
 Use the best on-device speech engine the OS offers for the language. Do not refuse the method only because a newer, narrower speech engine is missing, when an older on-device engine and the language model are both ready. Decision 005 already tells the user the quality is lower than an external service.
 
@@ -52,7 +52,7 @@ Success is a non-empty transcript. An empty transcript, an unsupported spoken la
 
 The on-device language model receives the transcript and the room context from decision 004. That text stays on the device. The prompt is the same wording as decision 006: same length and tone rules, first person, the transcript's language, empty strings when nothing fits. The user cannot edit it. Changing those limits, the voice, the language rule, or asking for more than a title and a summary needs a new decision.
 
-Where the OS can bind `title` and `summary` as two strings, use that. The system message is still sent as written. A reply that does not yield those two string fields is an **unusable reply**. An empty-string title or summary is allowed when the model cannot find one (still a usable reply). Decision 004 still truncates a longer title to 50 characters before show/send.
+Where the OS can bind `title` and `summary` as two strings, use that. The system message is still sent as written. A reply that does not yield those two string fields is an **unusable reply**. An empty-string title or summary is allowed when the model cannot find one (still a usable reply). Decision 004 still truncates a longer title or summary to its caps (title ≤4 words / 35 characters; summary ≤4 short sentences / 20 words / 160 characters) before show/send.
 
 A voice message the model cannot finish is a failed attempt. There is no partial brief and no overflow to a cloud model.
 
@@ -91,13 +91,15 @@ Audio, transcript, title, summary, and room context are not sent off the device 
 
 This listener does not invent statuses. It does not produce the network ones: no reply, allowance used up, too many requests, or sign-in rejected.
 
+**Not set up** is only for when **no** transcription method is in use. That case is owned by decision 004’s callers (and 009’s setup link), not by this listener while on-device remains the selected method.
+
 | Situation | Status (004) |
 |-----------|----------------|
-| Method not in use, or the phone can no longer transcribe and summarise on device | Not set up |
-| Unsupported spoken language, speech engine error, model error, or models not ready when the attempt runs | Generic failure |
-| Empty transcript, or a reply that does not yield string fields `title` and `summary` | Unusable reply |
+| On-device is the method in use, but the phone cannot currently both transcribe and summarise on device (models still preparing, assets gone, on-device mode unavailable, or the readiness check fails when the attempt runs) | **Generic failure**, with detail English source: **“On this device isn't ready yet.”** Action stays **Try again** (not setup). |
+| Unsupported spoken language, speech engine error, or model error while the device is otherwise ready | **Generic failure** (default status line; optional short human detail from the engine if useful and non-technical) |
+| Empty transcript, or a reply that does not yield string fields `title` and `summary` | **Unusable reply** |
 
-Prefer the more specific row when more than one could apply.
+Prefer the more specific row when more than one could apply. Never map a selected-but-not-ready on-device method to **Not set up**.
 
 ### Out of band
 
@@ -123,3 +125,6 @@ _(none)_
 - 2026-10-13: title/summary prompt locked to the same system message and user-message shape as decision 006; empty title or summary is usable; a bullet-only summariser does not qualify
 - 2026-10-13: dropped the Android on-device-only settings exception; the full selector is decision 005 on both platforms
 - 2026-10-14: network status name updated to Sign-in rejected (004 rename)
+- 2026-10-14: platforms = ios, android
+- 2026-10-14: selected-but-not-ready on-device maps to Generic failure (“On this device isn't ready yet.”) + Try again; Not set up only when no method is in use
+- 2026-10-14: truncation references match 004 / 006 prompt caps

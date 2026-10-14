@@ -21,6 +21,7 @@ User-observable outcomes. The design document specifies how these are achieved.
 - [ ] With on-device as the method in use, a voice message's title, summary, and transcript are produced on that phone. The audio is not sent to Flim, to a custom server, or to any other service for this method.
 - [ ] The same brief presentation, race, room notice, and failure statuses from decision 004 still apply; only the source of the words changes on this path.
 - [ ] On this device can be turned on only when the phone can both transcribe speech and write a title and summary without leaving the device, and those system models are ready. Otherwise the choice stays visible and says why it cannot be turned on.
+- [ ] When on this device is already the method in use but the phone is not ready to transcribe and summarise, the voice message shows a plain failure with try again — not a “transcription isn't set up” prompt into setup.
 - [ ] A result that is not a transcript plus a title and a summary is not shown, and nothing is sent to the room.
 - [ ] Flim and custom server are unchanged by this decision.
 
@@ -60,10 +61,12 @@ Design (replay-canonical with this decision): [`007-on-device-transcription.desi
 
 ### web
 
-- deferred
+- out of scope (Flim is iOS and Android only)
 
 ## History
 
 - 2026-10-13: proposed
 - 2026-10-13: on-device title and summary use the same prompt wording as decision 006
 - 2026-10-13: Android uses decision 005's full selector, not an on-device-only section
+- 2026-10-14: platforms = ios, android
+- 2026-10-14: selected-but-not-ready fails as generic (try again), not as not-set-up

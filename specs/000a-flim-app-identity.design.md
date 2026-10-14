@@ -55,9 +55,11 @@ Out of product scope. Do not enable or retarget Element Classic account import u
 - Do not retarget `CLASSIC_*` at Element’s groups; leave Classic migration disabled / unused for Flim.
 - Nightly / flavour overlays (e.g. `Components/Variants/Nightly/`) are out of scope until a later decision.
 
-### android / web
+### android
 
-- deferred — replay **Flim Messenger** / **Flim** and the same reverse-DNS product id as the application id / package root when those platforms are implemented.
+- Application id / package root: **`com.hallfors.panu.flim`**.
+- Display name **Flim Messenger**; short product label **Flim**.
+- Do not reuse Element’s application id or shared storage; side-by-side install with Element X must work.
 
 ## Open issues
 
@@ -67,3 +69,4 @@ _(none)_
 
 - 2026-09-11: first write
 - 2026-09-11: Flim Messenger (full) / Flim (short); human setup checklist for OIDC + MapLibre + team id; classic migration noted as out of scope
+- 2026-10-14: android in platforms with ios (same names and reverse-DNS id); web out of product scope

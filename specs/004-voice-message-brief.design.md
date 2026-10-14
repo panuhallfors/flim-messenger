@@ -12,7 +12,7 @@ Companion to `004-voice-message-brief.md`. **Replay-canonical** with that decisi
 
 Upstream sends a voice message as an audio message and shows a player. It does not title, summarise, or transcribe it. Element X iOS does not draw a caption on the voice-message bubble, so putting the brief only in the audio event's caption would leave other Element X clients with silence.
 
-This decision adds the brief around that player, and a companion room event so other Matrix clients still see the title and the summary. The words are produced by an in-app service. The service shipped here is a mock that returns fixed sample text; a later decision replaces it with one that reads the audio. The bubble, the race, and the room event stay as specified here.
+This decision adds the brief around that player, and a companion room event so other Matrix clients still see the title and the summary. The words are produced by an in-app service. This decision defines the service contract and ships a **mock** as the interim implementation. Decisions 006, 007, and 008 each replace the mock on their path when they are in the replay. The bubble, the race, and the room event stay as specified here.
 
 ## Product design
 
@@ -20,8 +20,8 @@ This decision adds the brief around that player, and a companion room event so o
 
 The voice-message block keeps the existing player. With it, in this order:
 
-1. **Title** — one line, at most 50 characters.
-2. **Summary** — a couple of sentences about what was said.
+1. **Title** — one line, at most four words and at most 35 characters.
+2. **Summary** — short: at most four short sentences, and at most 20 words, and at most 160 characters; not a copy of the transcript.
 3. **Transcript** — the full text.
 
 All three are part of that voice message. Flim does not also show them as their own timeline row.
@@ -40,8 +40,8 @@ Trying again is allowed only when nothing has been adopted yet; a result that is
 
 Every failure uses that same layout. The status is one of these:
 
-1. **Generic failure** — the transcript could not be made (English source: “Couldn't make a transcript.”).
-2. **Not set up** — transcription is not set up (English source: “Transcription isn't set up.”). The action is a setup link (not Try again): it opens decision 005’s transcription selector / setup. Decision 009 adds a stronger one-shot call-to-action the first time this status appears on a voice message; afterwards this quiet status + setup link remains.
+1. **Generic failure** — the transcript could not be made (English source: “Couldn't make a transcript.”). Optional detail may refine the case; when on-device is in use but not ready, decision 007 supplies detail English source: “On this device isn't ready yet.” Action remains Try again.
+2. **Not set up** — **no** transcription method is in use (English source: “Transcription isn't set up.”). Do not use this status when a method is selected but temporarily unable. The action is a setup link (not Try again): it opens decision 005’s transcription selector / setup. Decision 009 adds a stronger one-shot call-to-action the first time this status appears on a voice message; afterwards this quiet status + setup link remains.
 3. **No reply** — the service could not be reached (English source: “Couldn't reach the transcription service.”). Silence, a timeout, and a connection that drops are this status.
 4. **Service fault** — the service replied and failed (English source: “The transcription service failed.”).
 5. **Allowance used up** — the allowance is used up. For Flim, say that a larger transcription-service subscription is needed. For a server the user named, say that this key's allowance is used up. No store or plan-change flow on the bubble — only that message. Try again may succeed after the plan changes.
@@ -60,8 +60,8 @@ The conversation-list preview for that voice message uses the title once a resul
 
 Every platform calls an in-app service. Input is the voice message's audio plus **room context** (below). Output is a title, a summary, and a transcript.
 
-- Title is at most 50 characters. A longer title is truncated on a character boundary before it is shown or sent.
-- Summary is about two sentences, and is not a copy of the transcript.
+- Title is at most four words and at most 35 characters (same limits as the 006 / 007 prompts). A longer title is truncated on a character boundary to 35 before it is shown or sent; excess words are dropped from the end if needed to meet the four-word cap after that.
+- Summary is at most four short sentences, and at most 20 words, and at most 160 characters, and is not a copy of the transcript. Longer summaries are truncated to those caps before show/send (character cap first, then word / sentence caps as needed).
 - Transcript is the full text.
 
 #### Room context (every call)
@@ -100,11 +100,19 @@ The contract is fixed now, so a later decision can replace the implementation wi
 
 The call is asynchronous from the start. The mock may return immediately; a later engine may take time. Callers already wait either way.
 
-Title truncation to 50 characters sits outside the service, in the one place that shows and sends the result. Both implementations share it. Mapping a service failure to one of the statuses above also sits outside the engine, in that same place.
+Title and summary truncation to the limits above sits outside the service, in the one place that shows and sends the result. All implementations share it. Mapping a service failure to one of the statuses above also sits outside the engine, in that same place.
 
-The service in this decision is a mock. It does not read the audio or the context. On a successful call it returns a fixed title, summary, and transcript. The fixed text says that it is sample text, not what was spoken. **Every third call fails** with a generic failure, so the shipping app exercises the error UI in real rooms without a real engine. The mock can also return any of the other statuses (for previews and tests) under the same failure contract. The shipping app calls this mock in real rooms, not only in tests or previews: on success the sender's bubble shows the sample and the companion notice carries the sample title and summary; on failure the sender's bubble shows the error and no notice is sent.
+The mock does not read the audio or the context. On a successful call it returns a fixed title, summary, and transcript. The fixed text says that it is sample text, not what was spoken. **Every third call fails** with a generic failure so the error UI can be exercised without a real engine. The mock can also return any of the other statuses under the same failure contract (useful for previews and tests).
 
-A later decision replaces the mock by swapping which implementation is constructed. It does not edit the bubble, the race, the failure UI, context gathering, or the notice. Credentials, a model, quota accounting, or a network client that the engine needs live inside that implementation. A new user-visible behaviour is a new decision, not a change to these callers.
+**Interim only.** The mock is valid only until a real listener exists for the method in use:
+
+- **Custom server** → decision 006 replaces the mock on that path.
+- **On this device** → decision 007 replaces the mock on that path.
+- **Flim** → decision 008 replaces the mock on that path.
+
+Once that listener is in the replay, the composition root selects it for that method — never the mock. With no method in use, show not-set-up; do not call the mock as a stand-in. Until a path’s real listener exists, that method stays unavailable (or, only in the gap before 006–008 land, the mock may still serve real rooms for whatever path is wired). After 006–008, the mock remains available for tests and previews only.
+
+A later decision replaces the mock on a path by swapping which implementation is constructed. It does not edit the bubble, the race, the failure UI, context gathering, or the notice. Credentials, a model, quota accounting, or a network client that the engine needs live inside that implementation. A new user-visible behaviour is a new decision, not a change to these callers.
 
 The race below is per device. Only the device that sent the voice message publishes a brief to the other people in the room. If a recipient produces a result, it stays on that device.
 
@@ -120,7 +128,17 @@ Another signed-in device of the same account did not send the message. It follow
 
 ### Receiving
 
-When a voice message arrives:
+Auto-start of a brief on a recipient device applies only to a **newly arriving** voice message.
+
+**Newly arriving** means this device is processing that voice-message event for the first time as a live or catch-up sync (including messages that landed while the app was closed or offline). It does **not** mean:
+
+- opening a room whose timeline already holds the event,
+- scrolling or paginating older history into view,
+- reloading a room, or any other path that only puts an already-known past event on screen.
+
+Those historical voice messages stay as the player alone unless a trusted companion notice is already available to adopt (below), or the user later taps Try again after a failure from an attempt that had already started. Showing them on screen never starts the wait or the service.
+
+When a voice message **newly arrives**:
 
 - **No Flim marker.** Start the service immediately.
 - **Flim marker.** Wait 15 seconds for a trusted brief from the voice message's sender.
@@ -131,7 +149,14 @@ The first result to become ready on this device is adopted. That includes a trus
 
 A recipient does not publish. The result they produce is for themselves on that device, and the other people in the room do not receive it.
 
-**Trusted** means: the notice is the companion defined below, its relation points at this voice message, and its sender is the same user as the voice message's sender. Anything else with the marker stays an ordinary message — it is not attached to the player, and it is not hidden. The marker must not be a way for someone else in the room to overwrite a transcript or to hide a message.
+**Trusted** means: the notice is the companion defined below (`msgtype` `m.notice` with a `com.hallfors.panu.flim.voice_summary` content block), its sender is the same user as the voice message's sender, and it links to this voice message as follows:
+
+- **Main timeline** — `m.relates_to.rel_type` is `com.hallfors.panu.flim.voice_summary` and `m.relates_to.event_id` is this voice message.
+- **Thread** — `m.relates_to.rel_type` is `m.thread` (so the notice stays in the thread), and `m.relates_to.m.in_reply_to.event_id` is this voice message.
+
+Anything else with the marker stays an ordinary message — it is not attached to the player, and it is not hidden. The marker must not be a way for someone else in the room to overwrite a transcript or to hide a message.
+
+If a trusted companion is discovered for a historical voice message (one that did not newly arrive on this device), adopt it when found. Do not start the 15-second wait or the local service solely because that message is on screen.
 
 An adopted result is kept on device for that voice message, so a later launch does not start another attempt and does not swap in a late notice.
 
@@ -141,7 +166,9 @@ Incomplete work is remembered per voice message on this device. When the app sta
 
 **Received** (this device did not send the voice message — including another device of the same account):
 
-- If nothing is adopted yet and a brief is still owed (no trusted brief in the room, or the wait already ended without one): continue — start or resume the service. No 15-second wait again if that wait already completed before the close; if the wait was still running, finish the remaining wait, then continue as on receive.
+- Resume only work that **already started** for a newly arriving message (a wait in progress, or a service call that had begun): continue that wait or service. No 15-second wait again if that wait already completed before the close; if the wait was still running, finish the remaining wait, then continue as on receive.
+- Do **not** scan the timeline or start new briefs for historical voice messages that never began an attempt.
+- Voice messages that newly arrive during catch-up after launch follow **Receiving** as usual.
 - A received result stays on this device. Relaunch never publishes for a received message.
 
 **Sent** (this device sent the voice message):
@@ -151,25 +178,25 @@ Incomplete work is remembered per voice message on this device. When the app sta
   - Adopted result not yet published → publish that result; do not call the service again.
 - **10 minutes or older:** do not auto-start or resume the service, and do not publish a late companion notice. Recipients should not get a Flim title/summary in the room long after they already heard the audio. The bubble may show the quiet failure (or stay without a brief); the user can still tap Try again for a **local** result on this device only — that retry must not publish once the send is past 10 minutes.
 
-The 10-minute limit applies only to **outgoing** auto-resume and to **publishing**. It does not limit received local briefs.
+The 10-minute limit applies only to **outgoing** auto-resume and to **publishing**. It does not limit received local briefs that already started for a newly arriving message.
 
 ### What other clients see
 
 They see a normal voice message, then a notice that replies to it. The notice's visible text is only:
 
-1. the title
+1. a short line that names Flim Messenger as the summary's source
 2. a blank line
-3. the summary
+3. the title
 4. a blank line
-5. a short attribution that names Flim
+5. the summary
 
-The attribution is the sender's Flim-catalog string for "made with Flim" (decision 002). English source: "Made with Flim". The full transcript is not in the visible text.
+That leading line is the sender's Flim-catalog string (decision 002). English source: **"Summary by Flim Messenger"**. It comes first so other clients do not read the (often first-person) title and summary as the sender's own typed words. The full transcript is not in the visible text.
 
 The notice is an `m.notice`, so default push rules do not raise a second notification for it. The voice message still notifies as it does today. Clients that have turned notice suppression off may notify. The notice is its own timeline event, so clients that count every event will count it.
 
 Flim does not draw a trusted companion notice as its own timeline row, whether or not its text was the result Flim adopted.
 
-If the voice message is in a thread, the notice is in that same thread.
+If the voice message is in a thread, the companion notice is in that same thread (see Protocol). Matrix allows only one `rel_type` on an event, so a threaded notice cannot also use the custom voice-summary relation.
 
 When the sender redacts the voice message, Flim also redacts the companion notice they published for it, and drops any result stored on device for that message. The transcript should not remain in the room after the audio is removed.
 
@@ -185,17 +212,12 @@ Namespace is the product id from decision 000a: `com.hallfors.panu.flim`. Custom
 
 Presence is the whole signal. No brief is stored on the audio event.
 
-**Companion notice:**
+**Companion notice** — shared fields on every companion:
 
 ```json
 {
   "msgtype": "m.notice",
-  "body": "<title>\n\n<summary>\n\nMade with Flim",
-  "m.relates_to": {
-    "rel_type": "com.hallfors.panu.flim.voice_summary",
-    "event_id": "$voiceEventId",
-    "m.in_reply_to": { "event_id": "$voiceEventId" }
-  },
+  "body": "Summary by Flim Messenger\n\n<title>\n\n<summary>",
   "com.hallfors.panu.flim.voice_summary": {
     "v": 1,
     "title": "<title>",
@@ -205,7 +227,32 @@ Presence is the whole signal. No brief is stored on the audio event.
 }
 ```
 
-`body` is plain text. There is no `formatted_body`. The transcript exists only under `com.hallfors.panu.flim.voice_summary`. The visible attribution in `body` is the sender's localized catalog string; the English source above is the fallback shape.
+`body` is plain text. There is no `formatted_body`. The transcript exists only under `com.hallfors.panu.flim.voice_summary`. The leading attribution in `body` is the sender's localized catalog string; the English source above is the fallback shape. Do not put a second attribution at the end.
+
+**`m.relates_to` — choose exactly one shape:**
+
+1. **Voice message is not in a thread** (main timeline). Use the custom relation; `event_id` and `m.in_reply_to` both point at the voice message:
+
+```json
+"m.relates_to": {
+  "rel_type": "com.hallfors.panu.flim.voice_summary",
+  "event_id": "$voiceEventId",
+  "m.in_reply_to": { "event_id": "$voiceEventId" }
+}
+```
+
+2. **Voice message is in a thread.** Use `m.thread` so the notice appears in that thread. `event_id` is the thread root (same as the voice message's thread). `m.in_reply_to` points at the voice message — that is how Flim binds the notice to the audio when the custom `rel_type` cannot be used:
+
+```json
+"m.relates_to": {
+  "rel_type": "m.thread",
+  "event_id": "$threadRootEventId",
+  "m.in_reply_to": { "event_id": "$voiceEventId" },
+  "is_falling_back": false
+}
+```
+
+Do not combine both `rel_type` values on one event. Do not invent a second relation field.
 
 One notice per voice message. A later correction is not sent: a result that finishes later is discarded, not edited in.
 
@@ -220,11 +267,12 @@ The scheduler is not chosen here (extending that existing interval, a later refr
 ## Platform notes
 
 - iOS: the Rust SDK's typed timeline content drops unknown content keys. Reading `com.hallfors.panu.flim.voice` and `com.hallfors.panu.flim.voice_summary` needs the original event JSON (already exposed on timeline debug info) or a small SDK pass-through. The typed voice-message model is not enough.
-- iOS: 50 characters means extended grapheme clusters, so an emoji counts as one.
-- iOS: status, attribution, each failure status above, and “Try again” strings are Flim catalog keys (decision 002), not `Localizable.strings` / `Untranslated.strings`. English source for Flim's allowance status must state that a larger transcription-service subscription is needed.
+- iOS: title/summary character limits mean extended grapheme clusters, so an emoji counts as one.
+- iOS: status, the leading companion-notice attribution (“Summary by Flim Messenger”), each failure status above, and “Try again” strings are Flim catalog keys (decision 002), not `Localizable.strings` / `Untranslated.strings`. English source for Flim's allowance status must state that a larger transcription-service subscription is needed.
 - iOS background: the existing pieces to hang the attempt on are the SDK send queue and `AppCoordinator`'s `beginBackgroundTask` when entering background. Which of those, or a new task, actually runs the service is an implementation choice.
-- iOS: one protocol for the service, including room context on every call and a typed failure for each status above. This decision adds the mock as its implementation (success with sample text, every third call a generic failure, the other statuses available for previews/tests). The composition root is the only place that names the mock. A later engine conforms to the same protocol and is selected there.
+- iOS: one protocol for the service, including room context on every call and a typed failure for each status above. This decision adds the mock as the interim implementation (success with sample text, every third call a generic failure, the other statuses available for previews/tests). The composition root is the only place that names the mock. After 006 / 007 / 008, those listeners are selected for their methods; the mock is then for tests and previews only.
 - iOS: context items are built from timeline / local adopted briefs before the service call; do not download prior media solely to feed the service.
+- Android: same product rules (bubble, race, companion notice, newly-arriving trigger). Map storage, background work, and event JSON access to the Android SDK.
 
 ## Open issues
 
@@ -246,3 +294,10 @@ _(none)_
 - 2026-10-13: amended by 007 — on-device method uses the on-device listener instead of the mock; other methods unchanged
 - 2026-10-14: auth failure status renamed to Sign-in rejected (covers API key and Flim session); English source “Sign-in was refused.”
 - 2026-10-14: amended by 009 — not-set-up action is a setup link into decision 005, not Try again; first encounter may use 009’s stronger one-shot CTA
+- 2026-10-14: recipient auto-brief only for newly arriving voice messages (live/catch-up); opening or scrolling history does not start the wait or the service; relaunch resumes only in-flight received work; trusted companions for historical messages may still be adopted when found
+- 2026-10-14: companion `body` for other clients starts with “Summary by Flim Messenger”, then title and summary; trailing “Made with Flim” dropped
+- 2026-10-14: platforms include android (with ios)
+- 2026-10-14: companion `m.relates_to` — custom `voice_summary` on the main timeline; `m.thread` + `m.in_reply_to` the voice event when the voice message is in a thread (one `rel_type` only); Trusted updated to match
+- 2026-10-14: Not set up = no method in use only; on-device not-ready uses Generic failure + detail (decision 007)
+- 2026-10-14: mock interim only until 006 / 007 / 008 replace it per path; no separate 010 decision
+- 2026-10-14: title/summary limits match 006/007 prompts (title ≤4 words / 35 chars; summary ≤4 short sentences / 20 words / 160 chars)
