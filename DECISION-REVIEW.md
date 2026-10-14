@@ -30,27 +30,27 @@ Each finding is labelled **Blocker** (the app is broken, cannot ship, or the spe
 
 ### 1.1 Blocker — Companion notice cannot be both a custom relation and in a thread (004)
 
-004's design sets `m.relates_to.rel_type = com.hallfors.panu.flim.voice_summary` and also says *"If the voice message is in a thread, the notice is in that same thread."* In Matrix, an event has exactly one `rel_type`, and a thread reply needs `rel_type: m.thread` pointing at the thread root. Both can't be true.
+004's design sets `m.relates_to.rel_type = me.flim.voice_summary` and also says _"If the voice message is in a thread, the notice is in that same thread."_ In Matrix, an event has exactly one `rel_type`, and a thread reply needs `rel_type: m.thread` pointing at the thread root. Both can't be true.
 
-**Recommendation:** amend 004's protocol. The notice can use `m.thread` (with `m.in_reply_to` the voice event) when the voice message is in a thread, and the custom relation everywhere else. Alternatively, move the link to the voice event into the `com.hallfors.panu.flim.voice_summary` content block (`voice_event_id`) and make the trust check use that.
+**Recommendation:** amend 004's protocol. The notice can use `m.thread` (with `m.in_reply_to` the voice event) when the voice message is in a thread, and the custom relation everywhere else. Alternatively, move the link to the voice event into the `me.flim.voice_summary` content block (`voice_event_id`) and make the trust check use that.
 
 ### 1.2 Blocker — Stack order in 001 needs the system suggestion bar above the strip, which can't be done
 
 001 (and the L3/D3 mock in 003) stacks: panel → composer → **suggestion / dictation / emoji bars** → strip → keyboard keys. On iOS the QuickType predictive bar, the dictation UI and the emoji search bar are part of the **system keyboard**. On Android the suggestion strip belongs to the input method (the keyboard app). The app cannot place its own view between them and the keys. Only app-drawn bars (Element's @-mention and command suggestions) can sit above the strip.
 
-**Recommendation:** amend 001 and 003 by narrowing the rule to *app-owned* bars. Say that the system candidate bar stays attached to the keyboard, so the real stack is composer → app bars → strip → [system suggestion bar + keys]. Redo the 001 mis-tap analysis for that stack: the strip now sits next to the suggestion bar, not the top row of keys. Update the mock.
+**Recommendation:** amend 001 and 003 by narrowing the rule to _app-owned_ bars. Say that the system candidate bar stays attached to the keyboard, so the real stack is composer → app bars → strip → [system suggestion bar + keys]. Redo the 001 mis-tap analysis for that stack: the strip now sits next to the suggestion bar, not the top row of keys. Update the mock.
 
 ### 1.3 Major — "Buy a larger subscription" when no subscription can be bought (004 vs 005 / 008)
 
-004 says the Flim allowance failure must say *a larger transcription-service subscription is needed*. 005 and 008 make subscriptions visible but disabled ("Coming later"). The only plan is the 100-per-day promo plan, and it resets at UTC midnight. A user who runs out is sent to a control that does nothing.
+004 says the Flim allowance failure must say _a larger transcription-service subscription is needed_. 005 and 008 make subscriptions visible but disabled ("Coming later"). The only plan is the 100-per-day promo plan, and it resets at UTC midnight. A user who runs out is sent to a control that does nothing.
 
 **Recommendation:** amend 004 so the wording depends on the plan. On the free promo plan, say the daily limit is used up and give the reset time. Use the subscription wording only once store billing ships.
 
 ### 1.4 Major — Flim's own string catalog vs workspace policy (002 vs `AGENTS.md`, `ios/AGENTS.md`, `jev-pref.json`)
 
-- Root `AGENTS.md` (Jev rules), `ios/AGENTS.md` and `jev-pref.json` all say *"new English strings go in `Untranslated.strings`"*.
+- Root `AGENTS.md` (Jev rules), `ios/AGENTS.md` and `jev-pref.json` all say _"new English strings go in `Untranslated.strings`"_.
 - 002, 004, 005 and 009 say the opposite for fork copy: Flim strings go in `Flim.strings`, **never** in `Untranslated`.
-- 002's design also says *"(add this to AGENTS.md)"*, and that hasn't been done.
+- 002's design also says _"(add this to AGENTS.md)"_, and that hasn't been done.
 
 An implementing agent or the Jev reviewer following the workspace rules will put fork strings in the wrong place, or flag the right place as a violation.
 
@@ -58,25 +58,25 @@ An implementing agent or the Jev reviewer following the workspace rules will put
 
 ### 1.5 Major — On-device "not ready" shows up as "not set up" (007 vs 005 / 009)
 
-007 says that if the on-device check later fails, *the method stays selected* and settings says "not ready". Its failure table maps *"the phone can no longer transcribe and summarise on device"* to **Not set up**, and 009 turns that status into a setup call-to-action. A user who did set up on-device, and whose models are re-downloading after an OS update, is told *"Transcription isn't set up"* and pushed into setup. 007 also maps "models not ready when the attempt runs" to *Generic failure*, which overlaps with the same case.
+007 says that if the on-device check later fails, _the method stays selected_ and settings says "not ready". Its failure table maps _"the phone can no longer transcribe and summarise on device"_ to **Not set up**, and 009 turns that status into a setup call-to-action. A user who did set up on-device, and whose models are re-downloading after an OS update, is told _"Transcription isn't set up"_ and pushed into setup. 007 also maps "models not ready when the attempt runs" to _Generic failure_, which overlaps with the same case.
 
 **Recommendation:** map every "selected but not currently able" case to one status (Generic failure, with "on this device isn't ready yet" detail text, plus Try again). Use **Not set up** only when no method is in use.
 
 ### 1.6 Major — Custom server: two addresses, one key (005 / 006)
 
-005 allows a second address for the summary when it *"lives somewhere else"*, but there is only one key field. 006 sends that key as a bearer token to both addresses. With two providers, the second call fails as *Sign-in rejected*, and the first provider's key is sent to the second provider.
+005 allows a second address for the summary when it _"lives somewhere else"_, but there is only one key field. 006 sends that key as a bearer token to both addresses. With two providers, the second call fails as _Sign-in rejected_, and the first provider's key is sent to the second provider.
 
 **Recommendation:** when a second address is entered, show a second key field (defaulting to "same key"). Never send one provider's key to a different host.
 
 ### 1.7 Minor — 004's acceptance stops being true after 005–008
 
-004's acceptance and design say the shipping app uses the mock in real rooms. Successful results publish *sample text* with "Made with Flim", and *every third call fails*. After 005, nothing runs without a method. After 006, 007 and 008, every method has a real engine, so the mock is unreachable in production. 006's acceptance even says other paths *"still use the mock"* until their decisions land. No decision says **"the mock must never publish to a real room once 005 lands."** Under partial replay (for example, 008's server not deployed yet), real rooms would get fake summaries attributed to Flim.
+004's acceptance and design say the shipping app uses the mock in real rooms. Successful results publish _sample text_ with "Made with Flim", and _every third call fails_. After 005, nothing runs without a method. After 006, 007 and 008, every method has a real engine, so the mock is unreachable in production. 006's acceptance even says other paths _"still use the mock"_ until their decisions land. No decision says **"the mock must never publish to a real room once 005 lands."** Under partial replay (for example, 008's server not deployed yet), real rooms would get fake summaries attributed to Flim.
 
 **Recommendation:** an amending decision that makes the mock preview/test-only from 005 onward, and turns 004's sample-text and every-third-call acceptance bullets into "superseded".
 
 ### 1.8 Minor — 005 still says "Try again" for "not set up"
 
-005's design (Selector first, last paragraph) still says the not-set-up bubble offers *Try again*. 009 amends 005 and later wins, but 005's History has no "amended by 009" line, unlike 004's.
+005's design (Selector first, last paragraph) still says the not-set-up bubble offers _Try again_. 009 amends 005 and later wins, but 005's History has no "amended by 009" line, unlike 004's.
 
 ### 1.9 Minor — Title and summary limits don't match
 
@@ -105,14 +105,14 @@ Today these still point at Element:
 
 - **OIDC / MAS consent:** `clientName` already comes from the display name, but `logoURL`, `clientURI` (`websiteURL`), `tosURI` and `policyURI` are `element.io`. `oAuthRedirectURL` is `element.io/oauth/ios/<bundle id>`. The consent screen shows "Flim Messenger" with Element's logo and Element's terms. The redirect can't be completed for our bundle id without our own domain.
 - **Privacy, acceptable use, copyright and help links** (encryption, verification, backup): `element.io`.
-- **Analytics** (PostHog), **Sentry** and the **rageshake bug report** (`bugReportApplicationID = "element-x-ios"`): users would agree to *Element's* analytics, or file bug reports to Element.
+- **Analytics** (PostHog), **Sentry** and the **rageshake bug report** (`bugReportApplicationID = "element-x-ios"`): users would agree to _Element's_ analytics, or file bug reports to Element.
 - **`accountProvisioningHost`** and `elementWebHosts` (permalinks): `element.io`.
 
 **Recommendation:** extend 000a's design, or write a 000b "Flim service endpoints", so it lists each one as replace, disable, or keep on purpose. For analytics and bug reports, the sensible first ship is to disable them (the upstream consent screen then disappears).
 
 ### 2.3 Major — App icon and launch artwork have no owner
 
-000a lists *"icons… beyond display name + identifiers"* as a non-goal. 003 lists *"New app icon or launch / brand artwork (separate decision if wanted)"* as a non-goal. For a separately branded app, the icon is the most visible brand element, and Element's logo and name are trademarks. Shipping Flim with Element's icon is confusing and a trademark risk.
+000a lists _"icons… beyond display name + identifiers"_ as a non-goal. 003 lists _"New app icon or launch / brand artwork (separate decision if wanted)"_ as a non-goal. For a separately branded app, the icon is the most visible brand element, and Element's logo and name are trademarks. Shipping Flim with Element's icon is confusing and a trademark risk.
 
 **Recommendation:** a branding decision for the app icon (light, dark and tinted variants on iOS 26; adaptive on Android), the launch screen, the onboarding / splash artwork, notification icons, and App Store / Play listing assets.
 
@@ -124,7 +124,7 @@ Today these still point at Element:
 
 ### 2.5 Major — Android scope doesn't match (000a – 003 vs 005 – 009)
 
-005–009 list `platforms: [ios, android]`. 000a, 001, 002 and 003 are `ios` only, and 000a explicitly defers the Android application id. Following the log as written gives an Android app with Flim transcription screens and the `com.hallfors.panu.flim` event namespace, but no Flim app id, catalog, look or one-handed navigation. `AGENTS.md` asks every decision to consider both platforms.
+005–009 list `platforms: [ios, android]`. 000a, 001, 002 and 003 are `ios` only, and 000a explicitly defers the Android application id. Following the log as written gives an Android app with Flim transcription screens and the `me.flim` event namespace, but no Flim app id, catalog, look or one-handed navigation. `AGENTS.md` asks every decision to consider both platforms.
 
 **Recommendation:** add `android` to 000a–003 (with `deferred` verification), or make Android `deferred` in 005–009. Don't leave the Android build in a mixed state.
 
@@ -133,9 +133,9 @@ Today these still point at Element:
 These items are based on current App Store / Play policy as I understand it. Check them against the latest review guidelines.
 
 - **Account deletion.** An app that lets users create an account must let them delete it inside the app (App Store 5.1.1(v), and Play has a similar rule). 005 and 008 only offer sign-out. GDPR erasure applies to an EU service in any case.
-- **Sharing personal data with AI services.** Apple now requires clear disclosure and explicit permission before personal data is shared with third-party AI. Flim mode sends audio plus five earlier messages from *other people* in end-to-end-encrypted rooms to Cortecs / Mistral. Custom mode sends them to OpenAI or OpenRouter. 005's selector copy says this, but there is no explicit consent step and no privacy policy / terms for the Flim service.
+- **Sharing personal data with AI services.** Apple now requires clear disclosure and explicit permission before personal data is shared with third-party AI. Flim mode sends audio plus five earlier messages from _other people_ in end-to-end-encrypted rooms to Cortecs / Mistral. Custom mode sends them to OpenAI or OpenRouter. 005's selector copy says this, but there is no explicit consent step and no privacy policy / terms for the Flim service.
 - **Promo codes as the only unlock.** Unlocking a feature with a code redeemed against an external account, while the in-app purchase is disabled, is a known App Review risk (3.1.1). A visibly disabled "Coming later" button can also be rejected as placeholder content.
-- **Session lifetime.** 008 doesn't say when a Flim session expires or how it refreshes. *Sign-in rejected* tells the user to "fix it in Settings", but the account screen only offers sign-out.
+- **Session lifetime.** 008 doesn't say when a Flim session expires or how it refreshes. _Sign-in rejected_ tells the user to "fix it in Settings", but the account screen only offers sign-out.
 - **Limits.** No maximum voice-message length or upload size, and no promo-plan expiry, is defined. The cost of the free plan is open-ended.
 
 ### 2.7 Major — The companion notice can be too big (004)
@@ -154,7 +154,7 @@ The companion notice is hidden from the timeline but is still an event. It may s
 
 ### 2.10 Minor — Hardcoded upstream "Element" strings
 
-Upstream's English catalog has only 11 strings that say "Element" literally. Most name other products (Element Call, Element Pro, Element Classic). "Element Default" / "Element Fade" (notification sounds) and *"use the new Element X app"* do read as our branding. 002 forbids patching Element keys, so these need Flim keys at their call sites. A one-line audit item in 000a covers it.
+Upstream's English catalog has only 11 strings that say "Element" literally. Most name other products (Element Call, Element Pro, Element Classic). "Element Default" / "Element Fade" (notification sounds) and _"use the new Element X app"_ do read as our branding. 002 forbids patching Element keys, so these need Flim keys at their call sites. A one-line audit item in 000a covers it.
 
 ---
 
@@ -162,15 +162,15 @@ Upstream's English catalog has only 11 strings that say "Element" literally. Mos
 
 ### 3.1 Major — No way to turn transcription off (005 / 009 / 004)
 
-The methods are Flim, custom server and on-device. There is no **Off**. A user who chooses "Not now" in 009, or who simply doesn't want the feature, sees a *"Transcription isn't set up"* failure block with a setup link under **every voice message, forever**. A deliberate choice is treated as an error.
+The methods are Flim, custom server and on-device. There is no **Off**. A user who chooses "Not now" in 009, or who simply doesn't want the feature, sees a _"Transcription isn't set up"_ failure block with a setup link under **every voice message, forever**. A deliberate choice is treated as an error.
 
-Also, 004 marks **every** Flim-sent voice message *"a brief may follow"*, even when the sender has no method. Every recipient running Flim then waits 15 seconds for a brief that will never come.
+Also, 004 marks **every** Flim-sent voice message _"a brief may follow"_, even when the sender has no method. Every recipient running Flim then waits 15 seconds for a brief that will never come.
 
 **Recommendation:** add an explicit **Off** choice to 005's selector. With Off, show no brief block at all (only the player), and don't send the marker. Send the marker only when a method is in use. Keep the 009 prompts for users who haven't chosen yet, and stop prompting once they choose Off.
 
 ### 3.2 Major — When does a recipient transcribe? (004)
 
-004 says *"when a voice message arrives… start the service immediately."* It doesn't say whether "arrives" means synced, shown in the timeline, or opened. Read literally:
+004 says _"when a voice message arrives… start the service immediately."_ It doesn't say whether "arrives" means synced, shown in the timeline, or opened. Read literally:
 
 - Voice messages in rooms the user never opens get transcribed in the background.
 - Scrolling back through an old room starts one call per historical voice message. A busy group can use up the 100-per-day Flim plan, or the user's own paid custom-server key, before lunch.
@@ -183,9 +183,10 @@ Also, 004 marks **every** Flim-sent voice message *"a brief may follow"*, even w
 The sending device automatically publishes a title and summary written by a model, **in the first person** ("I like roses"), to everyone in the room. There is no preview, no edit, no per-message undo and no "don't share" setting. With on-device mode (lower quality, by 005's own copy) or a 35-character limit, a wrong summary will sometimes say something the sender didn't say, in their voice. "Made with Flim" helps, but recipients often read only the summary.
 
 **Recommendation:**
+
 - A setting "Share title and summary with the room" (worth discussing whether it should default on).
 - A "Remove summary" action on your own voice message that redacts the notice.
-- Consider third-person or neutral wording for the *shared* summary, while keeping first person for local display.
+- Consider third-person or neutral wording for the _shared_ summary, while keeping first person for local display.
 
 ### 3.4 Major — The full transcript always shows in the timeline (004)
 
@@ -195,9 +196,10 @@ The block shows title, summary **and the full transcript** under every voice mes
 
 ### 3.5 Major — Recipients' consent (004 / 005 / 008)
 
-A recipient in Flim or custom mode sends *someone else's* voice and the five earlier messages to a cloud service, without that person knowing, including from end-to-end-encrypted rooms. Combined with 3.2 this is the biggest trust risk in the log for a Matrix (privacy-focused) client.
+A recipient in Flim or custom mode sends _someone else's_ voice and the five earlier messages to a cloud service, without that person knowing, including from end-to-end-encrypted rooms. Combined with 3.2 this is the biggest trust risk in the log for a Matrix (privacy-focused) client.
 
 **Recommendation:**
+
 - Default room context to "off" for cloud methods, or limit it to the reply target.
 - Let users turn transcription off per room.
 - Write the consent copy in 005 explicitly, rather than leaving it as a line in the selector row.
@@ -212,7 +214,7 @@ Also check that the provider examples work with **one address for both steps**. 
 
 ### 3.7 Minor — Error statuses that give the user nothing to do (008)
 
-For Flim, *Setup is wrong* ("The transcription settings look wrong") has nothing the user can fix, because Flim has no settings fields. Flim-side 400 / 404 / 422 errors should map to *Service fault*.
+For Flim, _Setup is wrong_ ("The transcription settings look wrong") has nothing the user can fix, because Flim has no settings fields. Flim-side 400 / 404 / 422 errors should map to _Service fault_.
 
 ---
 
@@ -230,16 +232,16 @@ For Flim, *Setup is wrong* ("The transcription settings look wrong") has nothing
 
 ## 5. Branding (summary of the above)
 
-| Brand surface | Covered by | Status |
-|---|---|---|
-| Display name, bundle / app-group ids | 000a | Covered; home-screen name too long (2.4) |
-| Look: colours, components, light/dark | 003 | Covered thoroughly |
-| App icon, launch, store assets | none | Missing (2.3) |
-| OIDC consent logo / terms, website, help links | none | Still Element (2.2) |
-| Push, analytics, bug reports | none | Broken or still Element (2.1, 2.2) |
-| Fork-owned copy (en-GB + fi) | 002 | Covered; conflicts with workspace policy (1.4) |
-| Event namespace | 004 (from 000a) | `com.hallfors.panu.flim`, a personal namespace. Fine if that domain stays yours; it's permanent once events exist |
-| Android identity | none | Deferred while 005–009 require Android (2.5) |
+| Brand surface                                  | Covered by      | Status                                                                                             |
+| ---------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------- |
+| Display name, bundle / app-group ids           | 000a            | Covered; home-screen name too long (2.4)                                                           |
+| Look: colours, components, light/dark          | 003             | Covered thoroughly                                                                                 |
+| App icon, launch, store assets                 | none            | Missing (2.3)                                                                                      |
+| OIDC consent logo / terms, website, help links | none            | Still Element (2.2)                                                                                |
+| Push, analytics, bug reports                   | none            | Broken or still Element (2.1, 2.2)                                                                 |
+| Fork-owned copy (en-GB + fi)                   | 002             | Covered; conflicts with workspace policy (1.4)                                                     |
+| Event namespace                                | 004 (from 000a) | `me.flim`, a personal namespace. Fine if that domain stays yours; it's permanent once events exist |
+| Android identity                               | none            | Deferred while 005–009 require Android (2.5)                                                       |
 
 ---
 

@@ -21,9 +21,9 @@ Upstream Element X ships as “Element X” under Element’s Apple identifiers 
 
 ### Bundle / package identity
 
-- Canonical reverse-DNS product id: **`com.hallfors.panu.flim`**.
+- Canonical reverse-DNS product id: **`me.flim`**.
 - Rationale vs `…film-ios`: product spelling is **Flim**; platform suffix is unnecessary — each platform uses its own packaging field, and iOS extensions already hang off the base id with their own suffixes.
-- App group id for shared container / capabilities: **`group.com.hallfors.panu.flim`** (same suffix as the base id, `group.` prefix).
+- App group id for shared container / capabilities: **`group.me.flim`** (same suffix as the base id, `group.` prefix).
 - Extension and test targets derive from the base id (same pattern as upstream: e.g. notification service, share extension, unit/UI test bundles). Exact suffix strings are platform translation.
 
 ### Side-by-side with Element X
@@ -41,7 +41,7 @@ These complete a usable fork after identity config. They are **human-owned**; th
 1. Set Apple **Development Team ID** and regenerate the Xcode project (`xcodegen`).
 2. **OIDC / MAS** — host OIDC configuration values on one domain; add `apple-app-site-association` `webcredentials` for the app; set the app’s associated-domain entitlement to that domain; re-run `xcodegen`.
 3. **MapLibre / location** — obtain an API key, keep it out of git (`Secrets` / env / `pkl` as upstream suggests), configure map style IDs in runtime settings (upstream defaults such as `basic-v2` / `basic-v2-dark` are fine).
-4. Any further `AppSettings` runtime tweaks beyond identity — human judgment; new fork *product* behaviour still needs its own decision.
+4. Any further `AppSettings` runtime tweaks beyond identity — human judgment; new fork _product_ behaviour still needs its own decision.
 
 ### Classic migration
 
@@ -51,13 +51,13 @@ Out of product scope. Do not enable or retarget Element Classic account import u
 
 ### ios
 
-- Identity knobs in `app.yml` (then `xcodegen`): `APP_DISPLAY_NAME` → **Flim Messenger**; `PRODUCTION_APP_NAME` → **Flim**; `BASE_BUNDLE_IDENTIFIER` → `com.hallfors.panu.flim`; `APP_GROUP_IDENTIFIER` → `group.com.hallfors.panu.flim`; `DEVELOPMENT_TEAM` → human-supplied Team ID.
+- Identity knobs in `app.yml` (then `xcodegen`): `APP_DISPLAY_NAME` → **Flim Messenger**; `PRODUCTION_APP_NAME` → **Flim**; `BASE_BUNDLE_IDENTIFIER` → `me.flim`; `APP_GROUP_IDENTIFIER` → `group.me.flim`; `DEVELOPMENT_TEAM` → human-supplied Team ID.
 - Do not retarget `CLASSIC_*` at Element’s groups; leave Classic migration disabled / unused for Flim.
 - Nightly / flavour overlays (e.g. `Components/Variants/Nightly/`) are out of scope until a later decision.
 
 ### android
 
-- Application id / package root: **`com.hallfors.panu.flim`**.
+- Application id / package root: **`me.flim`**.
 - Display name **Flim Messenger**; short product label **Flim**.
 - Do not reuse Element’s application id or shared storage; side-by-side install with Element X must work.
 

@@ -75,13 +75,13 @@ If the reply target is already among those five, it still appears once as conten
 
 Each context item is **text only**. Never send prior messages' media bytes (audio, image, video, file) to the service. Per item:
 
-| Kind | What is sent |
-|------|----------------|
-| Ordinary text message | The message body text |
-| Voice message that already has an adopted transcript (local or trusted) | That transcript text (and title/summary if adopted — enough that the service sees the spoken words as text) |
-| Voice message without an adopted transcript | A short kind label only, e.g. that it is a voice message — not the audio |
-| Image (and other non-text media: video, file, sticker, location, etc.) | A short kind label only, e.g. that it is an image — not the media. If the event has a text caption, that caption text may be included; the media itself is not |
-| Redacted / unavailable | A short kind label that it is unavailable — not an attempt to recover content |
+| Kind                                                                    | What is sent                                                                                                                                                   |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ordinary text message                                                   | The message body text                                                                                                                                          |
+| Voice message that already has an adopted transcript (local or trusted) | That transcript text (and title/summary if adopted — enough that the service sees the spoken words as text)                                                    |
+| Voice message without an adopted transcript                             | A short kind label only, e.g. that it is a voice message — not the audio                                                                                       |
+| Image (and other non-text media: video, file, sticker, location, etc.)  | A short kind label only, e.g. that it is an image — not the media. If the event has a text caption, that caption text may be included; the media itself is not |
+| Redacted / unavailable                                                  | A short kind label that it is unavailable — not an attempt to recover content                                                                                  |
 
 Sender display name (or a stable sender id) may accompany each item so the service can tell speakers apart. That is still text metadata, not media.
 
@@ -149,9 +149,9 @@ The first result to become ready on this device is adopted. That includes a trus
 
 A recipient does not publish. The result they produce is for themselves on that device, and the other people in the room do not receive it.
 
-**Trusted** means: the notice is the companion defined below (`msgtype` `m.notice` with a `com.hallfors.panu.flim.voice_summary` content block), its sender is the same user as the voice message's sender, and it links to this voice message as follows:
+**Trusted** means: the notice is the companion defined below (`msgtype` `m.notice` with a `me.flim.voice_summary` content block), its sender is the same user as the voice message's sender, and it links to this voice message as follows:
 
-- **Main timeline** — `m.relates_to.rel_type` is `com.hallfors.panu.flim.voice_summary` and `m.relates_to.event_id` is this voice message.
+- **Main timeline** — `m.relates_to.rel_type` is `me.flim.voice_summary` and `m.relates_to.event_id` is this voice message.
 - **Thread** — `m.relates_to.rel_type` is `m.thread` (so the notice stays in the thread), and `m.relates_to.m.in_reply_to.event_id` is this voice message.
 
 Anything else with the marker stays an ordinary message — it is not attached to the player, and it is not hidden. The marker must not be a way for someone else in the room to overwrite a transcript or to hide a message.
@@ -202,12 +202,12 @@ When the sender redacts the voice message, Flim also redacts the companion notic
 
 ### Protocol
 
-Namespace is the product id from decision 000a: `com.hallfors.panu.flim`. Custom keys live in the event `content`, which is encrypted in encrypted rooms. They are not placed in `unsigned`.
+Namespace is the product id from decision 000a: `me.flim`. Custom keys live in the event `content`, which is encrypted in encrypted rooms. They are not placed in `unsigned`.
 
 **Voice message** (Flim-sent), in addition to the ordinary voice-message content:
 
 ```json
-"com.hallfors.panu.flim.voice": { "v": 1 }
+"me.flim.voice": { "v": 1 }
 ```
 
 Presence is the whole signal. No brief is stored on the audio event.
@@ -218,7 +218,7 @@ Presence is the whole signal. No brief is stored on the audio event.
 {
   "msgtype": "m.notice",
   "body": "Summary by Flim Messenger\n\n<title>\n\n<summary>",
-  "com.hallfors.panu.flim.voice_summary": {
+  "me.flim.voice_summary": {
     "v": 1,
     "title": "<title>",
     "summary": "<summary>",
@@ -227,7 +227,7 @@ Presence is the whole signal. No brief is stored on the audio event.
 }
 ```
 
-`body` is plain text. There is no `formatted_body`. The transcript exists only under `com.hallfors.panu.flim.voice_summary`. The leading attribution in `body` is the sender's localized catalog string; the English source above is the fallback shape. Do not put a second attribution at the end.
+`body` is plain text. There is no `formatted_body`. The transcript exists only under `me.flim.voice_summary`. The leading attribution in `body` is the sender's localized catalog string; the English source above is the fallback shape. Do not put a second attribution at the end.
 
 **`m.relates_to` — choose exactly one shape:**
 
@@ -235,7 +235,7 @@ Presence is the whole signal. No brief is stored on the audio event.
 
 ```json
 "m.relates_to": {
-  "rel_type": "com.hallfors.panu.flim.voice_summary",
+  "rel_type": "me.flim.voice_summary",
   "event_id": "$voiceEventId",
   "m.in_reply_to": { "event_id": "$voiceEventId" }
 }
@@ -266,7 +266,7 @@ The scheduler is not chosen here (extending that existing interval, a later refr
 
 ## Platform notes
 
-- iOS: the Rust SDK's typed timeline content drops unknown content keys. Reading `com.hallfors.panu.flim.voice` and `com.hallfors.panu.flim.voice_summary` needs the original event JSON (already exposed on timeline debug info) or a small SDK pass-through. The typed voice-message model is not enough.
+- iOS: the Rust SDK's typed timeline content drops unknown content keys. Reading `me.flim.voice` and `me.flim.voice_summary` needs the original event JSON (already exposed on timeline debug info) or a small SDK pass-through. The typed voice-message model is not enough.
 - iOS: title/summary character limits mean extended grapheme clusters, so an emoji counts as one.
 - iOS: status, the leading companion-notice attribution (“Summary by Flim Messenger”), each failure status above, and “Try again” strings are Flim catalog keys (decision 002), not `Localizable.strings` / `Untranslated.strings`. English source for Flim's allowance status must state that a larger transcription-service subscription is needed.
 - iOS background: the existing pieces to hang the attempt on are the SDK send queue and `AppCoordinator`'s `beginBackgroundTask` when entering background. Which of those, or a new task, actually runs the service is an implementation choice.
