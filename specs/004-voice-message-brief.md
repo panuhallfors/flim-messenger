@@ -28,7 +28,7 @@ User-observable outcomes. The design document specifies how these are achieved.
 - [ ] Sending a voice message and immediately leaving the app does not cancel the attempt to produce that result and to share the title and summary with the room while the attempt is still timely.
 - [ ] After the app is closed mid-work, opening it again continues unfinished briefs for voice messages this device received. For a voice message this device sent, unfinished work resumes only while that send is still recent — so a title and summary do not appear in the room long after people already heard the audio.
 - [ ] Until a later decision supplies a service that listens to the audio, a successful result in a real room is the fixed sample text. Other people in the room see that sample title and summary when the sender's attempt succeeds.
-- [ ] When producing the title, summary, and transcript fails and nothing has been adopted yet, Flim shows a plain-language error in that place on the voice message, offers a tappable way to try again, does not send a brief to the room, and leaves the voice message playable.
+- [ ] When producing the title, summary, and transcript fails and nothing has been adopted yet, Flim shows a plain-language error in that place on the voice message, offers a tappable next step (try again, or set up when transcription is not configured), does not send a brief to the room, and leaves the voice message playable.
 - [ ] When that failure is that the transcription quota is used up, the error says clearly that a larger transcription-service subscription is needed.
 
 ## Non-goals
@@ -82,3 +82,4 @@ Design (replay-canonical with this decision): [`004-voice-message-brief.design.m
 - 2026-10-13: failure statuses in the design cover each plain-language case, not only a generic failure and a used-up allowance
 - 2026-10-13: amended by 006 — when custom server is the method in use, that OpenAI-compatible listener replaces the mock on that path only
 - 2026-10-13: amended by 007 — when on-device is the method in use, the on-device listener replaces the mock on that path only
+- 2026-10-14: amended by 009 — when transcription is not set up, the bubble action opens setup instead of try again

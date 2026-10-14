@@ -34,19 +34,19 @@ When an attempt fails and nothing has been adopted yet, the same place where the
 
 1. **Status** — one short plain-language line from the Flim catalog (what happened).
 2. **Detail** (optional) — at most one more line. If the service returned a short human-readable note, show the **start** of that note and truncate the rest with an ellipsis so it stays a single line. Drop the detail entirely when it is empty, technical, or a duplicate of the status line. Never invent jargon to fill the slot.
-3. **Try again** — its own **tappable** control (text-button / link style), labelled from the catalog (English source: “Try again”). Not buried inside the status sentence, and not a second screen. Tap starts a new attempt on this device.
+3. **Action** — its own **tappable** control (text-button / link style), labelled from the catalog. Not buried inside the status sentence, and not a second screen. For most statuses the label is “Try again” and the tap starts a new attempt on this device. For **not set up**, the label opens setup instead (below) — another attempt cannot succeed until a method is in use.
 
 Trying again is allowed only when nothing has been adopted yet; a result that is already showing stays.
 
 Every failure uses that same layout. The status is one of these:
 
 1. **Generic failure** — the transcript could not be made (English source: “Couldn't make a transcript.”).
-2. **Not set up** — transcription is not set up (English source: “Transcription isn't set up.”). The user sets it up in Settings.
+2. **Not set up** — transcription is not set up (English source: “Transcription isn't set up.”). The action is a setup link (not Try again): it opens decision 005’s transcription selector / setup. Decision 009 adds a stronger one-shot call-to-action the first time this status appears on a voice message; afterwards this quiet status + setup link remains.
 3. **No reply** — the service could not be reached (English source: “Couldn't reach the transcription service.”). Silence, a timeout, and a connection that drops are this status.
 4. **Service fault** — the service replied and failed (English source: “The transcription service failed.”).
 5. **Allowance used up** — the allowance is used up. For Flim, say that a larger transcription-service subscription is needed. For a server the user named, say that this key's allowance is used up. No store or plan-change flow on the bubble — only that message. Try again may succeed after the plan changes.
 6. **Too many requests** — try again shortly (English source: “Too many requests. Try again shortly.”). This is not the allowance message, even when the host uses one refusal for both. A refusal that cannot be read as an empty allowance stays this status, so a throttle never asks the user to buy a larger plan.
-7. **Key rejected** — the key was rejected (English source: “The key was rejected.”). Fix it in Settings.
+7. **Sign-in rejected** — the key or Flim sign-in was refused (English source: “Sign-in was refused.”). Fix it in Settings.
 8. **Setup is wrong** — the server or the model settings look wrong (English source: “The transcription settings look wrong.”).
 9. **Unusable reply** — the service answered in a shape that is not a title, a summary, and a transcript (English source: “The transcription service replied in an unexpected way.”).
 
@@ -241,6 +241,8 @@ _(none)_
 - 2026-10-13: failure UI simplified — catalog status, optional one-line truncated human detail, separate tappable Try again; no tech codes
 - 2026-10-13: relaunch resumes unfinished received briefs; outgoing resume/publish only within 10 minutes of send (no late room notice); Try again after that stays local-only
 - 2026-10-13: amended by 005 — the user chooses the method in settings and finishes its setup before a brief is attempted
-- 2026-10-13: failure statuses cover not set up, no reply, service fault, allowance, too many requests, rejected key, wrong setup, and an unusable reply, besides the generic failure
+- 2026-10-13: failure statuses cover not set up, no reply, service fault, allowance, too many requests, sign-in rejected, wrong setup, and an unusable reply, besides the generic failure
 - 2026-10-13: amended by 006 — custom-server method uses an OpenAI-compatible listener instead of the mock; other methods unchanged
 - 2026-10-13: amended by 007 — on-device method uses the on-device listener instead of the mock; other methods unchanged
+- 2026-10-14: auth failure status renamed to Sign-in rejected (covers API key and Flim session); English source “Sign-in was refused.”
+- 2026-10-14: amended by 009 — not-set-up action is a setup link into decision 005, not Try again; first encounter may use 009’s stronger one-shot CTA

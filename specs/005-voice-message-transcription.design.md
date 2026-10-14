@@ -66,13 +66,33 @@ With an active plan whose allowance is used up, the brief shows decision 004's a
 
 ### Custom server
 
-One screen, after the selector:
+One screen, after the selector. It assumes the user has not set up an API before. The explanation comes first, in ordinary language, then the fields.
+
+Flim needs an account at a service that can listen to a voice message and write a short summary. Any service that speaks the OpenAI API works. The user can create one at **OpenAI**, **Cortecs** (cortecs.ai, a European provider), or **OpenRouter**, or use an account they already have. The voice message is sent to that service.
+
+On that service's site:
+
+1. Open the page for **API keys**. Create a key and copy it. Paste it into the key field here. The service usually shows the full key only once.
+2. Copy the **address** the service shows for its API (sometimes called a base URL). Paste that into the address field. The start of the address is enough — not a long path.
+3. Copy two **model names** from the service's model list: one that listens, and one that writes the summary. Whisper and Parakeet are both fine as the listening model when that service lists them.
+
+The screen names the three examples and gives the address to paste when it is a fixed one:
+
+| Service | Where the key is | Address to paste |
+|---|---|---|
+| OpenAI | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) | `https://api.openai.com/v1` |
+| Cortecs (European) | [cortecs.ai](https://cortecs.ai), then Credentials → Create API key | `https://api.cortecs.ai/v1` |
+| OpenRouter | [openrouter.ai/keys](https://openrouter.ai/keys) | `https://openrouter.ai/api/v1` |
+
+One address and one key cover both listening and the summary. The screen starts that way. A second address is there only if the summary lives somewhere else.
+
+The fields, in everyday labels as well as the names above:
 
 - transcription address and model name
-- summary address and model name — the same address may fill both, and the screen makes that the easy path
-- a key
+- summary address and model name
+- key
 
-Whisper and Parakeet are both chosen by the model name. Saving, once the required fields are filled, makes this the method in use.
+Saving, once the required fields are filled, makes this the method in use.
 
 The key is write-only after it is saved: the screen does not show it back in full. It is not placed in the Matrix account.
 
@@ -105,3 +125,5 @@ _(none)_
 - 2026-10-13: failure statuses removed here; they are specified on decision 004
 - 2026-10-13: on-device capability test and listener are decision 007; this screen only confirms or shows that reason
 - 2026-10-13: Android shows the same three choices as iOS
+- 2026-10-13: custom-server setup explains, for a non-technical user, how to get a key and an address from OpenAI, Cortex, or OpenRouter (or an equivalent service)
+- 2026-10-13: the example is Cortecs (cortecs.ai), named as a European provider; any OpenAI-compatible service works

@@ -89,7 +89,7 @@ Audio, transcript, title, summary, and room context are not sent off the device 
 
 ### Mapping to decision 004 failures
 
-This listener does not invent statuses. It does not produce the network ones: no reply, allowance used up, too many requests, or key rejected.
+This listener does not invent statuses. It does not produce the network ones: no reply, allowance used up, too many requests, or sign-in rejected.
 
 | Situation | Status (004) |
 |-----------|----------------|
@@ -122,3 +122,4 @@ _(none)_
 - 2026-10-13: first write
 - 2026-10-13: title/summary prompt locked to the same system message and user-message shape as decision 006; empty title or summary is usable; a bullet-only summariser does not qualify
 - 2026-10-13: dropped the Android on-device-only settings exception; the full selector is decision 005 on both platforms
+- 2026-10-14: network status name updated to Sign-in rejected (004 rename)

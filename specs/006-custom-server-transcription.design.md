@@ -108,7 +108,7 @@ Text: <context item text>
 | Situation | Status (004) |
 |-----------|----------------|
 | No HTTP response, timeout, or connection drop | No reply |
-| HTTP 401 / 403 | Key rejected |
+| HTTP 401 / 403 | Sign-in rejected |
 | HTTP 429 that clearly means quota / allowance exhausted | Allowance used up (custom-server wording) |
 | HTTP 429 otherwise, or a throttle that is not readable as empty allowance | Too many requests |
 | HTTP 400 / 404 / 422 that points at model, path, or request shape | Setup is wrong |
@@ -140,3 +140,4 @@ _(none)_
 - 2026-10-13: http disallowed — https only
 - 2026-10-13: embedded system/user prompts locked (adapted from prior Flim; language = same as transcript; no provider safety settings)
 - 2026-10-13: Android implements this listener; Web stays deferred
+- 2026-10-14: 401/403 maps to Sign-in rejected (004 rename)
