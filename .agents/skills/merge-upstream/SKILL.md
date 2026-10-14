@@ -27,7 +27,14 @@ Remotes (iOS today):
 - `origin` → our fork (e.g. `…/flim-element-x-ios`)
 - `upstream` → `element-hq/element-x-ios`
 
-Branch of record for Element X iOS: `develop`. Confirm remotes with `git remote -v` inside the submodule before fetching.
+**Branch policy** (see top-level `README.md`): same on app and meta — `develop` = work + test, `main` = published.
+
+| Place | Upstream sync does |
+|-------|--------------------|
+| App `develop` | Merge `upstream/develop` here. Never into app `main`. |
+| Meta `develop` | Pin the landed app SHA here. Never pin a sync onto meta `main`. |
+
+Confirm remotes with `git remote -v` inside the submodule before fetching. Keep the app name `develop` so syncs match Element HQ.
 
 ## Preconditions
 
@@ -45,11 +52,11 @@ Copy and track:
 ```
 Upstream merge progress:
 - [ ] 1. Scope — platform submodule; confirm origin/upstream remotes
-- [ ] 2. Fetch & branch — upstream tip; sync branch off fork develop
-- [ ] 3. Merge — prefer merge (not rebase) of upstream/develop
+- [ ] 2. Fetch — upstream tip; update local develop from origin
+- [ ] 3. Merge — prefer merge (not rebase) of upstream/develop into develop
 - [ ] 4. Conflicts — keep upstream structure; re-apply Flim per specs/; upstreamed → drop patch
 - [ ] 5. Prove — xcodegen/build/tests as appropriate; no new product inventing
-- [ ] 6. Land & pin — push fork; meta `git add <app>` pin commit (only if user asks to commit)
+- [ ] 6. Land & pin — push app origin develop; on meta develop, `git add <app>` pin (only if user asks to commit)
 ```
 
 ### 1. Scope
@@ -58,17 +65,16 @@ Work **inside the app submodule** (e.g. `cd ios`). Never stage app source as nor
 
 One platform per run unless the user explicitly wants both. Android, when present, is the same loop against Element X Android upstream.
 
-### 2. Fetch and branch
+### 2. Fetch
 
 ```bash
 cd ios   # or android/
 git fetch upstream
 git checkout develop
 git pull origin develop
-git checkout -b sync/upstream-YYYYMMDD
 ```
 
-Use today’s date in the branch name. Do not track `upstream/develop` as the local branch tip.
+Optional: a short-lived `sync/upstream-YYYYMMDD` branch for review, then fast-forward / merge into `develop`. Default for this solo trunk: merge **on `develop`**. Do not track `upstream/develop` as the local branch tip. Do not merge into `main`.
 
 ### 3. Merge (not rebase)
 
@@ -106,16 +112,18 @@ Do **not** push or open a PR unless the user asks.
 
 When the user wants it landed:
 
-1. Push the sync branch to `origin` and open/merge a PR into the fork’s `develop` (or merge locally and push `develop` if that is the agreed path).
-2. On **meta**, update the submodule to the merged fork SHA, then stage **only** the gitlink:
+1. Ensure the merge is on app **`develop`**, then `git push origin develop`. No PR / feature branch required for the solo trunk. Do not update app `main` as part of an upstream sync.
+2. On **meta `develop`**, update the submodule to that app `develop` SHA, then stage **only** the gitlink:
 
 ```bash
 cd /workspace   # meta root
-# submodule at the landed develop SHA
+git checkout develop
+git pull origin develop
+# submodule at the landed app develop SHA
 git add ios     # or android — stages the pin only
 ```
 
-3. Commit the pin on meta **only if the user asks** (Conventional Commits, e.g. `chore(ios): pin after upstream merge`). Never commit secrets or stage `ios/**` file paths as normal meta files.
+3. Commit the pin on meta **`develop` only if the user asks** (Conventional Commits, e.g. `chore(ios): pin after upstream merge`). Never commit secrets or stage `ios/**` file paths as normal meta files. Do not advance meta `main` during a sync.
 
 After an old meta checkout: `git submodule update`.
 

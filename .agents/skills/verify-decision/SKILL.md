@@ -79,19 +79,19 @@ Skip when no snapshot surface changed. CI alternative: `record-snapshots` label 
 
 ### 4. Record status (meta)
 
-Update on meta (not `done` until pin is committed):
+Update on meta **`develop`** (not `done` until pin is committed):
 
 - Decision `## Verification` — tests that lock acceptance; Agent UI if any.
 - Mark acceptance checkboxes only with evidence from tests (or Agent UI).
-- Decision + INDEX `status`: stay `implementing` until listed platforms pass **and** the submodule pin is committed on meta → then `done`.
+- Decision + INDEX `status`: stay `implementing` until listed platforms pass **and** the submodule pin is committed on meta `develop` → then `done`.
 - History: pin line when relevant (`YYYY-MM-DD: pinned ios @ <sha>`).
-- Pin: from meta, `git add ios` (gitlink only) when the user asks to commit/pin.
+- Pin: from meta `develop`, `git add ios` (gitlink only) when the user asks to commit/pin. Do not advance meta `main` here.
 
 Do not push or open a PR unless asked; if a PR is opened in the app fork, title/body mention `decision NNN`.
 
 ## Done means
 
-`done` iff every platform in `platforms:` is verified (or explicitly `deferred`) **and** the app submodule SHA is pinned on meta. Until then: `implementing`.
+`done` iff every platform in `platforms:` is verified (or explicitly `deferred`) **and** the app submodule SHA is pinned on meta `develop`. Until then: `implementing`.
 
 ## Out of scope for this skill
 

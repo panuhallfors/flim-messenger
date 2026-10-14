@@ -74,12 +74,12 @@ Set status to `implementing` in the decision frontmatter **and** INDEX when work
 
 ### 4. Implement
 
-Work **inside the app submodule** (e.g. `ios/`). Never stage app source as normal paths on meta.
+Work **inside the app submodule** (e.g. `ios/`), on **`develop`**. Meta decision/status edits and pins go on meta **`develop`**. Solo trunk; no feature branches by default — see top-level `README.md`. Never stage app source as normal paths on meta.
 
 - Execute the **accepted plan**; if reality forces a material deviation, re-enter Plan mode and get acceptance again before continuing.
 - Follow that app’s architecture and style (`ios/AGENTS.md`: MVVM-C, Compound, Swift concurrency, previews with `TestablePreview`, etc.).
 - Add or update fork tests/comments that mention `decision NNN` (PRs too, when opened) — but do not execute them here.
-- Do not commit unless the user asks. Conventional Commits in the submodule.
+- Do not commit unless the user asks. Conventional Commits on app `develop` / meta `develop`.
 - Still **do not** dump impl detail into `.design.md`.
 
 ### 5. Handoff (end of this skill)

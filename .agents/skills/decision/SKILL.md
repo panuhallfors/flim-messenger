@@ -130,8 +130,8 @@ Report final paths, id/slug, whether design exists, and any Open issues still li
 ## After authoring (not this skill’s job, but know the handoff)
 
 1. Implement in the app submodule; PR mentions `decision NNN`. **Deepen the `.design.md` then** as concrete UI/protocol choices land — that is when detailed design is written, not during `/decision`.
-2. Pin submodule SHA on meta; record in decision History.
-3. Verify per `AGENTS.md` (acceptance → app tests → Agent UI only if needed). `done` iff listed platforms pass (or `deferred`) and pin is committed.
+2. Pin submodule SHA on meta **`develop`**; record in decision History.
+3. Verify per `AGENTS.md` (acceptance → app tests → Agent UI only if needed). `done` iff listed platforms pass (or `deferred`) and pin is committed on meta `develop`.
 
 ## Multi-app reminder
 

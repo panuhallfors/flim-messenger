@@ -23,7 +23,9 @@ App `origin` = our fork; `upstream` = Element HQ. Specs never live in an app tre
 
 Apps are submodules. Meta stores gitlinks, not app source. Empty app dir → `git submodule update --init`.
 
-- Decision/design → meta. App code → that submodule, then **pin** (`git add ios` from meta; stages the SHA). Not `done` until pinned.
+**Branch policy** (also in `README.md`): everywhere, `develop` = work + test, `main` = published. Meta `develop` holds specs/pins/first-party under test (pins track each app’s `develop`). Meta `main` advances only on ship. No feature branches by default. Upstream merges into app `develop` only.
+
+- Decision/design → meta **`develop`**. App code → that submodule’s `develop`, then **pin** on meta `develop` (`git add ios`; stages the SHA). Not `done` until pinned.
 - Never stage app files as normal paths in meta. After checkout of an old meta SHA: `git submodule update`.
 - Upstream merge in the app repo, then pin — use `.agents/skills/merge-upstream` (`/merge-upstream`). New app: `git submodule add <our-fork-url> <dir>`.
 
