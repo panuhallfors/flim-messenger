@@ -38,9 +38,10 @@ Everywhere the installed app (and its store listing) shows a product mark — ho
 **Masters (source of truth):**
 
 - Icons: `specs/flim-logo-master-light.jpeg`, `specs/flim-logo-master-dark.jpeg`, `specs/flim-logo-master-tinted.jpeg`
+- Transparent (alpha) cut-out: `specs/flim-logo-master-transparent.png`
 - Splash / launch: `specs/flim-splash-master.jpeg`
 
-Implementation derives platform icon sets, notification glyphs, store upload sizes, and launch-screen crops from these (scaling, cropping, alpha, and format conversion). Do not invent a second logo in the apps. Transparent (alpha) logo masters are still to do — see design Open issues.
+Implementation derives platform icon sets, notification glyphs, store upload sizes, and launch-screen crops from these (scaling, cropping, alpha, and format conversion). Do not invent a second logo in the apps.
 
 Design (replay-canonical with this decision): [`013-flim-app-icon.design.md`](013-flim-app-icon.design.md)
 
@@ -63,3 +64,4 @@ Design (replay-canonical with this decision): [`013-flim-app-icon.design.md`](01
 
 - 2026-10-14: proposed
 - 2026-10-14: splash master `specs/flim-splash-master.jpeg`; transparent logo masters tracked as open work
+- 2026-10-18: transparent master `specs/flim-logo-master-transparent.png` landed; open work closed

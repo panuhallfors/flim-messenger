@@ -21,9 +21,10 @@ Upstream Element X ships Element-branded app icons, launch screens, notification
   - **Light** — `specs/flim-logo-master-light.jpeg` (full-colour mark on a light field).
   - **Dark** — `specs/flim-logo-master-dark.jpeg` (full-colour mark on a dark field).
   - **Tinted** — `specs/flim-logo-master-tinted.jpeg` (monochrome / single-hue glass mark for OS tinted or equivalent presentations).
+  - **Transparent** — `specs/flim-logo-master-transparent.png` (full-colour glass mark with alpha; cut-out for adaptive foregrounds, notification glyphs, and other layered uses).
   - **Splash** — `specs/flim-splash-master.jpeg` (full-bleed launch composition: mark on the dark radial field).
 - Implementation **scales and reformats** these masters into each platform’s required sizes and file types (PNG/WebP/asset catalogs, adaptive layers, etc.). Exact pixel grids and toolchains are filled when implementation begins; the product rule is: every shipped surface is derived from these masters (or a clear, documented simplification of the same mark for very small sizes if the full glass detail does not hold).
-- Current logo masters are JPEG with baked fields. **Transparent (alpha) versions** of light / dark / tinted are required before adaptive foregrounds, notification glyphs, and other surfaces that need a cut-out mark — tracked under Open issues until those files land in `specs/`.
+- Light / dark / tinted JPEGs keep baked fields for full-bleed presentations. The transparent PNG is the cut-out source; pair it with a solid field from the light or dark master when a background layer is required.
 
 ### Where the mark appears
 
@@ -38,7 +39,7 @@ Upstream Element X ships Element-branded app icons, launch screens, notification
 
 - **Light** and **dark** follow the light and dark masters so the icon stays readable on both system appearances.
 - **Tinted / monochrome** (e.g. iOS tinted icon mode) uses the tinted master — not a washed Element asset and not an ad-hoc recolour of the full rainbow mark unless the OS forces a system tint on a provided template.
-- **Android adaptive icon:** foreground is the Flim mark with alpha (with safe-zone padding); background is a solid field consistent with the light or dark master field, not Element’s adaptive layers. Prefer the transparent logo masters once they exist.
+- **Android adaptive icon:** foreground is the transparent master (with safe-zone padding); background is a solid field consistent with the light or dark master field, not Element’s adaptive layers.
 
 ### Relationship to other decisions
 
@@ -53,9 +54,10 @@ Upstream Element X ships Element-branded app icons, launch screens, notification
 
 ## Open issues
 
-- Produce **transparent (alpha) versions** of the three logo masters (light, dark, tinted) and land them in `specs/` (e.g. PNG), suitable for adaptive icon foregrounds, notification glyphs, and other cut-out uses. JPEG masters with baked fields stay as the full-bleed references until then.
+_(none)_
 
 ## History
 
 - 2026-10-14: first write
 - 2026-10-14: splash master `specs/flim-splash-master.jpeg`; open issue for transparent logo masters
+- 2026-10-18: transparent master `specs/flim-logo-master-transparent.png`; open issue closed
