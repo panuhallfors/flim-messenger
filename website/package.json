@@ -1,0 +1,13 @@
+{
+  "name": "flim-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Flim public site (decision 011) — Eleventy → statichost.eu",
+  "scripts": {
+    "build": "npx @11ty/eleventy",
+    "serve": "npx @11ty/eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

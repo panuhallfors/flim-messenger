@@ -1,0 +1,4 @@
+# decision 011 — Apple requires JSON for AASA (OIDC webcredentials)
+/.well-known/apple-app-site-association
+    Content-Type: application/json
+    X-Content-Type-Options: nosniff

@@ -1,0 +1,5 @@
+# Decision 011 — flim.me static site on statichost.eu
+# DNS / site link / webhook are human; this file is the build contract.
+image: node:22
+command: cd website && npm ci && npx @11ty/eleventy
+public: website/_site

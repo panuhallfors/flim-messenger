@@ -1,0 +1,271 @@
+:root {
+  /* decision 003 light tokens */
+  --bg: #f7f7f9;
+  --ink: #101114;
+  --muted: #6c6f7b;
+  --link: oklch(0.5 0.13 292);
+  --link-hover: oklch(0.42 0.13 292);
+  --rule: #eeedf2;
+  --font-flim: "SF Mono", "ui-monospace", "Cascadia Code", "Segoe UI Mono", Menlo, Consolas, monospace;
+  --font-body: "Avenir Next", "Segoe UI", Candara, Calibri, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background:
+    linear-gradient(180deg, oklch(0.962 0.014 292), var(--bg) 38%),
+    var(--bg);
+}
+
+a {
+  color: var(--link);
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+.site-header,
+.site-footer,
+main {
+  width: min(42rem, calc(100% - 2.5rem));
+  margin-inline: auto;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand img,
+.mark {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.4rem;
+  display: block;
+}
+
+.wordmark {
+  font-family: var(--font-flim);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.site-header nav,
+.site-header .site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.1rem;
+  font-size: 0.95rem;
+}
+
+.site-header .nav-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.1rem;
+}
+
+.site-header nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-header nav a:hover {
+  color: var(--ink);
+}
+
+.site-header .nav-service {
+  color: var(--timestamp, #6e7180);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.site-header .nav-service:hover {
+  color: var(--muted);
+}
+
+.site-header nav a[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+main {
+  padding: 2.5rem 0 3.5rem;
+}
+
+.hero {
+  min-height: calc(100vh - 10rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+  padding-bottom: 2rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-family: var(--font-flim);
+  font-size: clamp(3rem, 10vw, 4.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.hero .lede {
+  margin: 0;
+  max-width: 28rem;
+  color: var(--muted);
+  font-size: 1.15rem;
+}
+
+.hero .cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.hero .cta a {
+  color: var(--ink);
+}
+
+.home-section {
+  padding: 2.5rem 0 0;
+  border-top: 1px solid var(--rule);
+  margin-top: 2.5rem;
+}
+
+.home-section:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.lede-inline {
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 1.75rem;
+}
+
+.lede-inline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+h1,
+h2 {
+  font-family: var(--font-flim);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin: 0 0 1.25rem;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin: 2.25rem 0 0.75rem;
+  color: var(--ink);
+}
+
+p,
+ul {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+p strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+code {
+  font-size: 0.92em;
+  color: var(--ink);
+}
+
+ul {
+  padding-left: 1.2rem;
+}
+
+li + li {
+  margin-top: 0.35rem;
+}
+
+.credit {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.95rem;
+}
+
+.credit-inline {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.site-footer {
+  padding: 1.25rem 0 2.5rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer p + p {
+  margin-top: 0.65rem;
+}
+
+.oauth-return {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.oauth-return .mark {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 1rem;
+  margin: 0 auto 1.25rem;
+}
+
+.oauth-return h1 {
+  font-size: 1.75rem;
+}

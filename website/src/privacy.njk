@@ -1,0 +1,91 @@
+---
+layout: base.njk
+title: Privacy
+description: Flim privacy policy (draft) — app, website, and opt-in telemetry.
+---
+<h1>Privacy</h1>
+<p class="lede-inline">
+  Plain-language draft for the Flim apps and flim.me. Not counsel-approved.
+  Controller: Panu Hällfors —
+  <a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>.
+</p>
+
+<h2>The short version</h2>
+<p>
+  Analytics and crash reports are off until you opt in. That one choice covers
+  product analytics (PostHog in the EU) and crash reports (Sentry in the EU).
+  You can change it later in Settings → Analytics. Chat contents stay with you
+  and your Matrix homeserver. Push notifications are separate: if you allow
+  them, Flim’s gateway only gets what’s needed to wake the phone — not message
+  text.
+</p>
+
+<h2>Who’s responsible</h2>
+<p>
+  For flim.me and for the Flim apps’ own telemetry (when you opt in), the
+  controller is Panu Hällfors. See <a href="/about">about</a>.
+</p>
+<p>
+  Separate from that:
+</p>
+<ul>
+  <li>Your <strong>Matrix homeserver</strong> processes account and message data under its own rules.</li>
+  <li>Flim’s <strong>push gateway</strong> (when used) sees the device push token plus room and event IDs, so it can wake the phone for a notification — not message bodies.</li>
+  <li>If you choose to use <strong>Flim Summaries</strong> (optional), it has its own
+    <a href="/summaries/privacy">privacy policy</a>.</li>
+</ul>
+
+<h2>What the app may send (only if you opt in)</h2>
+<p>
+  After you agree:
+</p>
+<ul>
+  <li><strong>Analytics</strong> — rough product usage (screens and features), to Flim’s PostHog Cloud EU project.</li>
+  <li><strong>Crash reports</strong> — to Flim’s Sentry project with EU data storage, so bugs can get fixed.</li>
+</ul>
+<p>
+  Message bodies are not treated as analytics. You can say no and keep using the
+  app. Calls in the app do not send analytics.
+</p>
+
+<h2>Push notifications</h2>
+<p>
+  To deliver notifications, the app registers a push token with Flim’s push
+  gateway. The gateway uses that token plus room and event IDs. It does not get
+  message text or voice message data under the usual event-id-only setup.
+</p>
+
+<h2>This website</h2>
+<p>
+  flim.me does <strong>not</strong> use cookies and does <strong>not</strong>
+  run site analytics. The web server may keep ordinary server logs (including
+  IP addresses) for operation and abuse resistance.
+</p>
+
+<h2>Your rights</h2>
+<p>
+  This policy does not cover an account, a name, an email address, or your
+  chats. Those are not stored here. Flim Summaries, if you use it, is
+  <a href="/summaries/privacy">separate</a>.
+</p>
+<p>
+  What can exist under this policy is limited: an IP address in ordinary host
+  logs, a push token if notifications are on, and device or usage data only if
+  you opt in to analytics or crash reports. For that data you can ask for
+  access, correction, or deletion, object to or restrict processing, and
+  complain to a supervisory authority. Write to
+  <a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>.
+</p>
+
+<h2 id="analytics">Analytics and crash reports</h2>
+<p>
+  This section is the stable target for the app’s “learn more about analytics”
+  link (<code>/privacy#analytics</code>).
+</p>
+<p>
+  When you opt in, Flim apps send product analytics to Flim’s own PostHog
+  project in the EU and crash reports to Flim’s own Sentry project in the EU.
+  One consent covers both. You can withdraw in Settings →
+  Analytics at any time. The website itself does not set cookies or run
+  analytics for that purpose.
+</p>

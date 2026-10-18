@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% if title %}{{ title }} · {% endif %}Flim</title>
+    <meta name="description" content="{{ description | default('Flim — a Matrix messenger.') }}" />
+    <link rel="icon" href="/mobile-icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/mobile-icon.png" />
+    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="stylesheet" href="/css/app-theme.css" />
+  </head>
+  <body class="{% if '/summaries/' in page.url %}summaries-site{% elif page.url == '/' %}home{% else %}content-page{% endif %}">
+    <div class="site-shell">
+      {% if '/summaries/' in page.url %}
+      <header class="site-header summaries-header">
+        <a class="brand summaries-brand" href="/summaries/">
+          <img src="/mobile-icon.png" alt="" width="44" height="44" />
+          <span>
+            <span class="wordmark">Flim Summaries</span>
+            <span class="brand-line">Transcription and AI summaries for Flim</span>
+          </span>
+        </a>
+        <nav class="site-nav" aria-label="Flim Summaries">
+          <span class="nav-main">
+            <a href="/summaries/"{% if page.url == '/summaries/' %} aria-current="page"{% endif %}>Overview</a>
+            <a href="/summaries/terms"{% if page.url == '/summaries/terms/' %} aria-current="page"{% endif %}>Terms</a>
+            <a href="/summaries/privacy"{% if page.url == '/summaries/privacy/' %} aria-current="page"{% endif %}>Privacy</a>
+          </span>
+          <a class="subsite-return" href="/">← Main Flim site</a>
+        </nav>
+      </header>
+      {% else %}
+      <header class="site-header">
+        <a class="brand" href="/">
+          <img src="/mobile-icon.png" alt="" width="44" height="44" />
+          <span>
+            <span class="wordmark">Flim</span>
+            <span class="brand-line">A Matrix messenger</span>
+          </span>
+        </a>
+        <nav class="site-nav" aria-label="Site">
+          <span class="nav-main">
+            <a href="/about"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
+            <a href="/help"{% if page.url == '/help/' %} aria-current="page"{% endif %}>Help</a>
+            <a href="/source"{% if page.url == '/source/' %} aria-current="page"{% endif %}>Source</a>
+          </span>
+          <a class="nav-service" href="/summaries/">Flim Summaries Service</a>
+        </nav>
+      </header>
+      {% endif %}
+      <div class="signature-line" aria-hidden="true"></div>
+    </div>
+    <main>
+      {{ content | safe }}
+    </main>
+    <footer class="site-footer">
+      {% if '/summaries/' in page.url %}
+      <p>
+        Flim Summaries is an optional service for the
+        <a href="/">Flim Matrix messenger</a>.
+        Contact
+        <a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>.
+      </p>
+      <p>
+        <a href="/">← Return to the main Flim site</a>
+      </p>
+      {% else %}
+      <p>
+        Flim is a personal project by
+        <a href="/about">Panu Hällfors</a>
+        — a modified version of
+        <a href="https://element.io/">Element&nbsp;X</a>.
+        <a href="/source">Source</a>.
+        Contact
+        <a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>.
+      </p>
+      <p>
+        <a href="/privacy">Privacy</a>
+        ·
+        <a href="/acceptable-use">Terms</a>
+        ·
+        <a href="/summaries/privacy">Summaries privacy</a>
+        ·
+        <a href="/summaries/terms">Summaries terms</a>
+      </p>
+      {% endif %}
+    </footer>
+  </body>
+</html>

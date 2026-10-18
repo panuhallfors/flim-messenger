@@ -1,0 +1,113 @@
+---
+layout: base.njk
+title: About
+description: Who’s behind Flim, and why it exists.
+---
+<h1>About</h1>
+
+<p class="lede-inline">
+  Flim is a personal project by Panu Hällfors — 
+  building a Matrix messenger I actually want to use for voice messaging.
+</p>
+
+<h2>Who</h2>
+<p>
+  Hi — I’m Panu! A CTO and advisorby day in various businesses, working on Flim in my free time. 
+  If something feels unfinished, that’s because it probably is — and at the same time,
+  I want Flim to be of real use, so all feedback is super welcome — please reach out via email to
+  <a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>.
+</p>
+
+<h2>How it started</h2>
+<p>
+  Credit where it’s due: this whole thing got rolling when guys called Timo and Jaakko asked
+  me to join a voice-message
+  business. They put their finger on a real, pressing need — the problem of skimming through
+  a pile of voice messages, all looking the same, not knowing which one is the one you're looking for,
+  and not knowing what they're about before you even listen to them.
+</p>
+<p>
+  I saw that need too. I just didn’t end up building the business. I ended up
+  building an app for my friends instead — and after first creating a closed-source prototype,
+  I wanted it open source instead, and working on a battle-tested and secure infrastructure, so 
+  I re-implemented Flim as a <a href="https://matrix.org/">Matrix</a> messenger, forking the
+  <a href="https://element.io/">Element&nbsp;X</a> codebase that I consider by far the best Matrix client out there.
+  The source lives on
+  <a href="{{ site.githubUrl }}">GitHub</a>
+  (app fork:
+  <a href="{{ site.iosGithubUrl }}">flim-element-x-ios</a>).
+</p>
+
+<h2>Why</h2>
+<p>
+  Once that spark landed, two things became the main drivers for me:
+</p>
+<p>
+  <strong>Voice messages are hard to navigate.</strong> They’re lovely when
+  you’re sending them — messy when you’re trying to find “the one about Tuesday”
+  in a thread of identical waveforms. Without titles (and a bit of summary),
+  you’re stuck scrubbing and guessing. Flim leans into making voice messages
+  something you can skim, not only something you can play.
+</p>
+<p>
+  <strong>One-hand use was a pain for the everyday stuff.</strong> Opening a chat with a friend
+  and closing it again should be as effortless as it is to send a new voice message: with one flick of a finger.
+  However, in most
+  messenger apps, you're reaching for the top left corner for the back button (which is not where
+  your hands are if you're right-handed) or using a
+  swipe gesture to close the chat (which very often competes with the swipe gestures on the messages
+  itself, and you end up deleting or marking messages instead of navigating back).
+</p>
+
+<h2>What Flim is (and isn’t)</h2>
+<p>
+  Flim runs on <a href="https://matrix.org/">Matrix</a> — a way to deliver messages between people’s phones, without everything having to go through one
+  company’s app. Compared with WhatsApp, for example, you’re not locked into a
+  single provider: different apps and services can talk to each other on the same
+  network. And Flim is one of those apps - the one where your voice messages are titled and summarized.
+  And yes, you can send voice messages from Flim to other Matrix clients - the voice message titles and summaries
+  will be just shown a bit differently there. Under the hood, Flim is a fork of (a modification of)
+  <a href="https://element.io/">Element&nbsp;X</a> — that project already
+  did a lot of the hard work for a modern Matrix client. Browse the code on
+  <a href="{{ site.githubUrl }}">GitHub</a>.
+  </p>
+  <p>
+   You do need a <em>homeserver</em>, though — a place that holds your account and
+  helps pass messages along, a bit like the mail room for your chats. You can create
+  an account on a homeserver of your own choice; if you will, Flim will take you to
+  <a href="https://matrix.org/">matrix.org</a>’s homeserver by default.
+</p>
+<p>
+  It isn’t a new chat protocol, a social network, or a promise that every
+  Element feature will show up tomorrow with a Flim sticker on it. It’s an app
+  for fellow people who prefer voice messages.
+</p>
+
+<h2>Transcription and AI summaries</h2>
+<p>
+  To provide voice titles and summaries, Flim needs some kind of speech-to-text solution (and a bit of
+  summarising). The philosophy is simple: <strong>you decide where that work
+  happens</strong>, and I do my very best to help you make it as secure and private as possible.
+</p>
+<p>
+  The hope — honestly — is that every phone eventually carries good enough
+  on-device AI that nothing sensitive has to leave the device at all. We’re not
+  fully there for everyone yet. So for now you can pick: on-device when your
+  phone can handle it, a service you choose yourself (i.e. which AI service provider you trust),
+  or Flim’s own option.
+</p>
+<p>
+  If you use <a href="/summaries/">Flim Summaries</a>, I’ve tried to make it as
+  privacy-friendly as I know how: account email (and plan state) stay while the
+  account exists; IP addresses for rate limiting/troubleshooting for about 30
+  days, not linked to message content; voice audio, transcripts, titles and
+  summaries are not kept after the request. Processing in the EU. Details:
+  <a href="/summaries/privacy">Summaries privacy</a>.
+</p>
+
+<h2>How to think about it</h2>
+<p>
+  Use it if it helps. Tell me when it doesn’t
+  (<a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>) and I'll do my best to help. My aim is to keep the
+  product close to the upstream Element X, only adding Flim's specific features, so if you feel you need a feature, you should primarily raise it with the Element X team.
+</p>

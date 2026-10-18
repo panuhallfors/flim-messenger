@@ -3,8 +3,8 @@ id: 011
 slug: flim-public-site
 title: Flim public site and client endpoints
 status:
-  ios: proposed
-  android: proposed
+  ios: implementing
+  android: deferred
 created: 2026-10-14
 amends: [000a]
 platforms: [ios, android]
@@ -50,9 +50,9 @@ Design (replay-canonical with this decision): [`011-flim-public-site.design.md`]
 
 ### ios
 
-- Tests: none yet (base URLs, rageshake disabled, bug-report application id, and OAuth redirect host are lockable in unit tests)
+- Tests: **pending host** (`/verify-decision`) — `FlimPublicSiteAppSettingsTests`, `FlimElementCallAnalyticsTests` (decision 011); unit rung only
 - Agent UI: none
-- Meta: `website/` Eleventy tree + deploy path are part of this decision’s implementation (not an app submodule pin)
+- Meta: `website/` Eleventy tree + `statichost.yml` are part of this decision’s implementation (not an app submodule pin)
 
 ### android
 
@@ -68,3 +68,5 @@ Design (replay-canonical with this decision): [`011-flim-public-site.design.md`]
 - 2026-10-14: amends 000a (OIDC public site / AASA / OAuth host owned here); analytics URL `/privacy#analytics`; help stubs credit Element X
 - 2026-10-14: note — decision 012 amends empty `accountProvisioningHost` → `mobile.flim.me`
 - 2026-10-14: non-goal — app icon / launch artwork owned by decision 013
+- 2026-10-18: implementing ios
+- 2026-10-18: legal IA — app terms/privacy rewritten; Flim Summaries separate pages; Element Call analytics nil

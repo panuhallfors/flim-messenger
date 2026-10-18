@@ -1,8 +1,9 @@
 ---
-decision: 011
+
+## decision: 011
+
 slug: flim-public-site
 created: 2026-10-14
----
 
 # 011 — Flim public site and client endpoints (design)
 
@@ -18,7 +19,7 @@ Logo source for the site and OIDC: `specs/flim-logo-master*.jpeg` (light and dar
 
 ### Public host
 
-- Canonical site: **`https://flim.me`**.
+- Canonical site: `https://flim.me`.
 - Hosting: **[statichost.eu](https://www.statichost.eu/)** (European static hosting). No origin web server on UpCloud for this site.
 - DNS for `flim.me` (and `www` if used) is **human**; TLS is whatever statichost.eu provisions for the custom domain.
 - Subdomains already owned by other decisions stay where they are (e.g. `push.flim.me` → 010).
@@ -27,20 +28,23 @@ Logo source for the site and OIDC: `specs/flim-logo-master*.jpeg` (light and dar
 
 Minimum pages / assets the apps and OIDC need (paths may be refined at implementation, but the **roles** stay):
 
-| Role                                                                                   | Path (locked intent)                                                                                                          |
-| -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Marketing / product home                                                               | `/`                                                                                                                           |
-| Privacy policy                                                                         | `/privacy`                                                                                                                    |
-| Acceptable use / terms                                                                 | `/acceptable-use`                                                                                                             |
-| Copyright                                                                              | `/copyright`                                                                                                                  |
-| Analytics / cookie terms                                                               | **`/privacy#analytics`** (stable fragment; app `analyticsTermsURL`)                                                           |
+| Role                                                                                   | Path (locked intent)                                                                                                                                                                                                      |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Marketing / product home                                                               | `/`                                                                                                                                                                                                                       |
+| Privacy policy (app + site)                                                            | `/privacy`                                                                                                                                                                                                                |
+| Acceptable use / terms (app + site; AGPL-aware, short)                                 | `/acceptable-use` (page title “Terms of use”; path kept for app / OIDC)                                                                                                                                                   |
+| Copyright                                                                              | `/copyright`                                                                                                                                                                                                              |
+| Analytics terms (opt-in PostHog + Sentry)                                              | `/privacy#analytics` (stable fragment; app `analyticsTermsURL`)                                                                                                                                                           |
+| Flim Summaries overview                                                                | `/summaries/`                                                                                                                                                                                                             |
+| Flim Summaries terms                                                                   | `/summaries/terms`                                                                                                                                                                                                        |
+| Flim Summaries privacy                                                                 | `/summaries/privacy`                                                                                                                                                                                                      |
 | Help (encryption, device verification, chat backup, identity pinning, history sharing) | `/help` with anchors covering the same topics upstream links today — **short stubs** that link out to the corresponding Element X / Element help docs, and clearly state that **Flim is a modified version of Element X** |
-| App logo for OIDC / web views                                                          | Stable image URL under `flim.me` (e.g. `/mobile-icon.png`), derived from the master logo                                      |
-| OAuth redirect base                                                                    | `/oauth/ios/<bundle id>` (and later Android path pattern as Element X uses)                                                   |
-| OIDC `clientURI` path                                                                  | `/apps/ios` (and later `/apps/android`) appended to `https://flim.me`                                                         |
-| Apple Associated Domains                                                               | `/.well-known/apple-app-site-association` with `webcredentials` for the 000a id family in use (shipping `me.flim`, or interim `me.flim.dev` until cutover — plus relevant extensions) |
+| App logo for OIDC / web views                                                          | Stable image URL under `flim.me` (e.g. `/mobile-icon.png`), derived from the master logo                                                                                                                                  |
+| OAuth redirect base                                                                    | `/oauth/ios/<bundle id>` (and later Android path pattern as Element X uses)                                                                                                                                               |
+| OIDC `clientURI` path                                                                  | `/apps/ios` (and later `/apps/android`) appended to `https://flim.me`                                                                                                                                                     |
+| Apple Associated Domains                                                               | `/.well-known/apple-app-site-association` with `webcredentials` for the 000a id family in use (shipping `me.flim`, or interim `me.flim.dev` until cutover — plus relevant extensions)                                     |
 
-Landing content stays minimal (brand, short product line, links to store / legal). Policies are **Flim-authored**, covering Flim as controller for site + app telemetry, and pointing at Matrix homeserver / Flim transcription / push as separate processing where relevant. Exact counsel wording is filled when implementing / reviewing — not a product redesign.
+Landing content stays minimal (brand, short product line, links to store / legal). Policies are **Flim-authored**, covering Flim as controller for site + app telemetry, and pointing at Matrix homeserver / Flim Summaries / push as separate processing where relevant. The **website** uses **no cookies** and **no site analytics** (host server logs only). Exact counsel wording is filled when implementing / reviewing — not a product redesign. Contact: `hello@flim.me`.
 
 Help pages are not a full rewrite of Element’s docs: each topic is a short Flim stub (credit line + link to the upstream Element X / element.io help page for detail).
 
@@ -48,28 +52,28 @@ Help pages are not a full rewrite of Element’s docs: each topic is a short Fli
 
 Site build and deploy are **implementation of this decision in the meta repo**, not an app submodule.
 
-- Tree: **`website/`** at the meta root (sibling to `ios/`, `android/`, `push-gateway/`). Listed in `AGENTS.md` Layout.
+- Tree: `website/` at the meta root (sibling to `ios/`, `android/`, `push-gateway/`). Listed in `AGENTS.md` Layout.
 - Generator: **[Eleventy](https://www.11ty.dev/)** (static output only).
 - Deploy scripts / config target **statichost.eu** (git webhook or CLI as their docs require). Secrets for deploy stay out of git.
 - Does not register DNS; assumes `flim.me` already points at statichost.
 
 ### App endpoint map
 
-| Concern                                           | Product choice                                                                                                                                      |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Website, logo, copyright, acceptable use, privacy | `https://flim.me` (+ paths above)                                                                                                                   |
-| Help topics                                       | Flim `/help` (or fragment URLs) on `flim.me`                                                                                                        |
-| Analytics terms URL                               | **`https://flim.me/privacy#analytics`**                                                                                                             |
-| OAuth redirect                                    | `https://flim.me/oauth/ios/<bundle id>` (Android when that client ships)                                                                            |
-| OIDC client / logo / tos / policy URIs            | Same host as above (MAS requires one domain)                                                                                                        |
-| PostHog                                           | **Enabled** — Flim project on **PostHog Cloud EU**; host + API key via secrets (not Element’s)                                                      |
-| Sentry (app + Rust SDK DSNs)                      | **Enabled** — Flim org/project with **EU data storage**; DSNs via secrets                                                                           |
-| Bug-report application id                         | Flim-owned id (e.g. `flim-ios` / platform variants), not `element-x-ios`                                                                            |
-| Rageshake / in-app log upload                     | **Disabled** — no URL configured (empty / unset), so the upstream “report a problem” upload path stays off                                          |
-| `accountProvisioningHost`                         | Unset in **011** — **amended by decision 012** to `mobile.flim.me` (do not keep Element’s)                                                          |
-| `elementWebHosts`                                 | **Keep** Element’s hosts (`app.element.io`, staging, develop) so foreign Element Web permalinks still open in-app; they are not Flim product URLs  |
+| Concern                                           | Product choice                                                                                                                                    |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Website, logo, copyright, acceptable use, privacy | `https://flim.me` (+ paths above)                                                                                                                 |
+| Help topics                                       | Flim `/help` (or fragment URLs) on `flim.me`                                                                                                      |
+| Analytics terms URL                               | `https://flim.me/privacy#analytics`                                                                                                               |
+| OAuth redirect                                    | `https://flim.me/oauth/ios/<bundle id>` (Android when that client ships)                                                                          |
+| OIDC client / logo / tos / policy URIs            | Same host as above (MAS requires one domain)                                                                                                      |
+| PostHog                                           | **Enabled** — Flim project on **PostHog Cloud EU**; host + API key via secrets (not Element’s)                                                    |
+| Sentry (app + Rust SDK DSNs)                      | **Enabled** — Flim org/project with **EU data storage**; DSNs via secrets                                                                         |
+| Bug-report application id                         | Flim-owned id (e.g. `flim-ios` / platform variants), not `element-x-ios`                                                                          |
+| Rageshake / in-app log upload                     | **Disabled** — no URL configured (empty / unset), so the upstream “report a problem” upload path stays off                                        |
+| `accountProvisioningHost`                         | Unset in **011** — **amended by decision 012** to `mobile.flim.me` (do not keep Element’s)                                                        |
+| `elementWebHosts`                                 | **Keep** Element’s hosts (`app.element.io`, staging, develop) so foreign Element Web permalinks still open in-app; they are not Flim product URLs |
 
-Consent: analytics / Sentry prompts remain opt-in as upstream; copy and “learn more” must describe **Flim**, not Element.
+Consent: analytics / Sentry prompts remain opt-in as upstream; copy and “learn more” must describe **Flim**, not Element. **Element Call** must not receive Element’s (or any) PostHog/Sentry analytics configuration — pass `nil` so call telemetry never goes to Element.
 
 ### Human setup
 
@@ -92,6 +96,7 @@ Push (`push.flim.me`), transcription service, MapLibre keys, and Apple team id r
 - PostHog / Sentry via existing secrets mechanism (`POSTHOG_*`, `SENTRY_*`); leave rageshake secret unset so configuration is disabled.
 - `bugReportApplicationID` → Flim id, not `element-x-ios`.
 - Associated domain entitlement: `webcredentials:flim.me` (drop `*.element.io` for production Flim).
+- Element Call widget start: `analyticsConfiguration: nil` (do not wire upstream `elementCallPosthog*` to Element).
 - Exact type / file names follow Element X iOS.
 
 ### android
@@ -101,9 +106,9 @@ Push (`push.flim.me`), transcription service, MapLibre keys, and Apple team id r
 
 ### Site ops (`website/` in meta)
 
-- Path: **`website/`** at meta root.
+- Path: `website/` at meta root.
 - Stack: Eleventy → static files → **statichost.eu**.
-- Public name: **`https://flim.me`**.
+- Public name: `https://flim.me`.
 
 ## Open issues
 
@@ -115,3 +120,4 @@ _(none)_
 - 2026-10-14: lock analytics URL to `/privacy#analytics`; help = Element X stubs + credit; amends 000a OIDC site ownership
 - 2026-10-14: lock keep `elementWebHosts`; provisioning host empty in 011 (filled by 012)
 - 2026-10-14: AASA / package family — allow interim `me.flim.dev` per 000a until shipping cutover
+- 2026-10-18: IA — Flim Summaries `/summaries/` (+ terms/privacy); site no cookies/analytics; Element Call analytics nil; contact `hello@flim.me`

@@ -1,0 +1,66 @@
+---
+layout: base.njk
+title: Flim Summaries privacy
+description: Privacy policy for the Flim Summaries service (draft).
+permalink: /summaries/privacy/
+---
+<h1>Flim Summaries — privacy</h1>
+<p class="lede-inline">
+  Draft privacy notice for the optional Flim Summaries service only. Not
+  counsel-approved. Controller: Panu Hällfors —
+  <a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>.
+</p>
+
+<h2>The short version</h2>
+<p>
+  We keep what the account needs (your email and plan state). We keep IP
+  addresses for rate limiting and troubleshooting for <strong>30 days</strong>,
+  not linked to message content. We do <strong>not</strong> keep voice audio,
+  room context, transcripts, titles, or summaries after the request finishes.
+</p>
+
+<h2>What we store</h2>
+<ul>
+  <li><strong>Account email</strong> — so we can send sign-in codes and recognise your account. Kept while the account exists.</li>
+  <li><strong>Session, plan, allowance, promo redemptions</strong> (and later store-purchase references if those ship) — kept while needed for the account.</li>
+  <li><strong>IP addresses</strong> — for rate limiting and troubleshooting, retained about 30 days, not tied to message contents.</li>
+</ul>
+
+<h2>What we process but do not keep</h2>
+<p>
+  For each request the app may send voice audio and a little room context. We
+  run speech-to-text and summarisation, return title, summary, and transcript to
+  your phone, then discard that content. It is not stored for later browsing or
+  training on our side.
+</p>
+
+<h2>Where</h2>
+<p>
+  Processing stays in the EU as far as this service is concerned: hosting and
+  database on UpCloud in Finland; inference through Cortecs with EU-only
+  routing.
+</p>
+
+<h2>Sub-processors</h2>
+<ul>
+  <li><strong>UpCloud</strong> — hosting and managed database (Finland).</li>
+  <li><strong>Cortecs</strong> — EU-routed transcription and summary models.</li>
+  <li><strong>Resend</strong> — sending sign-in emails.</li>
+</ul>
+
+<h2>Your rights</h2>
+<p>
+  You can ask for access, correction, or deletion of account data, and lodge a
+  complaint with a supervisory authority. Contact
+  <a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>.
+  Deleting the account removes the stored account fields; IP logs age out on the
+  30-day schedule.
+</p>
+
+<p>
+  <a href="/summaries/terms">Terms of use</a>
+  ·
+  <a href="/summaries/">About the service</a>
+  ·
+  <a href="/privacy">Flim app privacy</a>
+</p>
