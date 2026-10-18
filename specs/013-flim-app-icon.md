@@ -30,7 +30,7 @@ Everywhere the installed app (and its store listing) shows a product mark — ho
 
 - Redesigning the in-app visual language (decision 003) or the public-site / OIDC logo URL wiring (decision 011) — those may reuse the same masters, but this decision owns **installable-app and store** surfaces only.
 - Replacing Element trademarks inside third-party or system chrome we do not control.
-- Authoring marketing copy, screenshots, or store listing text (beyond the visual mark assets).
+- Authoring marketing copy, screenshots, or store listing text (beyond the visual mark assets) — **decision 014**.
 - Committing every platform size/format into `specs/` — masters stay in meta; sized exports land in the app / store tooling at implementation.
 
 ## Notes
@@ -67,3 +67,4 @@ Design (replay-canonical with this decision): [`013-flim-app-icon.design.md`](01
 - 2026-10-14: proposed
 - 2026-10-14: splash master `specs/flim-splash-master.jpeg`; transparent logo masters tracked as open work
 - 2026-10-18: transparent master `specs/flim-logo-master-transparent.png` landed; open work closed
+- 2026-10-18: note — store listing copy / screenshots owned by decision 014

@@ -12,15 +12,14 @@ Companion to `000a-flim-app-identity.md`. **Replay-canonical** with that decisio
 
 Upstream Element X ships as “Element X” under Element’s Apple identifiers (`io.element.elementx`, `group.io.element`, Element’s team). Flim is a fork that must be a separate installable product. Upstream’s forking notes (`ios/docs/FORKING.md`) call out display name, base bundle identifier, app group, and development team as the first project-configuration step, then OIDC/associated domains and MapLibre secrets as further setup.
 
+Store listing package (name, copy, screenshots) is owned by **decision 014** (amends this decision for that surface).
+
 ## Product design
 
 ### Display names
 
-- **Home screen / system app lists:** **Flim** (short enough to avoid launcher truncation; “Flim Messenger” is ~14 characters and ellipsizes on iOS and many Android launchers).
-- **Store listing title** (App Store / Play): **Flim Messenger**.
-- **Short name** (in-app product label where the stack interpolates a short production name): **Flim**.
-
-Long-form **Flim Messenger** in other product copy (notices, legal, marketing sentences) is unchanged unless a later decision says otherwise.
+- **App name** (home screen / system app lists, and in-app short product label where the stack interpolates a production name): **Flim**.
+- **Flim Messenger:** legal text and other **long contexts** only — not the app name. Store listing naming follows the same rule under **014**.
 
 **Element string audit:** Upstream’s English catalog has a handful of strings that say “Element” literally. Most name other products (Element Call, Element Pro, Element Classic) and stay. Strings that present **this** app as Element — e.g. notification sound names “Element Default” / “Element Fade”, and “use the new Element X app” — must resolve to **Flim** via Flim catalog keys at those call sites. Decision 002 forbids patching Element keys in place.
 
@@ -63,14 +62,13 @@ Out of product scope. Do not enable or retarget Element Classic account import u
 ### ios
 
 - Identity knobs in `app.yml` (then `xcodegen`): `APP_DISPLAY_NAME` → **Flim**; `PRODUCTION_APP_NAME` → **Flim**; `BASE_BUNDLE_IDENTIFIER` / `APP_GROUP_IDENTIFIER` → interim **`me.flim.dev`** / **`group.me.flim.dev`**, then shipping **`me.flim`** / **`group.me.flim`** at cutover; `DEVELOPMENT_TEAM` → human-supplied Team ID.
-- Store listing title **Flim Messenger** is App Store Connect metadata, not an `app.yml` knob.
 - Do not retarget `CLASSIC_*` at Element’s groups; leave Classic migration disabled / unused for Flim.
 - Nightly / flavour overlays (e.g. `Components/Variants/Nightly/`) are out of scope until a later decision.
 
 ### android
 
 - Application id / package root: shipping **`me.flim`**; interim **`me.flim.dev`** until the final Play / signing account owns the shipping id (same cutover idea as iOS).
-- Launcher / application label → **Flim**; Play listing title → **Flim Messenger**; short in-app product label → **Flim**.
+- Launcher / application label → **Flim**; short in-app product label → **Flim**.
 - Do not reuse Element’s application id or shared storage; side-by-side install with Element X must work.
 
 ## Open issues
@@ -86,3 +84,4 @@ _(none)_
 - 2026-10-14: home screen / launcher = Flim; store listing = Flim Messenger (avoids truncation)
 - 2026-10-14: Element string audit — product-self hits → Flim keys at call sites (002); leave Call / Pro / Classic
 - 2026-10-14: interim Apple-safe ids `me.flim.dev` / `group.me.flim.dev` until final team owns shipping `me.flim`
+- 2026-10-18: store listing moved to decision 014; app name **Flim**; **Flim Messenger** only in legal/long contexts

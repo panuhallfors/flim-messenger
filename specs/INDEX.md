@@ -7,7 +7,7 @@ Status is **per platform** (`ios` / `android`): `proposed` | `implementing` | `d
 | id | slug | ios | android | intent | platforms | design |
 |----|------|-----|---------|--------|-----------|--------|
 | 000 | [fork-baseline](000-fork-baseline.md) | — | — | This workspace records fork deltas on Element X; no full-app decision | meta | — |
-| 000a | [flim-app-identity](000a-flim-app-identity.md) | implementing | deferred | Distinct Flim install identity (home: Flim; store: Flim Messenger) + our bundle/app-group ids; OIDC/maps human setup | ios, android | [design](000a-flim-app-identity.design.md) |
+| 000a | [flim-app-identity](000a-flim-app-identity.md) | implementing | deferred | Distinct Flim install identity (home/short: Flim) + our bundle/app-group ids; OIDC/maps human setup | ios, android | [design](000a-flim-app-identity.design.md) |
 | 001 | [thumb-reach-room-exit](001-thumb-reach-room-exit.md) | proposed | proposed | Narrow-layout thumb-reachable room/space→list exit via container transform + bottom strip; wide/split stays upstream | ios, android | [design](001-thumb-reach-room-exit.design.md) |
 | 002 | [flim-strings](002-flim-strings.md) | implementing | deferred | Local Flim string catalog infra (en-GB + fi); Element Localazy unchanged | ios, android | [design](002-flim-strings.design.md) |
 | 003 | [flim-visual-refresh](003-flim-visual-refresh.md) | proposed | proposed | App-wide Flim visual restyle (neutral surfaces, glass controls, rainbow line/outline) on narrow and wide; no navigation change beyond 001; drops no upstream info; amends 001's visual detail | ios, android | [design](003-flim-visual-refresh.design.md) |
@@ -21,3 +21,4 @@ Status is **per platform** (`ios` / `android`): `proposed` | `implementing` | `d
 | 011 | [flim-public-site](011-flim-public-site.md) | proposed | proposed | Flim owns flim.me (Eleventy → statichost.eu) + app legal/OIDC/help links; PostHog EU + Sentry EU; rageshake off; amends 000a OIDC site | ios, android | [design](011-flim-public-site.design.md) |
 | 012 | [flim-account-provisioning](012-flim-account-provisioning.md) | proposed | proposed | Provisioning links/QR on mobile.flim.me (default HS matrix.org); amends 011 empty host | ios, android | [design](012-flim-account-provisioning.design.md) |
 | 013 | [flim-app-icon](013-flim-app-icon.md) | proposed | proposed | Flim mark on home-screen icon, splash (`flim-splash-master`), notifications, and store artwork | ios, android | [design](013-flim-app-icon.design.md) |
+| 014 | [flim-store-listing](014-flim-store-listing.md) | proposed | deferred | Store listing package (name Flim; copy + screenshots); Flim Messenger only in legal/long contexts; amends 000a | ios, android | [design](014-flim-store-listing.design.md) |
