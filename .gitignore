@@ -3,3 +3,4 @@
 
 # Local Cursor state (mcp.json, etc.). Project skills live in `.agents/skills/`.
 .cursor/*
+.DS_Store
