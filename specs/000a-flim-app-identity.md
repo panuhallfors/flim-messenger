@@ -20,12 +20,12 @@ The installed app is a distinct product identity from Element X on every platfor
 
 **High level.** Outcomes a person could confirm by using the app (or looking at the installed app on device).
 
-- [ ] On the home screen and in system app lists, the app’s display name is **Flim**, not Element X.
-- [ ] In the App Store / Play store listing, the product name is **Flim Messenger**.
-- [ ] Where the product uses a short name in UI copy, that name is **Flim**, not Element.
-- [ ] UI that names **this** product (notification sound labels, forced-upgrade copy, and similar) says **Flim**, not Element; other products named Element Call / Pro / Classic may stay.
-- [ ] Installing this fork does not replace or share the same app identity as Element X — both can be installed at once as separate apps.
-- [ ] App extensions that ship with the fork (notifications, share, etc.) belong to the same Flim identity family, not Element’s.
+- [x] On the home screen and in system app lists, the app’s display name is **Flim**, not Element X. (`FlimAppIdentityTests.displayAndProductionNamesAreFlim` — `CFBundleDisplayName` / `bundleDisplayName`)
+- [ ] In the App Store / Play store listing, the product name is **Flim Messenger**. (App Store Connect / Play Console metadata — human)
+- [x] Where the product uses a short name in UI copy, that name is **Flim**, not Element. (`productionAppName` via same test)
+- [ ] UI that names **this** product (notification sound labels, forced-upgrade copy, and similar) says **Flim**, not Element; other products named Element Call / Pro / Classic may stay. (Flim catalog / call sites — decision 002; not locked by `FlimAppIdentityTests`)
+- [x] Installing this fork does not replace or share the same app identity as Element X — both can be installed at once as separate apps. (`interimBaseBundleIdentifier` — `me.flim.dev` / `group.me.flim.dev`)
+- [ ] App extensions that ship with the fork (notifications, share, etc.) belong to the same Flim identity family, not Element’s. (NSE/ShareExtension derive from `BASE_BUNDLE_IDENTIFIER` in `app.yml`; no dedicated unit assertion yet)
 
 ## Non-goals
 
@@ -48,8 +48,10 @@ Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md
 
 ### ios
 
-- Tests: **pending host** (`/verify-decision`) — `FlimAppIdentityTests` (unit); manual: home-screen **Flim**, notification sound labels, bundle id family `me.flim.dev*`; store listing **Flim Messenger** is App Store Connect (human). Side-by-side with Element X when both installed.
+- Tests (2026-10-18 host): `swift run tools ci run-tests --scheme UnitTests --test-name FlimAppIdentityTests` — all 3 passed (`displayAndProductionNamesAreFlim`, `interimBaseBundleIdentifier`, `backgroundTaskIdentifiersDeriveFromBaseBundleIdentifier`). Preview/UI rungs skipped (no snapshot surface).
+- Still human / not locked by that suite: App Store listing **Flim Messenger**; product-self “Element” copy (notification sounds etc. → 002); side-by-side install when Element X is also present; extension bundle-id family beyond shared `app.yml` knobs.
 - Agent UI: none
+- Status: stay `implementing` until ios submodule SHA pinned on meta `develop`.
 
 ### android
 
@@ -70,3 +72,4 @@ Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md
 - 2026-10-14: note — interim `me.flim.dev` until final developer account owns shipping `me.flim`
 - 2026-10-14: implementing
 - 2026-10-18: status per platform — ios implementing, android deferred
+- 2026-10-18: ios host verify — `FlimAppIdentityTests` (UnitTests) passed; acceptance partial (store / product-self copy / extension asserts still open); pin → `done` when asked

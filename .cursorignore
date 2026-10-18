@@ -1,0 +1,3 @@
+# Local secrets — keep *.example readable for agents following the template.
+.secrets/**
+!.secrets/**/*.example

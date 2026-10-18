@@ -4,3 +4,7 @@
 # Local Cursor state (mcp.json, etc.). Project skills live in `.agents/skills/`.
 .cursor/*
 .DS_Store
+
+# Local secrets (never commit). Keep committed `*.example` templates.
+.secrets/**
+!.secrets/**/*.example

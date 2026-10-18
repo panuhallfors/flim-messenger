@@ -41,6 +41,9 @@ Verify progress:
 - [ ] 4. Record — Verification + acceptance evidence; pin when asked → done
 ```
 
+Integration Tests credentials (when that rung is used): load from meta
+`.secrets/integration-tests.env` — never print password values; never store them in Mem0.
+
 ### 1. Load
 
 1. `specs/NNN-slug.md` — Acceptance, Verification, `platforms:`
@@ -61,10 +64,40 @@ Prefer Xcode MCP tools over raw terminal when available.
 | Unit / VM | Logic, state, coordinators for this decision | `swift run tools ci run-tests --scheme UnitTests --test-name …` (full `unit-tests` only if many classes touched) |
 | Preview (simulator) | `TestablePreview` / snapshot surface for this decision | Scoped PreviewTests; device iPhone SE (3rd gen), OS = `CI.defaultOSVersion`. Full `preview-tests` only if many previews touched |
 | UI (simulator) | Only if acceptance needs a UITest flow / UITest snapshot Preview cannot lock | Scoped UITests (`ui-tests` + `--test-name` / matching classes). iPad only if the decision touches wide/split. **Skip entirely** for most decisions |
+| Integration (simulator + real HS) | Only if acceptance **cannot** be locked with mocks and needs a live Matrix login / room (rare) | See **Integration Tests** below. **Skip entirely** unless the decision’s Verification or Host verify plan names this rung |
 
 Stop and fix before climbing further. Verified = the **chosen** scoped runs pass — not that every scheme ran.
 
 Fill `## Verification` → platform section with what ran (test names / schemes). Add `## Agent UI` only if those tests still cannot cheaply lock acceptance — no new test framework.
+
+#### Integration Tests (optional rung)
+
+Upstream harness: `ios/IntegrationTests/` — real OIDC/MAS login via Safari, then search for a room named exactly **`Element X iOS Integration Tests`** (hardcoded in `UserFlowTests`). Not a substitute for UITests; use only when mocks cannot prove the acceptance.
+
+**Credentials (Mac host, meta checkout):**
+
+1. Ensure `.secrets/integration-tests.env` exists (gitignored). Template: `.secrets/integration-tests.env.example`.
+2. Required keys: `INTEGRATION_TESTS_USERNAME`, `INTEGRATION_TESTS_PASSWORD`. Optional: `INTEGRATION_TESTS_HOST` (server name or base URL, e.g. `matrix.org`; omit/empty keeps app default).
+3. Before running, load without echoing secrets:
+
+```bash
+set -a
+source "$(git rev-parse --show-toplevel)/.secrets/integration-tests.env"
+set +a
+cd ios && swift run tools ci integration-tests
+```
+
+If the file is missing or username/password empty: **stop** and tell the user to create the account + room (below) and fill `.secrets/integration-tests.env`. Do not invent credentials. Do not read the password aloud in chat.
+
+**One-time human setup (test user + room):**
+
+1. Register on the chosen homeserver (Flim default: **matrix.org**) with a dedicated throwaway account — not a personal day-to-day account.
+2. Confirm password login works in Element X / Flim against that server (MAS “Username or Email” + “Password”).
+3. Create a **room** whose display name is exactly `Element X iOS Integration Tests` (spelling and spaces matter). Stay joined; leave at least one message so search finds it reliably.
+4. Put host / username / password into `.secrets/integration-tests.env` (copy from the `.example`).
+5. Optional CI: the same three values as GitHub Actions secrets on the **ios fork** (`INTEGRATION_TESTS_HOST`, `INTEGRATION_TESTS_USERNAME`, `INTEGRATION_TESTS_PASSWORD`) if you want upstream’s scheduled workflow — local verify only needs the `.secrets` file.
+
+Never commit the filled env file. Never add passwords to Mem0 (path + “credentials configured” is fine).
 
 ### 3. Snapshots (if needed)
 
