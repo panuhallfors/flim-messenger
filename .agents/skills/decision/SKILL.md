@@ -57,7 +57,7 @@ Copy this checklist and track it:
 ```
 Decision progress:
 - [ ] 1. Discover — read context; enough clarifying Qs to pick shape
-- [ ] 2. Write drafts — files + INDEX; status proposed
+- [ ] 2. Write drafts — files + INDEX; per-platform status proposed
 - [ ] 3. Challenge & edit — push back; revise the .md files until the user is happy
 - [ ] 4. Confirm — summarize paths and any Open issues still open
 ```
@@ -94,7 +94,7 @@ As soon as shape is clear, create the files — do not hold the draft in chat:
 1. Copy templates → `specs/NNN-slug.md` and, if needed, `specs/NNN-slug.design.md`.
 2. Fill frontmatter and a complete best-effort body (intent, acceptance, non-goals, notes; design sections if present).
 3. Link the design from the decision Notes and from `INDEX.md`.
-4. Append a row to `INDEX.md` (`proposed`, intent one-liner, platforms, design link or `—`).
+4. Append a row to `INDEX.md` (per-platform `ios`/`android` status usually `proposed`, intent one-liner, platforms, design link or `—`).
 5. Decision History: `YYYY-MM-DD: proposed`. Design History: `YYYY-MM-DD: first write`.
 
 Acceptance: handful of user-observable bullets. Mechanism that creeps in → move into the design file.
@@ -131,7 +131,7 @@ Report final paths, id/slug, whether design exists, and any Open issues still li
 
 1. Implement in the app submodule; PR mentions `decision NNN`. **Deepen the `.design.md` then** as concrete UI/protocol choices land — that is when detailed design is written, not during `/decision`.
 2. Pin submodule SHA on meta **`develop`**; record in decision History.
-3. Verify per `AGENTS.md` (acceptance → app tests → Agent UI only if needed). `done` iff listed platforms pass (or `deferred`) and pin is committed on meta `develop`.
+3. Verify per `AGENTS.md` (acceptance → app tests → Agent UI only if needed). Set that platform’s status to `done` when it passes and the pin is committed on meta `develop` (other listed platforms may stay `deferred` or `proposed`).
 
 ## Multi-app reminder
 

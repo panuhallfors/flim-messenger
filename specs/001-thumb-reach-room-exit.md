@@ -2,7 +2,9 @@
 id: 001
 slug: thumb-reach-room-exit
 title: Thumb-reach exit from a room or space
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-09-10
 amends: []
 platforms: [ios, android]

@@ -46,11 +46,11 @@ Acceptance is high-level user outcomes (not mechanism). Same intent/design, tigh
 
 A companion `.design.md` at decision time locks product shape; **fill in detailed design when implementation begins**. Do not stockpile future topics as a “Follow-on” backlog in the design file. Use **Open issues** only for unresolved questions while the decision is still being authored (normally empty).
 
-**Author or amend a decision:** use the project skill `.agents/skills/decision` (`/decision`). It owns the challenge loop, drafting, and file/INDEX write steps. After a decision exists: implement in the app submodule with `.agents/skills/implement-decision` (`/implement-decision`) (PR mentions `decision NNN`); verify on the Mac host with `.agents/skills/verify-decision` (`/verify-decision`); pin the submodule SHA on meta; record History → `done` iff listed platforms pass (or `deferred`) and the pin is committed.
+**Author or amend a decision:** use the project skill `.agents/skills/decision` (`/decision`). It owns the challenge loop, drafting, and file/INDEX write steps. After a decision exists: implement in the app submodule with `.agents/skills/implement-decision` (`/implement-decision`) (PR mentions `decision NNN`); verify on the Mac host with `.agents/skills/verify-decision` (`/verify-decision`); pin the submodule SHA on meta; record History → set that platform’s status to `done` when it passes and the pin is committed (other listed platforms may stay `deferred` or `proposed`).
 
 ## Verification
 
-Prefer Element X’s existing harness; name fork tests with the decision id. Lock acceptance with app tests; `## Agent UI` only if that cannot cheaply lock the interaction. Unshipped platforms: `deferred`. Code in the container: `/implement-decision`. Xcode/simulator on the Mac host (same checkout): `/verify-decision`.
+Prefer Element X’s existing harness; name fork tests with the decision id. Lock acceptance with app tests; `## Agent UI` only if that cannot cheaply lock the interaction. Status is **per platform** in the decision frontmatter and `specs/INDEX.md` (`ios` / `android`). Unshipped platforms: `deferred`. Code in the container: `/implement-decision`. Xcode/simulator on the Mac host (same checkout): `/verify-decision`.
 
 ## Multi-app
 

@@ -2,7 +2,9 @@
 id: 002
 slug: flim-strings
 title: Local Flim string catalog (en + fi)
-status: implementing
+status:
+  ios: implementing
+  android: deferred
 created: 2026-09-11
 amends: []
 platforms: [ios, android]
@@ -60,3 +62,4 @@ Design (replay-canonical with this decision): [`002-flim-strings.design.md`](002
 - 2026-09-11: infra-only (no keys yet); English clarified as en-GB; no en-US Flim locale
 - 2026-10-14: platforms = ios, android
 - 2026-10-14: implementing
+- 2026-10-18: status per platform — ios implementing, android deferred

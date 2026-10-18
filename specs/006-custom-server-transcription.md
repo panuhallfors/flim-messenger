@@ -2,7 +2,9 @@
 id: 006
 slug: custom-server-transcription
 title: Custom server transcription
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-13
 amends: [004]
 platforms: [ios, android]

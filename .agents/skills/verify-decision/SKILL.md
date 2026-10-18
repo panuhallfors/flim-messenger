@@ -21,11 +21,11 @@ Orientation: top-level `AGENTS.md`. App conventions: `ios/AGENTS.md`. Snapshots:
 
 - Abort (tell the user to switch to a host Cursor/terminal session) if `xcodebuild` / usable Xcode is missing, or if you are clearly inside Linux without host tooling.
 
-If the user names no id, ask which `NNN` (or confirm the obvious `implementing` row in `specs/INDEX.md`).
+If the user names no id, ask which `NNN` (or confirm the obvious `implementing` platform cell in `specs/INDEX.md`).
 
 ## Preconditions
 
-- Decision status is usually `implementing`; app changes for this id exist in the submodule.
+- That platform’s status is usually `implementing`; app changes for this id exist in the submodule.
 - Read the decision’s `## Verification` (may say pending host) and the implement plan’s Host verify subsection if available in chat/transcript.
 - Search Mem0 (`user_id: flim`) for gotchas on this area / flaky tests.
 
@@ -83,15 +83,15 @@ Update on meta **`develop`** (not `done` until pin is committed):
 
 - Decision `## Verification` — tests that lock acceptance; Agent UI if any.
 - Mark acceptance checkboxes only with evidence from tests (or Agent UI).
-- Decision + INDEX `status`: stay `implementing` until listed platforms pass **and** the submodule pin is committed on meta `develop` → then `done`.
-- History: pin line when relevant (`YYYY-MM-DD: pinned ios @ <sha>`).
+- Decision + INDEX status for **this platform**: stay `implementing` until it passes **and** the submodule pin is committed on meta `develop` → then set that platform to `done`. Leave other platforms as they are (`deferred`, `proposed`, etc.).
+- History: pin line when relevant (`YYYY-MM-DD: pinned ios @ <sha>`; `YYYY-MM-DD: ios done`).
 - Pin: from meta `develop`, `git add ios` (gitlink only) when the user asks to commit/pin. Do not advance meta `main` here.
 
 Do not push or open a PR unless asked; if a PR is opened in the app fork, title/body mention `decision NNN`.
 
 ## Done means
 
-`done` iff every platform in `platforms:` is verified (or explicitly `deferred`) **and** the app submodule SHA is pinned on meta `develop`. Until then: `implementing`.
+A **platform** is `done` when that platform is verified **and** the app submodule SHA is pinned on meta `develop`. Until then that platform stays `implementing`. Other listed platforms may remain `deferred` or `proposed` independently.
 
 ## Out of scope for this skill
 

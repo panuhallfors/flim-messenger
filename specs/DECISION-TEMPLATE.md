@@ -2,10 +2,12 @@
 id: NNN
 slug: short-kebab-name
 title: Human title
-status: proposed   # proposed | implementing | done | withdrawn | upstreamed
+status:
+  ios: proposed      # proposed | implementing | done | withdrawn | upstreamed | deferred
+  android: proposed  # same enum; deferred = listed but not shipping yet
 created: YYYY-MM-DD
 amends: []         # e.g. [001]
-platforms: [ios, android]   # Flim product platforms only; verification may still defer android
+platforms: [ios, android]   # Flim product platforms only; status is per platform (see INDEX)
 ---
 
 # NNN — Title

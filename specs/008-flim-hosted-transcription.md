@@ -2,7 +2,9 @@
 id: 008
 slug: flim-hosted-transcription
 title: Flim hosted transcription
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-13
 amends: [004]
 platforms: [ios, android]

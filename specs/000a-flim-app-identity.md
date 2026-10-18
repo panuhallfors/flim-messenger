@@ -2,7 +2,9 @@
 id: 000a
 slug: flim-app-identity
 title: Flim app identity (display name + bundle IDs)
-status: implementing
+status:
+  ios: implementing
+  android: deferred
 created: 2026-09-11
 amends: []
 platforms: [ios, android]
@@ -67,3 +69,4 @@ Design (replay-canonical with this decision): [`000a-flim-app-identity.design.md
 - 2026-10-14: acceptance — this-product “Element” UI copy → Flim (design: audit + Flim keys per 002)
 - 2026-10-14: note — interim `me.flim.dev` until final developer account owns shipping `me.flim`
 - 2026-10-14: implementing
+- 2026-10-18: status per platform — ios implementing, android deferred

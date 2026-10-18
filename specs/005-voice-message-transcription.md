@@ -2,7 +2,9 @@
 id: 005
 slug: voice-message-transcription
 title: Voice message transcription
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-13
 amends: [004]
 platforms: [ios, android]

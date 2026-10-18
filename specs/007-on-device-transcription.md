@@ -2,7 +2,9 @@
 id: 007
 slug: on-device-transcription
 title: On-device transcription
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-13
 amends: [004]
 platforms: [ios, android]

@@ -52,7 +52,7 @@ Read, in order:
 4. Platform `AGENTS.md` for each platform in `platforms:` that is not deferred
 5. Mem0 search for the feature area
 
-Set status to `implementing` in the decision frontmatter **and** INDEX when work starts. History: `YYYY-MM-DD: implementing`.
+Set that platform’s status to `implementing` in the decision frontmatter **and** INDEX when work starts (leave other platforms unchanged). History: `YYYY-MM-DD: implementing <platform>`.
 
 ### 2. Scope lock
 
@@ -84,7 +84,7 @@ Work **inside the app submodule** (e.g. `ios/`), on **`develop`**. Meta decision
 
 ### 5. Handoff (end of this skill)
 
-Update meta lightly — stay `implementing`; do **not** mark acceptance checkboxes or claim `done`:
+Update meta lightly — keep this platform `implementing`; do **not** mark acceptance checkboxes or claim platform `done`:
 
 - Decision `## Verification` → platform section: note tests are **pending host** (`/verify-decision`), optionally listing the planned schemes/`--test-name`s from the accepted plan.
 - Leave Agent UI alone unless the plan already required it (usually filled during verify).
@@ -94,7 +94,7 @@ Do not push or open a PR unless asked; if a PR is opened in the app fork, title/
 
 ## Done means (not this skill)
 
-`done` is decided by `/verify-decision` (platforms verified or `deferred`) **and** a committed submodule pin on meta. After implement alone, status stays `implementing`.
+Per-platform `done` is decided by `/verify-decision` for that platform **and** a committed submodule pin on meta. After implement alone, that platform stays `implementing`.
 
 ## Out of scope for this skill
 

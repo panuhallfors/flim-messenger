@@ -30,7 +30,7 @@ Project skills live under [`.agents/skills/`](.agents/skills/) (invoke with `/na
 |-------|---------|
 | [`decision`](.agents/skills/decision/) | Author or amend a fork decision (+ design) in `specs/` |
 | [`implement-decision`](.agents/skills/implement-decision/) | Implement a decision in the app submodule (devcontainer) |
-| [`verify-decision`](.agents/skills/verify-decision/) | Xcode/simulator verify on the Mac host; mark `done` when pinned |
+| [`verify-decision`](.agents/skills/verify-decision/) | Xcode/simulator verify on the Mac host; mark that platform `done` when pinned |
 | [`merge-upstream`](.agents/skills/merge-upstream/) | Merge Element HQ into the app fork, then pin the submodule on meta |
 | [`review-for-bugs`](.agents/skills/review-for-bugs/) | Review session work for bugs, corner cases, AGENTS alignment, and DRY; fix without over-engineering |
 

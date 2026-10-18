@@ -2,7 +2,7 @@
 id: 000
 slug: fork-baseline
 title: Fork baseline
-status: done
+status: done  # meta-only; no per-platform app status
 created: 2026-09-09
 amends: []
 platforms: []

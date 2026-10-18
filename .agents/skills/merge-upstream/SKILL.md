@@ -90,7 +90,7 @@ When conflicted:
 
 1. Prefer **upstream** structure, APIs, and Element-owned behaviour unless a decision says otherwise.
 2. Re-apply the **Flim delta** from `specs/NNN-slug.md` + companion `.design.md` (and the existing fork patch).
-3. If upstream now matches a decision’s intent → **drop** our patch; in meta, set that decision (and INDEX) to `upstreamed` and add a History line. That status change is part of this skill when the match is clear.
+3. If upstream now matches a decision’s intent → **drop** our patch; in meta, set every listed platform’s status (and INDEX cells) to `upstreamed` and add a History line. That status change is part of this skill when the match is clear.
 4. Identity / branding / strings / push / icons: follow the relevant decisions (e.g. 000a, 002, 010, 013) — do not “restore Element” in those surfaces.
 5. Mid-sync product questions or new behaviour → stop and run `/decision`; do not stretch the merge PR.
 

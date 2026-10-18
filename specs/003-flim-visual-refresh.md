@@ -2,7 +2,9 @@
 id: 003
 slug: flim-visual-refresh
 title: Flim visual refresh (neutral surfaces, glass controls, signature gradient)
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-13
 amends: [001]
 platforms: [ios, android]

@@ -2,7 +2,9 @@
 id: 009
 slug: transcription-setup-prompts
 title: Transcription setup prompts
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-14
 amends: [004, 005]
 platforms: [ios, android]

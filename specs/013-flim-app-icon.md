@@ -2,7 +2,9 @@
 id: 013
 slug: flim-app-icon
 title: Flim app icon and launch artwork
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-14
 amends: []
 platforms: [ios, android]

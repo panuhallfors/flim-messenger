@@ -2,7 +2,9 @@
 id: 010
 slug: flim-push-gateway
 title: Flim push gateway
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-14
 amends: []
 platforms: [ios, android]

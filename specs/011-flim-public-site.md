@@ -2,7 +2,9 @@
 id: 011
 slug: flim-public-site
 title: Flim public site and client endpoints
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-14
 amends: [000a]
 platforms: [ios, android]

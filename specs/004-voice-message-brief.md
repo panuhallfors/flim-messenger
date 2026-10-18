@@ -2,7 +2,9 @@
 id: 004
 slug: voice-message-brief
 title: Voice message title, summary, and transcript
-status: proposed
+status:
+  ios: proposed
+  android: proposed
 created: 2026-10-13
 amends: []
 platforms: [ios, android]
